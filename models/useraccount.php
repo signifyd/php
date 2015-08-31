@@ -1,5 +1,13 @@
 <?php
+namespace models;
 
+use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+
+/**
+ * Class UserAccount
+ * Info for the account that placed the order. May not be the recipient
+ * @package Signifyd\Connect\Lib\SDK\models
+ */
 class UserAccount extends SignifydModel
 {
     public $emailAddress;

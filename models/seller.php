@@ -1,5 +1,13 @@
 <?php
+namespace models;
 
+use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+
+/**
+ * Class Seller
+ * Info on the store which the order was created in
+ * @package Signifyd\Connect\Lib\SDK\models
+ */
 class Seller extends SignifydModel
 {
     public $name;

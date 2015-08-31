@@ -1,5 +1,13 @@
 <?php
+namespace models;
 
+use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+
+/**
+ * Class Recipient
+ * Info on the person who will receive the order. May not be that same as the person who placed it.
+ * @package Signifyd\Connect\Lib\SDK\models
+ */
 class Recipient extends SignifydModel
 {
     public $fullName;

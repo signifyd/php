@@ -1,14 +1,47 @@
 <?php
+namespace models;
 
+use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+
+
+/**
+ * Class Address
+ * Contains a shipping/billing address
+ * @package Signifyd\Connect\Lib\SDK\models
+ */
 class Address extends SignifydModel
 {
+    /**
+     * @var string Main street address
+     */
     public $streetAddress;
+    /**
+     * @var string Address line 2
+     */
     public $unit;
+    /**
+     * @var string City name
+     */
     public $city;
+    /**
+     * @var string Province (optional)
+     */
     public $provinceCode;
+    /**
+     * @var string Local postal code.
+     */
     public $postalCode;
+    /**
+     * @var string Country code
+     */
     public $countryCode;
+    /**
+     * @var string Actual latitude
+     */
     public $latitude;
+    /**
+     * @var string actual longitude
+     */
     public $longitude;
 
     public function __construct()

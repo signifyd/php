@@ -1,12 +1,13 @@
 <?php
 
 namespace core;
+
 /**
  * Class SignifydSettings
+ * Stores all of the options required for the API itself. Specific integrations may have their own settings
  */
 class SignifydSettings
 {
-
     /**
      * @var string API key used for authorization with Signifyd service
      * You can find the key value at http://signifyd.com/settings/teams
@@ -14,33 +15,45 @@ class SignifydSettings
     public $apiKey;
 
     /**
-     * @var
+     * @var bool Whether or not to validate inputs before executing API calls. For diagnostic purposes
      */
-    public $validateData;
+    public $validateData = false;
 
     /**
-     * @var
+     * @var bool Whether to log errors. Recommended
      */
-    public $logErrors;
-    /**
-     * @var
-     */
-    public $logWarnings;
-    /**
-     * @var
-     */
-    public $logInfo;
+    public $logErrors = true;
 
     /**
-     * @var
+     * @var bool Whether to log warnings. Recommended
+     */
+    public $logWarnings = true;
+
+    /**
+     * @var bool Whether to log trace statements. Only for diagnostic purposes.
+     */
+    public $logInfo = false;
+
+    /**
+     * @var callable Function which will be used for logging errors.
+     * Takes one argument, the message body
      */
     public $loggerError;
+
     /**
-     * @var
+     * @var callable Function which will be used for logging warnings.
+     * Takes one argument, the message body
      */
     public $loggerWarning;
+
     /**
-     * @var
+     * @var callable Function which will be used for logging info.
+     * Takes one argument, the message body
      */
     public $loggerInfo;
+
+    /**
+     * @var int CURL timeout value.
+     */
+    public $timeout = 12;
 }

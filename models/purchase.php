@@ -1,5 +1,13 @@
 <?php
+namespace models;
 
+use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+
+/**
+ * Class Purchase
+ * Info on the placed order
+ * @package Signifyd\Connect\Lib\SDK\models
+ */
 class Purchase extends SignifydModel
 {
     public $browserIpAddress;

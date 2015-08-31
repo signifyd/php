@@ -4,6 +4,10 @@ namespace core;
 class SignifydAPI
 {
     const URI_BASE = "https://api.signifyd.com/v2/";
+
+    /**
+     * @var SignifydSettings
+     */
     private $settings;
 
     private function logError($message)
@@ -34,7 +38,7 @@ class SignifydAPI
     {
         if(is_null($settings->apiKey))
         {
-            throw new Exception("API key is required.");
+            throw new \Exception("API key is required.");
         }
         $this->settings = $settings;
     }
@@ -72,6 +76,25 @@ class SignifydAPI
             return false;
         }
         return json_decode($response);
+    }
+
+    public function validWebhookRequest($request, $hash, $topic)
+    {
+        $check = base64_encode(hash_hmac('sha256', $request, $this->settings->apiKey, true));
+
+        if ($check == $hash) {
+            return true;
+        }
+
+        else if ($topic == "cases/test"){
+            // In the case that this is a webhook test, the encoding ABCDE is allowed
+            $check = base64_encode(hash_hmac('sha256', $request, 'ABCDE', true));
+            if ($check == $hash) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function _setupRequestCommon($url)
@@ -119,7 +142,7 @@ class SignifydAPI
         return $curl;
     }
 
-    private function _setupPostJsonRequest($url, $data)
+    private function _setupPostJsonRequest($url, SignifydModel $data)
     {
         $postBody = $data->toJson();
         return $this->_setupPostRequest($url, $postBody, "application/json");

@@ -1,5 +1,13 @@
 <?php
+namespace models;
 
+use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+
+/**
+ * Class Shipment
+ * Info for the fulfillment of the order
+ * @package Signifyd\Connect\Lib\SDK\models
+ */
 class Shipment extends SignifydModel
 {
     public $shipper;
