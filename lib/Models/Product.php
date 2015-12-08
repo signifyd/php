@@ -1,12 +1,11 @@
 <?php
-namespace models;
+namespace Signifyd\Models;
 
-use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+use Signifyd\Core\SignifydModel;
 
 /**
  * Class Product
  * Info on a particular item in the order.
- * @package Signifyd\Connect\Lib\SDK\models
  */
 class Product extends SignifydModel
 {

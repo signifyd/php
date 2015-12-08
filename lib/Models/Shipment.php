@@ -1,12 +1,11 @@
 <?php
-namespace models;
+namespace Signifyd\Models;
 
-use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+use Signifyd\Core\SignifydModel;
 
 /**
  * Class Shipment
  * Info for the fulfillment of the order
- * @package Signifyd\Connect\Lib\SDK\models
  */
 class Shipment extends SignifydModel
 {

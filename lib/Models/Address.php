@@ -1,13 +1,12 @@
 <?php
-namespace models;
+namespace Signifyd\Models;
 
-use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+use Signifyd\Core\SignifydModel;
 
 
 /**
  * Class Address
  * Contains a shipping/billing address
- * @package Signifyd\Connect\Lib\SDK\models
  */
 class Address extends SignifydModel
 {

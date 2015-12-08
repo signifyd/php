@@ -1,10 +1,8 @@
 <?php
-namespace core;
+namespace Signifyd\Core;
 
 class SignifydAPI
 {
-    const URI_BASE = "https://api.signifyd.com/v2/";
-
     /**
      * @var SignifydSettings
      */
@@ -12,7 +10,7 @@ class SignifydAPI
 
     private function logError($message)
     {
-        if($this->settings->logErrors)
+        if($this->settings->logErrors && $this->settings->loggerError)
         {
             call_user_func($this->settings->loggerError, $message);
         }
@@ -20,7 +18,7 @@ class SignifydAPI
 
     private function logWarning($message)
     {
-        if($this->settings->logWarnings)
+        if($this->settings->logWarnings && $this->settings->loggerWarning)
         {
             call_user_func($this->settings->loggerWarning, $message);
         }
@@ -28,7 +26,7 @@ class SignifydAPI
 
     private function logInfo($message)
     {
-        if($this->settings->logInfo)
+        if($this->settings->logInfo && $this->settings->loggerInfo)
         {
             call_user_func($this->settings->loggerInfo, $message);
         }
@@ -43,11 +41,21 @@ class SignifydAPI
         $this->settings = $settings;
     }
 
+    private function makeUrl($endpoint)
+    {
+        if(substr($this->settings->apiAddress, -1) != '/')
+        {
+            return $this->settings->apiAddress . '/' . $endpoint;
+        }
+        return $this->settings->apiAddress . $endpoint;
+    }
+
     public function createCase($case)
     {
-        $curl = $this->_setupPostJsonRequest(SignifydAPI::URI_BASE."cases", $case);
+        $curl = $this->_setupPostJsonRequest($this->makeUrl("cases"), $case);
         $response = curl_exec($curl);
         $info = curl_getinfo($curl);
+        $error = curl_error($curl);
         curl_close($curl);
 
         if($info['http_code'] != 201)
@@ -61,7 +69,7 @@ class SignifydAPI
 
     public function getCase($caseId, $entry = null)
     {
-        $url = SignifydAPI::URI_BASE."cases/$caseId";
+        $url = $this->makeUrl("cases/$caseId");
         if($entry != null)
         {
             $url .= "/$entry";
@@ -69,6 +77,7 @@ class SignifydAPI
         $curl = $this->_setupGetRequest($url);
         $response = curl_exec($curl);
         $info = curl_getinfo($curl);
+        $error = curl_error($curl);
         curl_close($curl);
         if($info['http_code'] != 200)
         {
@@ -76,6 +85,24 @@ class SignifydAPI
             return false;
         }
         return json_decode($response);
+    }
+
+    public function updatePayment($caseId, $paymentUpdate)
+    {
+        $url = $this->makeUrl("cases/$caseId");
+        $blob = array("purchase" => $paymentUpdate);
+        $curl = $this->_setupPutJsonRequest($url, $blob);
+        $response = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        $error = curl_error($curl);
+        curl_close($curl);
+
+        if($info['http_code'] != 201)
+        {
+            $this->logError("Returned http error: ".$info['http_code']);
+            return false;
+        }
+        return true;
     }
 
     public function validWebhookRequest($request, $hash, $topic)
@@ -108,6 +135,7 @@ class SignifydAPI
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_TIMEOUT, $this->settings->timeout);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $this->settings->timeout);
 
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_USERPWD, $this->settings->apiKey);
@@ -142,9 +170,31 @@ class SignifydAPI
         return $curl;
     }
 
+    private function _setupPutRequest($url, $postBody, $contentType)
+    {
+        $curl = $this->_setupRequestCommon($url);
+
+        $headers = array();
+        $headers[] = "Accept: application/json";
+        $headers[] = "Content-Type: $contentType";
+        $headers[] = "Content-length: ".strlen($postBody);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postBody);
+
+        return $curl;
+    }
+
     private function _setupPostJsonRequest($url, SignifydModel $data)
     {
         $postBody = $data->toJson();
         return $this->_setupPostRequest($url, $postBody, "application/json");
+    }
+
+    private function _setupPutJsonRequest($url, $data)
+    {
+        $postBody = json_encode($data);
+        return $this->_setupPutRequest($url, $postBody, "application/json");
     }
 }

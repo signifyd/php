@@ -1,12 +1,11 @@
 <?php
-namespace models;
+namespace Signifyd\Models;
 
-use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+use Signifyd\Core\SignifydModel;
 
 /**
  * Class Purchase
  * Info on the placed order
- * @package Signifyd\Connect\Lib\SDK\models
  */
 class Purchase extends SignifydModel
 {
@@ -17,9 +16,11 @@ class Purchase extends SignifydModel
     public $currency;
     public $avsResponseCode;
     public $cvvResponseCode;
+    public $transactionId;
     public $orderChannel;
     public $receivedBy;
     public $totalPrice; //double
+
     public $products; // array
     public $shipments; // array
 
@@ -31,6 +32,7 @@ class Purchase extends SignifydModel
         $validator["createdAt"] = array("type" => "string", "value" => null);
         $validator["paymentGateway"] = array ("type" => "string", "value" => null);
         $validator["currency"] = array("type" => "string", "value" => null);
+        $validator["transactionId"] = array("type" => "string", "value" => null);
         $validator["avsResponseCode"] = array("type" => "string", "value" => null);
         $validator["cvvResponseCode"] = array ("type" => "string", "value" => null);
         $validator["orderChannel"] = array("type" => "string", "value" => null);

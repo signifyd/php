@@ -1,12 +1,11 @@
 <?php
-namespace models;
+namespace Signifyd\Models;
 
-use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+use Signifyd\Core\SignifydModel;
 
 /**
  * Class Card
  * Credit card data. If the payment type is not CC, this ma not be used
- * @package Signifyd\Connect\Lib\SDK\models
  */
 class Card extends SignifydModel
 {

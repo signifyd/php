@@ -1,33 +1,32 @@
 <?php
-namespace models;
+namespace Signifyd\Models;
 
-use Signifyd\Connect\Lib\SDK\core\SignifydModel;
+use Signifyd\Core\SignifydModel;
 
 /**
  * Class CaseModel
  * Top level object model for a new case entry
- * @package Signifyd\Connect\Lib\SDK\models
  */
 class CaseModel extends SignifydModel
 {
     /**
-     * @var \Signifyd\Connect\Lib\SDK\models\Purchase
+     * @var \Signifyd\Models\Purchase
      */
     public $purchase;
     /**
-     * @var \Signifyd\Connect\Lib\SDK\models\Recipient
+     * @var \Signifyd\Models\Recipient
      */
     public $recipient;
     /**
-     * @var \Signifyd\Connect\Lib\SDK\models\Card
+     * @var \Signifyd\Models\Card
      */
     public $card;
     /**
-     * @var \Signifyd\Connect\Lib\SDK\models\UserAccount
+     * @var \Signifyd\Models\UserAccount
      */
     public $userAccount;
     /**
-     * @var \Signifyd\Connect\Lib\SDK\models\Seller
+     * @var \Signifyd\Models\Seller
      */
     public $seller;
 

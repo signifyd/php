@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace Signifyd\Core;
 
 /**
  * Class SignifydModel Base class for all API model data. Handles data validation
@@ -17,6 +17,15 @@ abstract class SignifydModel
      */
     public function __construct()
     {
+    }
+
+    public static function Make($class)
+    {
+        if(is_subclass_of('Signifyd\Core\SignifydModel', $class, false))
+        {
+            return new $class();
+        }
+        return null;
     }
 
     /**
