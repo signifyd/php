@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Copyright © 2015 SIGNIFYD Inc. All rights reserved.
+ * See COPYRIGHT.txt for license details.
+ */
 namespace Signifyd\Models;
 
 use Signifyd\Core\SignifydModel;
