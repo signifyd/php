@@ -3,7 +3,7 @@
   "description": "Signifyd client API plugin for PHP",
   "type": "library",
   "license": [
-    "OSL-3.0"
+    "MIT"
   ],
   "require": {
     "php": ">=5.4.0"

@@ -1,9 +1,13 @@
 <?php
 
+/**
+ * Copyright © 2015 SIGNIFYD Inc. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
 namespace Signifyd\Core;
 
 /**
- * Class SignifydModel Base class for all API model data. Handles data validation
+ * Class SignifydModel Base class for all API model data. Handles data validation.
  */
 abstract class SignifydModel
 {
