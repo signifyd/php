@@ -25,7 +25,7 @@ abstract class SignifydModel
 
     public static function Make($class)
     {
-        if(is_subclass_of('Signifyd\Core\SignifydModel', $class, false))
+        if(is_subclass_of($class, '\Signifyd\Core\SignifydModel'))
         {
             return new $class();
         }
