@@ -17,7 +17,7 @@ class Product extends SignifydModel
     public $itemId;
     public $itemName;
     public $itemUrl;
-    public $itemQuality;
+    public $itemQuantity;
     public $itemPrice;
     public $itemHeight;
 
@@ -27,7 +27,7 @@ class Product extends SignifydModel
         $validator["itemId"] = array("type" => "string", "value" => null);
         $validator["itemName"] = array ("type" => "string", "value" => null);
         $validator["itemUrl"] = array("type" => "string", "value" => null);
-        $validator["itemQuality"] = array ("type" => "string", "value" => null);
+        $validator["itemQuantity"] = array ("type" => "string", "value" => null);
         $validator["itemPrice"] = array("type" => "string", "value" => null);
         $validator["itemHeight"] = array("type" => "string", "value" => null);
 
