@@ -120,7 +120,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if($info['http_code'] != 201)
+        if($info['http_code'] != 200)
         {
             $this->logError("Returned http error: ".$info['http_code']);
             return false;
