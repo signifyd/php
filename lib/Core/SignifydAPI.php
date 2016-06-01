@@ -66,7 +66,7 @@ class SignifydAPI
         if($info['http_code'] != 201)
         {
             // TODO We may want to throw an exception here
-            $this->logError("Returned http error: ".$info['http_code']);
+            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
             return false;
         }
         return json_decode($response)->investigationId;
@@ -86,7 +86,7 @@ class SignifydAPI
         curl_close($curl);
         if($info['http_code'] != 200)
         {
-            $this->logError("Returned http error: ".$info['http_code']);
+            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
             return false;
         }
         return json_decode($response);
@@ -104,7 +104,7 @@ class SignifydAPI
 
         if($info['http_code'] != 201)
         {
-            $this->logError("Returned http error: ".$info['http_code']);
+            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
             return false;
         }
         return true;
