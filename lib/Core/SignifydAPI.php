@@ -110,6 +110,24 @@ class SignifydAPI
         return true;
     }
 
+    public function updateInvestigationLabel($caseId, $investigationUpdate)
+    {
+        $url = $this->makeUrl("cases/$caseId");
+        $blob = array("reviewDisposition" => $investigationUpdate);
+        $curl = $this->_setupPutJsonRequest($url, $blob);
+        $response = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        $error = curl_error($curl);
+        curl_close($curl);
+
+        if($info['http_code'] != 201)
+        {
+            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
+            return false;
+        }
+        return true;
+    }
+
     public function validWebhookRequest($request, $hash, $topic)
     {
         $check = base64_encode(hash_hmac('sha256', $request, $this->settings->apiKey, true));
