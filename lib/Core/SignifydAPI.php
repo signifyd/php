@@ -31,8 +31,7 @@ class SignifydAPI
 
     private function logInfo($message)
     {
-        if($this->settings->logInfo && $this->settings->loggerInfo)
-        {
+        if ($this->settings->logInfo && $this->settings->loggerInfo) {
             call_user_func($this->settings->loggerInfo, $message);
         }
     }
@@ -53,6 +52,11 @@ class SignifydAPI
             return $this->settings->apiAddress . '/' . $endpoint;
         }
         return $this->settings->apiAddress . $endpoint;
+    }
+
+    public function traceOut($str)
+    {
+        echo $str;
     }
 
     public function createCase($case)
