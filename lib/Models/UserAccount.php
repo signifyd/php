@@ -26,17 +26,5 @@ class UserAccount extends SignifydModel
 
     public function __construct()
     {
-        $validator = array();
-        $validator["emailAddress"] = array("type" => "string", "value" => null);
-        $validator["username"] = array ("type" => "string", "value" => null);
-        $validator["phone"] = array("type" => "string", "value" => null);
-        $validator["accountNumber"] = array("type" => "string", "value" => null);
-        $validator["createdDate"] = array ("type" => "string", "value" => null);
-        $validator["lastOrderId"] = array("type" => "string", "value" => null);
-        $validator["aggregateOrderCount"] = array("type" => "string", "value" => null);
-        $validator["aggregateOrderDollars"] = array ("type" => "string", "value" => null);
-        $validator["lastUpdateDate"] = array("type" => "string", "value" => null);
-
-        $this->validationInfo = $validator;
     }
 }

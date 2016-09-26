@@ -21,16 +21,5 @@ class Seller extends SignifydModel
 
     public function __construct()
     {
-        $validator = array();
-        $validator["name"] = array("type" => "string", "value" => null);
-        $validator["domain"] = array ("type" => "string", "value" => null);
-        $validator["shipFromAddress"] = array("type" => "SignifydModel", "value" => array(
-            "subtype" => "Address"
-        ));
-        $validator["corporateAddress"] = array("type" => "SignifydModel", "value" => array(
-            "subtype" => "Address"
-        ));
-
-        $this->validationInfo = $validator;
     }
 }

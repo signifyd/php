@@ -15,16 +15,14 @@ class SignifydAPI
 
     private function logError($message)
     {
-        if($this->settings->logErrors && $this->settings->loggerError)
-        {
+        if ($this->settings->logErrors && $this->settings->loggerError) {
             call_user_func($this->settings->loggerError, $message);
         }
     }
 
     private function logWarning($message)
     {
-        if($this->settings->logWarnings && $this->settings->loggerWarning)
-        {
+        if ($this->settings->logWarnings && $this->settings->loggerWarning) {
             call_user_func($this->settings->loggerWarning, $message);
         }
     }
@@ -38,8 +36,7 @@ class SignifydAPI
 
     public function __construct(SignifydSettings $settings)
     {
-        if(is_null($settings->apiKey))
-        {
+        if (is_null($settings->apiKey)) {
             throw new \Exception("API key is required.");
         }
         $this->settings = $settings;
@@ -47,8 +44,7 @@ class SignifydAPI
 
     private function makeUrl($endpoint)
     {
-        if(substr($this->settings->apiAddress, -1) != '/')
-        {
+        if (substr($this->settings->apiAddress, -1) != '/') {
             return $this->settings->apiAddress . '/' . $endpoint;
         }
         return $this->settings->apiAddress . $endpoint;
@@ -59,6 +55,11 @@ class SignifydAPI
         echo $str;
     }
 
+    protected function IsResultError($result)
+    {
+        return $result >= 200 && $result < 300;
+    }
+
     public function createCase($case)
     {
         $curl = $this->_setupPostJsonRequest($this->makeUrl("cases"), $case);
@@ -67,10 +68,9 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if($info['http_code'] != 201)
-        {
+        if ($this->IsResultError($info['http_code'])) {
             // TODO We may want to throw an exception here
-            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
+            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
             return false;
         }
         return json_decode($response)->investigationId;
@@ -79,8 +79,7 @@ class SignifydAPI
     public function getCase($caseId, $entry = null)
     {
         $url = $this->makeUrl("cases/$caseId");
-        if($entry != null)
-        {
+        if ($entry != null) {
             $url .= "/$entry";
         }
         $curl = $this->_setupGetRequest($url);
@@ -88,9 +87,8 @@ class SignifydAPI
         $info = curl_getinfo($curl);
         $error = curl_error($curl);
         curl_close($curl);
-        if($info['http_code'] != 200)
-        {
-            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
+        if ($this->IsResultError($info['http_code'])) {
+            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
             return false;
         }
         return json_decode($response);
@@ -106,9 +104,8 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if($info['http_code'] != 201)
-        {
-            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
+        if ($this->IsResultError($info['http_code'])) {
+            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
             return false;
         }
         return true;
@@ -124,9 +121,8 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if($info['http_code'] != 200)
-        {
-            $this->logError("Returned http error: ".$info['http_code']." Returned http content: ".$response);
+        if ($this->IsResultError($info['http_code'])) {
+            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
             return false;
         }
         return true;
@@ -138,14 +134,14 @@ class SignifydAPI
 
         if ($check == $hash) {
             return true;
-        }
-
-        else if ($topic == "cases/test"){
+        } else {
+            if ($topic == "cases/test") {
             // In the case that this is a webhook test, the encoding ABCDE is allowed
             $check = base64_encode(hash_hmac('sha256', $request, 'ABCDE', true));
             if ($check == $hash) {
                 return true;
             }
+        }
         }
 
         return false;
@@ -155,8 +151,7 @@ class SignifydAPI
     {
         $curl = curl_init($url);
 
-        if (stripos($url, 'https://') === 0)
-        {
+        if (stripos($url, 'https://') === 0) {
             curl_setopt($curl, CURLOPT_PORT, 443);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -188,7 +183,7 @@ class SignifydAPI
         $headers = array();
         $headers[] = "Accept: application/json";
         $headers[] = "Content-Type: $contentType";
-        $headers[] = "Content-length: ".strlen($postBody);
+        $headers[] = "Content-length: " . strlen($postBody);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         curl_setopt($curl, CURLOPT_POST, true);
@@ -204,7 +199,7 @@ class SignifydAPI
         $headers = array();
         $headers[] = "Accept: application/json";
         $headers[] = "Content-Type: $contentType";
-        $headers[] = "Content-length: ".strlen($postBody);
+        $headers[] = "Content-length: " . strlen($postBody);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");

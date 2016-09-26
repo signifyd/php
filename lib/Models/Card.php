@@ -24,17 +24,5 @@ class Card extends SignifydModel
 
     public function __construct()
     {
-        $validator = array();
-        $validator["cardholderName"] = array("type" => "string", "value" => null);
-        $validator["bin"] = array("type" => "string", "value" => null);
-        $validator["last4"] = array ("type" => "string", "value" => null);
-        $validator["expiryMonth"] = array("type" => "string", "value" => null);
-        $validator["expiryYear"] = array ("type" => "string", "value" => null);
-        $validator["hash"] = array("type" => "string", "value" => null);
-        $validator["billingAddress"] = array("type" => "SignifydModel", "value" => array(
-            "subtype" => "Address"
-        ));
-
-        $this->validationInfo = $validator;
     }
 }

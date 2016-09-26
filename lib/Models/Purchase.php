@@ -31,21 +31,5 @@ class Purchase extends SignifydModel
 
     public function __construct()
     {
-        $validator = array();
-        $validator["browserIpAddress"] = array("type" => "string", "value" => null);
-        $validator["orderId"] = array ("type" => "string", "value" => null);
-        $validator["createdAt"] = array("type" => "string", "value" => null);
-        $validator["paymentGateway"] = array ("type" => "string", "value" => null);
-        $validator["currency"] = array("type" => "string", "value" => null);
-        $validator["transactionId"] = array("type" => "string", "value" => null);
-        $validator["avsResponseCode"] = array("type" => "string", "value" => null);
-        $validator["cvvResponseCode"] = array ("type" => "string", "value" => null);
-        $validator["orderChannel"] = array("type" => "string", "value" => null);
-        $validator["receivedBy"] = array ("type" => "string", "value" => null);
-        $validator["totalPrice"] = array("type" => "double", "value" => null);
-        $validator["products"] = array ("type" => "array", "value" => null);
-        $validator["shipments"] = array("type" => "array", "value" => null);
-
-        $this->validationInfo = $validator;
     }
 }

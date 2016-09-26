@@ -33,12 +33,5 @@ class PaymentUpdate extends SignifydModel
 
     public function __construct()
     {
-        $validator = array();
-        $validator["paymentGateway"] = array ("type" => "string", "value" => null);
-        $validator["transactionId"] = array("type" => "string", "value" => null);
-        $validator["avsResponseCode"] = array("type" => "string", "value" => null);
-        $validator["cvvResponseCode"] = array ("type" => "string", "value" => null);
-
-        $this->validationInfo = $validator;
     }
 }
