@@ -55,9 +55,18 @@ class SignifydAPI
         echo $str;
     }
 
-    protected function IsResultError($result)
+    protected function checkResultError($result, $response)
     {
-        return $result >= 200 && $result < 300;
+        if ($result >= 200 && $result < 300) {
+            return false;
+        }
+
+        $output = "Returned http error: " . $result;
+        if (!empty($response)) {
+            $output = $output . " Returned http content: " . $response;
+        }
+        $this->logError($output);
+        return true;
     }
 
     public function createCase($case)
@@ -68,9 +77,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->IsResultError($info['http_code'])) {
-            // TODO We may want to throw an exception here
-            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
+        if ($this->checkResultError($info['http_code'], $response)) {
             return false;
         }
         return json_decode($response)->investigationId;
@@ -87,8 +94,7 @@ class SignifydAPI
         $info = curl_getinfo($curl);
         $error = curl_error($curl);
         curl_close($curl);
-        if ($this->IsResultError($info['http_code'])) {
-            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
+        if ($this->checkResultError($info['http_code'], $response)) {
             return false;
         }
         return json_decode($response);
@@ -104,8 +110,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->IsResultError($info['http_code'])) {
-            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
+        if ($this->checkResultError($info['http_code'], $response)) {
             return false;
         }
         return true;
@@ -121,8 +126,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->IsResultError($info['http_code'])) {
-            $this->logError("Returned http error: " . $info['http_code'] . " Returned http content: " . $response);
+        if ($this->checkResultError($info['http_code'], $response)) {
             return false;
         }
         return true;
