@@ -14,7 +14,7 @@ use Signifyd\Core\SignifydModel;
  */
 class Card extends SignifydModel
 {
-    public $cardholderName;
+    public $cardHolderName;
     public $bin;
     public $last4;
     public $expiryMonth;
