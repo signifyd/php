@@ -100,6 +100,25 @@ class SignifydAPI
         return json_decode($response);
     }
 
+    public function closeCase($caseId)
+    {
+        $url = $this->makeUrl("cases/$caseId");
+        $data = array('status' => 'DISMISSED');
+        $curl = $this->_setupPutJsonRequest($url, $data);
+        $response = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        $error = curl_error($curl);
+        curl_close($curl);
+        if ($this->checkResultError($info['http_code'], $response)) {
+            return false;
+        }
+        if(!empty($error)){
+            $this->logError("Curl call error: {$error}");
+            return false;
+        }
+        return json_decode($response);
+    }
+
     public function updatePayment($caseId, $paymentUpdate)
     {
         $url = $this->makeUrl("cases/$caseId");
