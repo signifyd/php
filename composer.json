@@ -1,7 +1,7 @@
 {
   "name": "signifyd/signifyd-php",
   "description": "Signifyd client API plugin for PHP",
-  "type": "library",
+  "type": "metapackage",
   "license": [
     "MIT"
   ],
