@@ -14,6 +14,7 @@ use Signifyd\Core\SignifydModel;
  */
 class Purchase extends SignifydModel
 {
+    public $orderSessionId;
     public $browserIpAddress;
     public $orderId;
     public $createdAt; // datetime
