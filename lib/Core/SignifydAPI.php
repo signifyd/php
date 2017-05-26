@@ -192,6 +192,21 @@ class SignifydAPI
         return true;
     }
 
+    public function submitGarantee($caseId)
+    {
+        $data = json_encode(array('caseId' => $caseId));
+        $curl = $this->_setupPostRequest($this->makeUrl("guarantees"), $data, "application/json");
+        $response = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        $error = curl_error($curl);
+        curl_close($curl);
+
+        if ($this->checkResultError($info['http_code'], $response)) {
+            return false;
+        }
+        return json_decode($response);
+    }
+
     public function validWebhookRequest($request, $hash, $topic)
     {
         $check = base64_encode(hash_hmac('sha256', $request, $this->settings->apiKey, true));
