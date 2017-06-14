@@ -6,6 +6,9 @@
  */
 namespace Signifyd\Core;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 class SignifydAPI
 {
     /**
@@ -13,24 +16,29 @@ class SignifydAPI
      */
     private $settings;
 
+    public $logger;
+
     private function logError($message)
     {
-        if ($this->settings->logErrors && $this->settings->loggerError) {
-            call_user_func($this->settings->loggerError, $message);
+        if($this->settings->logErrors && $this->settings->loggerError)
+        {
+            $this->logger->error($message);
         }
     }
 
     private function logWarning($message)
     {
-        if ($this->settings->logWarnings && $this->settings->loggerWarning) {
-            call_user_func($this->settings->loggerWarning, $message);
+        if($this->settings->logWarnings && $this->settings->loggerWarning)
+        {
+            $this->logger->warning($message);
         }
     }
 
     private function logInfo($message)
     {
-        if ($this->settings->logInfo && $this->settings->loggerInfo) {
-            call_user_func($this->settings->loggerInfo, $message);
+        if($this->settings->logInfo && $this->settings->loggerInfo)
+        {
+            $this->logger->info($message);
         }
     }
 
@@ -40,6 +48,8 @@ class SignifydAPI
             throw new \Exception("API key is required.");
         }
         $this->settings = $settings;
+        $this->logger = new Logger('Signifyd PHP Library');
+        $this->logger->pushHandler(new StreamHandler($this->settings->logFileLocation . '/' . $this->settings->logFileName));
     }
 
     private function makeUrl($endpoint)
@@ -74,6 +84,8 @@ class SignifydAPI
         $curl = $this->_setupPostJsonRequest($this->makeUrl("cases"), $case);
         $response = curl_exec($curl);
         $info = curl_getinfo($curl);
+        $this->logInfo("Raw Request: " . json_encode($info));
+
         $error = curl_error($curl);
         curl_close($curl);
 
@@ -195,6 +207,8 @@ class SignifydAPI
     public function validWebhookRequest($request, $hash, $topic)
     {
         $check = base64_encode(hash_hmac('sha256', $request, $this->settings->apiKey, true));
+        $this->logInfo("Api request hash: " . $hash);
+        $this->logInfo("Api request hash check: " . $check);
 
         if ($check == $hash) {
             return true;
@@ -243,6 +257,7 @@ class SignifydAPI
     private function _setupPostRequest($url, $postBody, $contentType)
     {
         $curl = $this->_setupRequestCommon($url);
+        $this->logInfo("Request post body: " . $postBody);
 
         $headers = array();
         $headers[] = "Accept: application/json";
@@ -259,6 +274,7 @@ class SignifydAPI
     private function _setupPutRequest($url, $postBody, $contentType)
     {
         $curl = $this->_setupRequestCommon($url);
+        $this->logInfo("Request put body: " . $postBody);
 
         $headers = array();
         $headers[] = "Accept: application/json";

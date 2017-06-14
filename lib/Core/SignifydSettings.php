@@ -6,6 +6,9 @@
  */
 namespace Signifyd\Core;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 /**
  * Class SignifydSettings
  * Stores all of the options required for the API itself. Specific integrations may have their own settings
@@ -47,22 +50,27 @@ class SignifydSettings
      * @var callable Function which will be used for logging errors.
      * Takes one argument, the message body
      */
-    public $loggerError;
+    public $loggerError = 'error';
 
     /**
      * @var callable Function which will be used for logging warnings.
      * Takes one argument, the message body
      */
-    public $loggerWarning;
+    public $loggerWarning = 'warning';
 
     /**
      * @var callable Function which will be used for logging info.
      * Takes one argument, the message body
      */
-    public $loggerInfo;
+    public $loggerInfo = 'info';
 
     /**
      * @var int CURL timeout value.In seconds
      */
     public $timeout = 12;
+
+    public $logFileName = 'signifyd_connect.log';
+
+    public $logFileLocation = __DIR__;
+
 }
