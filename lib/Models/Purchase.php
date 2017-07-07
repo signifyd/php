@@ -19,6 +19,7 @@ class Purchase extends SignifydModel
     public $orderId;
     public $createdAt; // datetime
     public $paymentGateway;
+    public $paymentMethod;
     public $currency;
     public $avsResponseCode;
     public $cvvResponseCode;
