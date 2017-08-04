@@ -12,18 +12,11 @@ use Signifyd\Core\SignifydModel;
  * Class Product
  * Info on a particular item in the order.
  */
-class Product extends SignifydModel
+class DiscountCode extends SignifydModel
 {
-    public $itemId;
-    public $itemName;
-    public $itemUrl;
-    public $itemImage;
-    public $itemQuantity;
-    public $itemPrice;
-    public $itemWeight;
-    public $itemIsDigital;
-    public $itemCategory;
-    public $itemSubCategory;
+    public $code;
+    public $amount;
+    public $percentage;
 
     public function __construct()
     {
