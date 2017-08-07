@@ -30,7 +30,7 @@ class Purchase extends SignifydModel
 
     public $products; // array
     public $shipments; // array
-    public $discountsCodes; // array
+    public $discountCodes; // array
 
     public function __construct()
     {
