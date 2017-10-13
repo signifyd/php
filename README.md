@@ -220,7 +220,7 @@ The card class can be found under namespace "Signifyd\Models", located lib/Core/
 
 The address object has the following properties that need to be filled in:
 ``` <?php 
-    public $cardholderName;
+    public $cardHolderName;
     public $bin;
     public $last4;
     public $expiryMonth;
@@ -232,7 +232,7 @@ The address object has the following properties that need to be filled in:
 
 Example:
 ``` <?php 
-    $card->cardholderName = 'Robert Smith';
+    $card->cardHolderName = 'Robert Smith';
     $card->bin = 407441;
     $card->last4 = '1234';
     $card->expiryMonth = 12;
