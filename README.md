@@ -13,7 +13,8 @@ The main class that does the abstraction between your code and the API is the cl
 In order to instantiate the main class you will need to instantiate the settings class first as the constructor of the Main class requires a settings object to be passed. The settings class is SignifydSettings can be found under the namespace "Signifyd\Core", located under lib/Core/SignifydSettings.php.
 
 Example:
-```<?php 
+```php
+<?php 
     // instantiating the settings class
     $settings = new \Signifyd\Core\SignifydSettings();
     $settings->apiKey = 'YOUR API KEY';
@@ -29,14 +30,16 @@ The case object is the main container for the case related information that is s
 The case class can be found under namespace "Signifyd\Models", located lib/Core/CaseModel.php.
 The case object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 
-```<?php 
+```php
+<?php 
     // instantiating the case model class
     $case = new \Signifyd\Models\CaseModel();
 ?>
 ```
 
 The properties of the case object are as follows:
-``` <?php
+```php
+<?php
     /**
      * @var \Signifyd\Models\Purchase
      */
@@ -64,14 +67,16 @@ The properties of the case object are as follows:
 The purchase object is a container for the order information, the order that was placed in your store.
 The purchase class can be found under namespace "Signifyd\Models", located lib/Core/Purchase.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the purchase model class
     $purchase = new \Signifyd\Models\Purchase();
 ?> 
 ```
 
 The purchase object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $browserIpAddress;
     public $orderId;
     public $createdAt; // datetime
@@ -90,7 +95,8 @@ The purchase object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php 
+```php
+<?php 
     $purchase->browserIpAddress = '192.168.1.1';
     $purchase->orderId = '4fj58as';
     $purchase->createdAt = '2016-07-11T17:54:31-05:00';
@@ -110,14 +116,16 @@ Example:
 The product object is a container for the product information, for the order that was placed in your store.
 The product class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the product model class
     $product = new \Signifyd\Models\Product();
 ?> 
 ```
 
 The product object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $itemId;
     public $itemName;
     public $itemUrl;
@@ -129,7 +137,8 @@ The product object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php 
+```php
+<?php 
     $product->itemId = '2';
     $product->itemName = 'Sparkly sandals';
     $product->itemUrl = 'http://mydomain.com/sparkly-sandals';
@@ -144,14 +153,16 @@ Example:
 The recipient object is a container for the recipient information, for the order that was placed in your store.
 The recipient class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the recipient model class
     $recipient = new \Signifyd\Models\Recipient();
 ?> 
 ```
 
 The recipient object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $fullName;
     public $confirmationEmail;
     public $confirmationPhone;
@@ -162,7 +173,8 @@ The recipient object has the following properties that need to be filled in:
 
 The delivery address in it's self an object.
 Example:
-``` <?php 
+```php
+<?php 
     $recipient->fullName = "Bob Smith";
     $recipient->confirmationEmail = "bob@gmail.com";
     $recipient->confirmationPhone = "5047130000";
@@ -176,14 +188,16 @@ Example:
 The address object is a container for the address information, for the order that was placed in your store.
 The address class can be found under namespace "Signifyd\Models", located lib/Core/Address.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the recipient model class
     $address = new \Signifyd\Models\Address();
 ?> 
 ```
 
 The address object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $streetAddress;
     public $unit;
     public $city;
@@ -196,7 +210,8 @@ The address object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php 
+```php
+<?php 
     $address->streetAddress = '123 State Street';
     $address->unit = '2A';
     $address->city = 'Chicago';
@@ -212,14 +227,16 @@ Example:
 The card object is a container for the card information, for the order that was placed in your store.
 The card class can be found under namespace "Signifyd\Models", located lib/Core/Card.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the card model class
     $card = new \Signifyd\Models\Card();
 ?> 
 ```
 
 The address object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $cardHolderName;
     public $bin;
     public $last4;
@@ -231,7 +248,8 @@ The address object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php 
+```php
+<?php 
     $card->cardHolderName = 'Robert Smith';
     $card->bin = 407441;
     $card->last4 = '1234';
@@ -246,14 +264,16 @@ Example:
 The userAccount object is a container for the user account information, for the order that was placed in your store.
 The userAccount class can be found under namespace "Signifyd\Models", located lib/Core/UserAccount.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the card model class
     $userAccount = new \Signifyd\Models\UserAccount();
 ?> 
 ```
 
 The userAccount object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $emailAddress;
     public $username;
     public $phone;
@@ -267,7 +287,8 @@ The userAccount object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php 
+```php
+<?php 
     $userAccount->emailAddress = 'bob@gmail.com';
     $userAccount->username = 'bobbo';
     $userAccount->phone = '5555551212';
@@ -284,14 +305,16 @@ Example:
 The seller object is a container for the seller information, for the order that was placed in your store.
 The seller class can be found under namespace "Signifyd\Models", located lib/Core/Seller.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the seller model class
     $seller = new \Signifyd\Models\Seller();
 ?> 
 ```
 
 The seller object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $name;
     public $domain;
     public $shipFromAddress; // Address
@@ -300,7 +323,8 @@ The seller object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php 
+```php
+<?php 
     $seller->name = 'We sell awesome stuff, Inc.';
     $seller->domain = 'wesellawesomestuff.com';
     $seller->shipFromAddress = $address; //an Address object as seen above
@@ -313,14 +337,16 @@ Example:
 The shipment object is a container for the shipment information, for the order that was placed in your store.
 The shipment class can be found under namespace "Signifyd\Models", located lib/Core/Shipment.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the shipment model class
     $shipment = new \Signifyd\Models\Shipment();
 ?> 
 ```
 
 The shipment object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $shipper;
     public $shippingMethod;
     public $shippingPrice;
@@ -329,7 +355,8 @@ The shipment object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php
+```php
+<?php
     $shipment->shipper = 'UPS';
     $shipment->shippingMethod = 'ground';
     $shipment->shippingPrice = 10;
@@ -342,14 +369,16 @@ Example:
 The paymentUpdate object is a container for the payment update information, for the order that was placed in your store.
 The paymentUpdate class can be found under namespace "Signifyd\Models", located lib/Core/PaymentUpdate.php.
 
-``` <?php 
+```php
+<?php 
     // instantiating the PaymentUpdate model class
     $paymentUpdate = new \Signifyd\Models\PaymentUpdate();
 ?> 
 ```
 
 The paymentUpdate object has the following properties that need to be filled in:
-``` <?php 
+```php
+<?php 
     public $paymentGateway;
     public $transactionId;
     public $avsResponseCode;
@@ -358,7 +387,8 @@ The paymentUpdate object has the following properties that need to be filled in:
 ```
 
 Example:
-``` <?php
+```php
+<?php
     $paymentUpdate->paymentGateway = 'stripe';
     $paymentUpdate->transactionId = '1a2sf3f44f21s1';
     $paymentUpdate->avsResponseCode = 'Y';
@@ -372,7 +402,8 @@ Example:
 
 This sends the request to our API Endpoint to create a new case. As a parameter for this method you need to send a case object that has its properties filled up.
 
-``` <?php
+```php
+<?php
     // instantiating the settings class
     $settings = new \Signifyd\Core\SignifydSettings();
     $settings->apiKey = 'YOUR API KEY';
@@ -387,7 +418,8 @@ This sends the request to our API Endpoint to create a new case. As a parameter 
 ```
 
 An example of a JSON object sent to our API:
-```{
+```json
+{
     "purchase": {
         "orderSessionId": "uha3d98weicm20eufhlqe",
         "browserIpAddress": "192.168.1.1",
@@ -522,7 +554,8 @@ The usual payload for a response:
 
 This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
 
-``` <?php
+```php
+<?php
     // instantiating the settings class
     $settings = new \Signifyd\Core\SignifydSettings();
     $settings->apiKey = 'YOUR API KEY';
@@ -543,7 +576,8 @@ Example of request:
 GET https://api.signifyd.com/v2/cases/caseId
 
 Example of response:
-``` {
+```
+{
     guaranteeEligible: false,
     guaranteeDisposition: "APPROVED",
     status: "DISMISSED",
@@ -565,7 +599,8 @@ Example of response:
 #### 16.	Close Case Method
 
 This sends the request to our API Endpoint to close a case. As a parameter for this method you need to send a case id.
-``` <?php
+```php
+<?php
     // instantiating the settings class
     $settings = new \Signifyd\Core\SignifydSettings();
     $settings->apiKey = 'YOUR API KEY';
@@ -586,7 +621,8 @@ If the HTTP response code is other than 2xx to 3xx the $case value is false, whi
 #### 17.	Update Payment Method
 
 This sends the request to our API Endpoint to update the payment for an existing case. As a parameter for this method you need to send a case id and the payment update object (as described above).
-``` <?php
+```php
+<?php
     // instantiating the settings class
     $settings = new \Signifyd\Core\SignifydSettings();
     $settings->apiKey = 'YOUR API KEY';
@@ -602,11 +638,14 @@ This sends the request to our API Endpoint to update the payment for an existing
 Based on the HTTP response code the updatePayment method can return the bool true or bool false.
 If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
 If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.
-18.	Update Investigation Label Method
+
+
+#### 18.	Update Investigation Label Method
 
 This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id and new investigation label.
 
-``` <?php
+```php
+<?php
     // instantiating the settings class
     $settings = new \Signifyd\Core\SignifydSettings();
     $settings->apiKey = 'YOUR API KEY';
