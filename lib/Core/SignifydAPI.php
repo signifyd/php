@@ -18,6 +18,8 @@ class SignifydAPI
 
     public $logger;
 
+    protected $lastErrorMessage;
+
     private function logError($message)
     {
         if($this->settings->logErrors && $this->settings->loggerError)
@@ -65,7 +67,7 @@ class SignifydAPI
         echo $str;
     }
 
-    protected function checkResultError($result, $response)
+    protected function checkResultError($result, $response, $curlError)
     {
         if ($result >= 200 && $result < 300) {
             return false;
@@ -76,6 +78,20 @@ class SignifydAPI
             $output = $output . " Returned http content: " . $response;
         }
         $this->logError($output);
+
+        if ($curlError) {
+            $this->lastErrorMessage = "Network Error: " . $curlError;
+        } elseif ($response) {
+            $json = json_decode($response);
+            if(!isset($json->messages)) {
+                $this->lastErrorMessage = "Http Error " . $result . ": " . $response;
+            } else {
+                $this->lastErrorMessage = implode(',', $json->messages);
+            }
+        } else {
+            $this->lastErrorMessage = "Http Error " . $result;
+        }
+
         return true;
     }
 
@@ -89,7 +105,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->checkResultError($info['http_code'], $response)) {
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
         return json_decode($response)->investigationId;
@@ -106,7 +122,8 @@ class SignifydAPI
         $info = curl_getinfo($curl);
         $error = curl_error($curl);
         curl_close($curl);
-        if ($this->checkResultError($info['http_code'], $response)) {
+
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
         return json_decode($response);
@@ -121,7 +138,8 @@ class SignifydAPI
         $info = curl_getinfo($curl);
         $error = curl_error($curl);
         curl_close($curl);
-        if ($this->checkResultError($info['http_code'], $response)) {
+
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
         if(!empty($error)){
@@ -141,7 +159,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->checkResultError($info['http_code'], $response)) {
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
 
@@ -159,7 +177,8 @@ class SignifydAPI
         $info = curl_getinfo($curl);
         $error = curl_error($curl);
         curl_close($curl);
-        if ($this->checkResultError($info['http_code'], $response)) {
+
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
         if(!empty($error)){
@@ -182,7 +201,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->checkResultError($info['http_code'], $response)) {
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
         return true;
@@ -198,7 +217,7 @@ class SignifydAPI
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($this->checkResultError($info['http_code'], $response)) {
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
             return false;
         }
         return true;
@@ -223,6 +242,11 @@ class SignifydAPI
         }
 
         return false;
+    }
+
+    public function getLastErrorMessage()
+    {
+        return $this->lastErrorMessage;
     }
 
     private function _setupRequestCommon($url)
