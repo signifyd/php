@@ -67,7 +67,7 @@ class SignifydSettings
     /**
      * @var int CURL timeout value.In seconds
      */
-    public $timeout = 12;
+    public $timeout = 30;
 
     public $logFileName = 'signifyd_connect.log';
 
