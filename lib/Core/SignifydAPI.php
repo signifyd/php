@@ -18,30 +18,34 @@ class SignifydAPI
 
     public $logger;
 
+    protected $lastErrorMessage;
+
     private function logError($message)
     {
-        if($this->settings->logErrors && $this->settings->loggerError)
-        {
+        if($this->settings->logErrors && $this->settings->loggerError){
             $this->logger->error($message);
         }
     }
 
     private function logWarning($message)
     {
-        if($this->settings->logWarnings && $this->settings->loggerWarning)
-        {
+        if($this->settings->logWarnings && $this->settings->loggerWarning){
             $this->logger->warning($message);
         }
     }
 
     private function logInfo($message)
     {
-        if($this->settings->logInfo && $this->settings->loggerInfo)
-        {
+        if($this->settings->logInfo && $this->settings->loggerInfo){
             $this->logger->info($message);
         }
     }
 
+    /**
+     * SignifydAPI constructor.
+     * @param SignifydSettings $settings
+     * @throws \Exception
+     */
     public function __construct(SignifydSettings $settings)
     {
         if (is_null($settings->apiKey)) {
@@ -65,16 +69,21 @@ class SignifydAPI
         echo $str;
     }
 
-    protected function checkResultError($result, $response)
+    protected function checkResultError($result, $response, $error)
     {
         if ($result >= 200 && $result < 300) {
             return false;
         }
 
-        $output = "Returned http error: " . $result;
-        if (!empty($response)) {
-            $output = $output . " Returned http content: " . $response;
+        if($error){
+            $this->lastErrorMessage = "Curl error: " . $error;
+            $this->logError("Curl error: " . $error);
+            return true;
         }
+
+        $output = "Returned http error: " . $result;
+        $output .= (!empty($response))? " Returned http content: " . $response : '';
+        $this->lastErrorMessage = $output;
         $this->logError($output);
         return true;
     }
@@ -82,17 +91,9 @@ class SignifydAPI
     public function createCase($case)
     {
         $curl = $this->_setupPostJsonRequest($this->makeUrl("cases"), $case);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $this->logInfo("Raw Request: " . json_encode($info));
+        $response = $this->curlCall($curl);
 
-        $error = curl_error($curl);
-        curl_close($curl);
-
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-        return json_decode($response)->investigationId;
+        return ($response === false)? false : json_decode($response)->investigationId;
     }
 
     public function getCase($caseId, $entry = null)
@@ -102,14 +103,9 @@ class SignifydAPI
             $url .= "/$entry";
         }
         $curl = $this->_setupGetRequest($url);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-        return json_decode($response);
+        $response = $this->curlCall($curl);
+
+        return ($response === false)? false : json_decode($response);
     }
 
     public function closeCase($caseId)
@@ -117,37 +113,17 @@ class SignifydAPI
         $url = $this->makeUrl("cases/$caseId");
         $blob = array('status' => 'DISMISSED');
         $curl = $this->_setupPutJsonRequest($url, $blob);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-        if(!empty($error)){
-            $this->logError("Curl call error: {$error}");
-            return false;
-        }
-        return json_decode($response);
+        $response = $this->curlCall($curl);
+
+        return ($response === false)? false : json_decode($response);
     }
 
     public function createGuarantee($guarantee)
     {
         $curl = $this->_setupPostJsonRequest($this->makeUrl("guarantees"), $guarantee);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $this->logInfo("Raw request create guaranty: " . json_encode($info));
+        $response = $this->curlCall($curl);
 
-        $error = curl_error($curl);
-        curl_close($curl);
-
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-
-        $this->logInfo("Raw response create guaranty: " . $response);
-
-        return json_decode($response)->disposition;
+        return ($response === false)? false : json_decode($response)->disposition;
     }
 
     public function cancelGuarantee($caseId)
@@ -155,21 +131,9 @@ class SignifydAPI
         $url = $this->makeUrl("cases/$caseId/guarantee");
         $blob = ['guaranteeDisposition' => 'CANCELED'];
         $curl = $this->_setupPutJsonRequest($url, $blob);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-        if(!empty($error)){
-            $this->logError("Curl call error: {$error}");
-            return false;
-        }
+        $response = $this->curlCall($curl);
 
-        $this->logInfo("Raw response create guaranty: " . $response);
-
-        return json_decode($response)->disposition;
+        return ($response === false)? false : json_decode($response)->disposition;
     }
 
     public function updatePayment($caseId, $paymentUpdate)
@@ -177,15 +141,9 @@ class SignifydAPI
         $url = $this->makeUrl("cases/$caseId");
         $blob = array("purchase" => $paymentUpdate);
         $curl = $this->_setupPutJsonRequest($url, $blob);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
+        $response = $this->curlCall($curl);
 
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-        return true;
+        return ($response === false)? false : true;
     }
 
     public function updateInvestigationLabel($caseId, $investigationUpdate)
@@ -193,15 +151,9 @@ class SignifydAPI
         $url = $this->makeUrl("cases/$caseId");
         $blob = array("reviewDisposition" => $investigationUpdate);
         $curl = $this->_setupPutJsonRequest($url, $blob);
-        $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
+        $response = $this->curlCall($curl);
 
-        if ($this->checkResultError($info['http_code'], $response)) {
-            return false;
-        }
-        return true;
+        return ($response === false)? false : true;
     }
 
     public function validWebhookRequest($request, $hash, $topic)
@@ -299,4 +251,26 @@ class SignifydAPI
         $postBody = json_encode($data);
         return $this->_setupPutRequest($url, $postBody, "application/json");
     }
+
+    private function curlCall($curl)
+    {
+        $response = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        $this->logInfo("Raw request: " . json_encode($info));
+        $this->logInfo("Raw response: " . $response);
+        $error = curl_error($curl);
+        curl_close($curl);
+
+        if ($this->checkResultError($info['http_code'], $response, $error)) {
+            return false;
+        }
+
+        return $response;
+    }
+    
+    public function getLastErrorMessage()
+    {
+        return $this->lastErrorMessage;
+    }
+
 }
