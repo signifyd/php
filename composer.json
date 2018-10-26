@@ -6,8 +6,12 @@
     "MIT"
   ],
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=5.5.0",
     "monolog/monolog": ">=1.16.0"
+  },
+  "require-dev": {
+    "php": ">=5.5.0",
+    "phpunit/phpunit": "^7"
   },
   "support": {
     "email": "support@signifyd.com"
