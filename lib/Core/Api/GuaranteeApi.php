@@ -24,5 +24,31 @@ namespace Signifyd\Core\Api;
  */
 class GuaranteeApi
 {
+    public function createGuarantee()
+    {
 
+    }
+
+    public function cancelGuarantee()
+    {
+
+    }
+
+//    public function createGuarantee($guarantee)
+//    {
+//        $curl = $this->_setupPostJsonRequest($this->makeUrl("guarantees"), $guarantee);
+//        $response = $this->curlCall($curl);
+//
+//        return ($response === false)? false : json_decode($response)->disposition;
+//    }
+//
+//    public function cancelGuarantee($caseId)
+//    {
+//        $url = $this->makeUrl("cases/$caseId/guarantee");
+//        $blob = ['guaranteeDisposition' => 'CANCELED'];
+//        $curl = $this->_setupPutJsonRequest($url, $blob);
+//        $response = $this->curlCall($curl);
+//
+//        return ($response === false)? false : json_decode($response)->disposition;
+//    }
 }
