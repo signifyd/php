@@ -24,6 +24,11 @@ namespace Signifyd\Core\Api;
  */
 class GuaranteeApi
 {
+    public function __construct($args)
+    {
+
+    }
+
     public function createGuarantee()
     {
 

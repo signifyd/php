@@ -13,6 +13,9 @@
  */
 namespace Signifyd\Core\Api;
 
+use Signifyd\Core\Connection;
+use Signifyd\Core\Settings;
+
 /**
  * Class CaseApi
  *
@@ -24,29 +27,49 @@ namespace Signifyd\Core\Api;
  */
 class CaseApi
 {
-    public function createCase()
-    {
+    public $settings;
+    public $connection;
 
+    public function __construct($args = [])
+    {
+        if (is_array($args) && !empty($args)) {
+            $this->settings = new Settings($args);
+        } elseif ($args instanceof Settings) {
+            $this->settings = $args;
+        } else {
+            $this->settings = new Settings([]);
+        }
+
+        $this->connection = new Connection();
     }
 
-    public function getCase()
+    public function createCase($case)
     {
+        if (is_array($case)) {
 
+        }
+
+        $this->connection->callApi($case, 'create');
     }
 
-    public function closeCase()
+    public function getCase($case)
     {
-
+        $this->connection->callApi($case, 'get');
     }
 
-    public function updatePayment()
+    public function closeCase($case)
     {
-
+        $this->connection->callApi($case, 'close');
     }
 
-    public function updateInvestigationLabel()
+    public function updatePayment($case)
     {
+        $this->connection->callApi($case, 'updatePayment');
+    }
 
+    public function updateInvestigationLabel($case)
+    {
+        $this->connection->callApi($case, 'updateInvestigation');
     }
 
 //    public function createCase($case)

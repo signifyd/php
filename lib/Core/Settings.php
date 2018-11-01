@@ -61,6 +61,8 @@ class Settings
      */
     public $retry = false;
 
+    protected $SSLVerification = false;
+
     /**
      * Settings constructor.
      *
@@ -165,6 +167,22 @@ class Settings
     public function setRetry($retry)
     {
         $this->retry = $retry;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSSLVerification()
+    {
+        return $this->SSLVerification;
+    }
+
+    /**
+     * @param bool $SSLVerification
+     */
+    public function setSSLVerification($SSLVerification)
+    {
+        $this->SSLVerification = $SSLVerification;
     }
 
 }

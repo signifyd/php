@@ -24,5 +24,8 @@ namespace Signifyd\Core\Api;
  */
 class WebhooksApi
 {
+    public function __construct($args)
+    {
 
+    }
 }
