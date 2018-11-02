@@ -27,28 +27,57 @@ use Signifyd\Core\Exceptions\ConnectionException;
 class Connection
 {
     /**
+     * The setting of the SDK
+     *
      * @var \Signifyd\Core\Settings
      */
     public $settings;
-    protected $headers = ["Accept: application/json", "Content-Type: application/json"];
+
+    /**
+     * The default curl headers
+     *
+     * @var array
+     */
+    protected $headers = [
+        "Accept: application/json",
+        "Content-Type: application/json"
+    ];
+
+    /**
+     * The curl that does the sending
+     *
+     * @var resource
+     */
     protected $curl;
+
+    /**
+     * To have logging in a time o need
+     *
+     * @var Logging
+     */
     protected $logger;
 
     /**
      * Connection constructor.
-     * @param $settings
+     *
+     * @param \Signifyd\Core\Settings $settings The settings
+     *
      * @throws Exceptions\LoggerException
      */
-    public function __construct($settings, $consoleOut = false)
+    public function __construct($settings)
     {
         $this->settings = $settings;
-        $this->logger = new Logging($consoleOut);
+        $this->logger = new Logging($settings);
     }
 
     /**
-     * @param $url
-     * @param $method
+     * Init the Curl resource
+     *
+     * @param string $url    The curl url
+     * @param string $method The REST method type
+     *
      * @return bool
+     *
      * @throws Exceptions\ConnectionException
      */
     public function initCurl($url, $method)
@@ -80,7 +109,9 @@ class Connection
         } elseif ($method != 'get') {
             $options[CURLOPT_CUSTOMREQUEST] = "GET";
         } else {
-            throw new ConnectionException('Method ' . $method . ' is not supported.');
+            throw new ConnectionException(
+                'Method ' . $method . ' is not supported.'
+            );
         }
 
         curl_setopt_array($this->curl, $options);
@@ -88,6 +119,15 @@ class Connection
         return true;
     }
 
+    /**
+     * The main part that does the call to the Signifyd API
+     *
+     * @param string $endpoint The url where to send the request
+     * @param string $payload  The data to be send
+     * @param string $method   The REST method type
+     *
+     * @return bool|mixed
+     */
     public function callApi($endpoint, $payload, $method)
     {
         $url = $this->makeUrl($endpoint);
@@ -117,6 +157,13 @@ class Connection
         return $response;
     }
 
+    /**
+     * Making the url for the api call to Signifyd
+     *
+     * @param string $endpoint The resource from the Signifyd Api
+     *
+     * @return string
+     */
     public function makeUrl($endpoint)
     {
         if (substr($this->settings->getApiAddress(), -1) != '/') {
@@ -125,5 +172,15 @@ class Connection
         return $this->settings->getApiAddress() . $endpoint;
     }
 
+    /**
+     * Handle the response from Signifyd api
+     *
+     * @param array $response The response received from Signifyd
+     *
+     * @return array
+     */
+    public function handleResponse($response)
+    {
     }
+
 }

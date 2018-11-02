@@ -28,22 +28,40 @@ use Signifyd\Core\Exceptions\LoggerException;
  */
 class Logging
 {
+    /*
+     * The name of the log file
+     */
     protected $logFileName = 'signifyd_connect.log';
+
+    /*
+     * The location of the log file
+     */
     protected $logLocation = '.';
-    protected $consoleOut = false;
+
+    /*
+     * The main logger implementation
+     *
+     * @var \Monolog\Logger
+     */
     protected $logger;
-    protected $enable = true;
+
+    /**
+     * THe settings of the SDK
+     *
+     * @var \Signifyd\Core\Settings
+     */
+    protected $settings;
 
     /**
      * Logging constructor.
      *
-     * @param bool $consoleOut Enable command line output
+     * @param \Signifyd\Core\Settings $settings The settings
      *
      * @throws LoggerException
      */
-    public function __construct($consoleOut = false)
+    public function __construct($settings)
     {
-        $this->consoleOut = (bool)$consoleOut;
+        $this->settings = $settings;
         $this->logger = new Logger('Signifyd PHP Library');
         $this->initLogs();
     }
@@ -58,9 +76,11 @@ class Logging
     public function initLogs()
     {
         try {
-            $fileHandler = new StreamHandler($this->logLocation . '/' . $this->logFileName);
+            $fileHandler = new StreamHandler(
+                $this->logLocation . '/' . $this->logFileName
+            );
             $this->logger->pushHandler($fileHandler);
-            if (true === $this->isConsoleOut()) {
+            if (true === $this->settings->isConsoleOut()) {
                 $outputHandler = new StreamHandler('php://output');
                 $this->logger->pushHandler($outputHandler);
             }
@@ -95,31 +115,6 @@ class Logging
     }
 
     /**
-     * Is the output in the command line enabled
-     *
-     * @return bool
-     */
-    public function isConsoleOut()
-    {
-        return $this->consoleOut;
-    }
-
-    /**
-     * Set the output to the command line
-     *
-     * @param bool $consoleOut The console output bool
-     *
-     * @return void
-     *
-     * @throws LoggerException
-     */
-    public function setConsoleOut($consoleOut)
-    {
-        $this->consoleOut = $consoleOut;
-        $this->initLogs();
-    }
-
-    /**
      * Log message with the log level of debug
      *
      * @param string $msg The message
@@ -128,7 +123,7 @@ class Logging
      */
     public function debug($msg)
     {
-        if (false === $this->isEnable()) {
+        if (false === $this->settings->isLogEnabled()) {
             return;
         }
 
@@ -144,7 +139,7 @@ class Logging
      */
     public function info($msg)
     {
-        if (false === $this->isEnable()) {
+        if (false === $this->settings->isLogEnabled()) {
             return;
         }
 
@@ -160,7 +155,7 @@ class Logging
      */
     public function notice($msg)
     {
-        if (false === $this->isEnable()) {
+        if (false === $this->settings->isLogEnabled()) {
             return;
         }
 
@@ -176,7 +171,7 @@ class Logging
      */
     public function warning($msg)
     {
-        if (false === $this->isEnable()) {
+        if (false === $this->settings->isLogEnabled()) {
             return;
         }
 
@@ -192,33 +187,11 @@ class Logging
      */
     public function error($msg)
     {
-        if (false === $this->isEnable()) {
+        if (false === $this->settings->isLogEnabled()) {
             return;
         }
 
         $this->logger->error($msg);
-    }
-
-    /**
-     * Is the logging enabled
-     *
-     * @return bool
-     */
-    public function isEnable()
-    {
-        return $this->enable;
-    }
-
-    /**
-     * Set if the logging should be enabled or not
-     *
-     * @param bool $enable The enable log bool
-     *
-     * @return void
-     */
-    public function setEnable($enable)
-    {
-        $this->enable = $enable;
     }
 
     /**

@@ -62,6 +62,8 @@ class Settings
     public $retry = false;
 
     protected $SSLVerification = false;
+    protected $consoleOut = false;
+    protected $logEnabled = true;
 
     /**
      * Settings constructor.
@@ -170,6 +172,8 @@ class Settings
     }
 
     /**
+     * Get the state of the SSL verification
+     *
      * @return bool
      */
     public function isSSLVerification()
@@ -178,11 +182,59 @@ class Settings
     }
 
     /**
-     * @param bool $SSLVerification
+     * Set the state of the SSL verification
+     *
+     * @param bool $SSLVerification Value of SSL Verification
+     *
+     * @return void
      */
     public function setSSLVerification($SSLVerification)
     {
         $this->SSLVerification = $SSLVerification;
+    }
+
+    /**
+     * Is logging to the console enabled
+     *
+     * @return bool
+     */
+    public function isConsoleOut()
+    {
+        return $this->consoleOut;
+    }
+
+    /**
+     * Set the state console logging
+     *
+     * @param bool $consoleOut Value of the console logging
+     *
+     * @return void
+     */
+    public function setConsoleOut($consoleOut)
+    {
+        $this->consoleOut = $consoleOut;
+    }
+
+    /**
+     * Is logging enabled
+     *
+     * @return bool
+     */
+    public function isLogEnabled()
+    {
+        return $this->logEnabled;
+    }
+
+    /**
+     * Set the state of the enable logging
+     *
+     * @param bool $logEnabled Value of the enable logging
+     *
+     * @return void
+     */
+    public function setLogEnabled($logEnabled)
+    {
+        $this->logEnabled = $logEnabled;
     }
 
 }
