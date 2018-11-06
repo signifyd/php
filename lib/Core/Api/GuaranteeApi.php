@@ -13,6 +13,8 @@
  */
 namespace Signifyd\Core\Api;
 
+use Signifyd\Core\Response;
+
 /**
  * Class GuaranteeApi
  *
@@ -24,36 +26,65 @@ namespace Signifyd\Core\Api;
  */
 class GuaranteeApi
 {
-    public function __construct($args)
+    /**
+     * GuaranteeApi constructor.
+     *
+     * @param array $args The settings values
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function __construct($args = [])
     {
 
     }
 
-    public function createGuarantee()
+    /**
+     * Crate a guarantee in Signifyd
+     *
+     * @param \Signifyd\Models\Guarantee $guarantee The guarantee data
+     *
+     * @return Response
+     */
+    public function createGuarantee($guarantee)
     {
+        $response = '';
 
+        return new Response($response);
     }
 
-    public function cancelGuarantee()
+    /**
+     * Cancel a guarantee in Signifyd
+     *
+     * @param \Signifyd\Models\Guarantee $guarantee The guarantee data
+     *
+     * @return Response
+     */
+    public function cancelGuarantee($guarantee)
     {
+        $response = '';
 
+        return new Response($response);
     }
 
-//    public function createGuarantee($guarantee)
-//    {
-//        $curl = $this->_setupPostJsonRequest($this->makeUrl("guarantees"), $guarantee);
-//        $response = $this->curlCall($curl);
-//
-//        return ($response === false)? false : json_decode($response)->disposition;
-//    }
-//
-//    public function cancelGuarantee($caseId)
-//    {
-//        $url = $this->makeUrl("cases/$caseId/guarantee");
-//        $blob = ['guaranteeDisposition' => 'CANCELED'];
-//        $curl = $this->_setupPutJsonRequest($url, $blob);
-//        $response = $this->curlCall($curl);
-//
-//        return ($response === false)? false : json_decode($response)->disposition;
-//    }
+    //    public function createGuarantee($guarantee)
+    //    {
+    //        $curl = $this->_setupPostJsonRequest(
+    //      $this->makeUrl("guarantees"), $guarantee
+    //);
+    //        $response = $this->curlCall($curl);
+    //
+    //        return ($response === false)? false :
+    // json_decode($response)->disposition;
+    //    }
+    //
+    //    public function cancelGuarantee($caseId)
+    //    {
+    //        $url = $this->makeUrl("cases/$caseId/guarantee");
+    //        $blob = ['guaranteeDisposition' => 'CANCELED'];
+    //        $curl = $this->_setupPutJsonRequest($url, $blob);
+    //        $response = $this->curlCall($curl);
+    //
+    //        return ($response === false)? false :
+    // json_decode($response)->disposition;
+    //    }
 }

@@ -63,9 +63,16 @@ class Connection
      * @param \Signifyd\Core\Settings $settings The settings
      *
      * @throws Exceptions\LoggerException
+     * @throws ConnectionException
      */
     public function __construct($settings)
     {
+        if ($settings instanceOf \Signifyd\Core\Settings === false) {
+            throw new ConnectionException(
+                'Settings should be a \Signifyd\Core\Settings instance'
+            );
+        }
+
         $this->settings = $settings;
         $this->logger = new Logging($settings);
     }
@@ -140,7 +147,6 @@ class Connection
         }
 
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $payload);
-
         $response = curl_exec($this->curl);
         $info = curl_getinfo($this->curl);
         $error = curl_error($this->curl);
@@ -150,11 +156,9 @@ class Connection
         $this->logger->info("Raw response: " . $response);
         $this->logger->error("Curl error: " . $error);
 
-        if ($this->checkResultError($info['http_code'], $response, $error)) {
-            return false;
-        }
+        $responseObj = $this->handleResponse($info, $response, $error);
 
-        return $response;
+        return $responseObj;
     }
 
     /**
@@ -175,12 +179,34 @@ class Connection
     /**
      * Handle the response from Signifyd api
      *
-     * @param array $response The response received from Signifyd
+     * @param array  $info     The curl info
+     * @param array  $response The response received from Signifyd
+     * @param string $error    The curl error
      *
-     * @return array
+     * @return object
      */
-    public function handleResponse($response)
+    public function handleResponse($info, $response, $error)
     {
+        $responseObj = new \Signifyd\Core\Response();
+        if ($info['http_code'] == 0) {
+            $responseObj->setError($info['http_code'], $error);
+        }
+
+        if ($info['http_code'] >= 200 && $info['http_code'] < 300) {
+            $responseObj->setObject($response);
+        } else {
+            $responseObj->setError($info['http_code'], $response);
+        }
+
+        return $responseObj;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getCurl()
+    {
+        return $this->curl;
     }
 
 }

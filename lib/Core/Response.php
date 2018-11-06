@@ -31,12 +31,31 @@ class Response
      */
     public function __construct($response = [])
     {
-        //    if (is_array($args) && !empty($args)) {
-        //        $this->settings = new \Signifyd\Core\Settings($args);
-        //    } elseif ($args instanceof \Signifyd\Core\Settings) {
-        //        $this->settings = $args;
-        //    } else {
-        //        $this->settings = new \Signifyd\Core\Settings([]);
-        //    }
+
+    }
+
+    /**
+     * Setting the error for the object
+     *
+     * @param int|string $httpCode The http status code
+     * @param string     $error    The error message
+     *
+     * @return void
+     */
+    public function setError($httpCode, $error)
+    {
+
+    }
+
+    /**
+     * Setting the response data
+     *
+     * @param string $response The response from Signifyd
+     *
+     * @return void
+     */
+    public function setObject($response)
+    {
+
     }
 }

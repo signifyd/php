@@ -24,7 +24,14 @@ namespace Signifyd\Core\Api;
  */
 class WebhooksApi
 {
-    public function __construct($args)
+    /**
+     * WebhooksApi constructor.
+     *
+     * @param array $args The settings values
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function __construct($args = [])
     {
 
     }
