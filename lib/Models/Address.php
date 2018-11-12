@@ -28,45 +28,66 @@ use Signifyd\Core\Model;
 class Address extends Model
 {
     /**
+     * The main street address
+     *
      * @var string Main street address
      */
     public $streetAddress;
 
     /**
+     * The unit
+     *
      * @var string Address line 2
      */
     public $unit;
 
     /**
+     * The city of the address
+     *
      * @var string City name
      */
     public $city;
 
     /**
+     * The province code (state code) of the address
+     *
      * @var string Province (optional)
      */
     public $provinceCode;
 
     /**
+     * The zip code
+     *
      * @var string Local postal code.
      */
     public $postalCode;
 
     /**
+     * The country code of the address
+     *
      * @var string Country code
      */
     public $countryCode;
 
     /**
+     * The geographical latitude of the address
+     *
      * @var string Actual latitude
      */
     public $latitude;
 
     /**
+     * The geographical longitude of the address
+     *
      * @var string actual longitude
      */
     public $longitude;
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'streetAddress',
         'unit',
@@ -78,6 +99,11 @@ class Address extends Model
         'longitude'
     ];
 
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'streetAddress' => [],
         'unit' => [],
@@ -89,6 +115,11 @@ class Address extends Model
         'longitude' => []
     ];
 
+    /**
+     * Address constructor.
+     *
+     * @param array $item The data for the address
+     */
     public function __construct($item = [])
     {
         if (!empty($item)) {
@@ -102,12 +133,20 @@ class Address extends Model
         }
     }
 
+    /**
+     * Validate the address
+     *
+     * @return bool
+     */
     public function validate()
     {
-
+        //TODO add code to validate the address
+        return true;
     }
 
     /**
+     * Get the street number and street name
+     *
      * @return string
      */
     public function getStreetAddress()
@@ -116,7 +155,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $streetAddress
+     * Set the street number and street name
+     *
+     * @param string $streetAddress Name and number of street
+     *
+     * @return void
      */
     public function setStreetAddress($streetAddress)
     {
@@ -124,6 +167,8 @@ class Address extends Model
     }
 
     /**
+     * Get the unit
+     *
      * @return string
      */
     public function getUnit()
@@ -132,7 +177,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $unit
+     * Set the unit
+     *
+     * @param string $unit The unit number or address line 2
+     *
+     * @return void
      */
     public function setUnit($unit)
     {
@@ -140,6 +189,8 @@ class Address extends Model
     }
 
     /**
+     * Get the city
+     *
      * @return string
      */
     public function getCity()
@@ -148,7 +199,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $city
+     * Set the city
+     *
+     * @param string $city City name
+     *
+     * @return void
      */
     public function setCity($city)
     {
@@ -156,6 +211,8 @@ class Address extends Model
     }
 
     /**
+     * Get the province code/state code
+     *
      * @return string
      */
     public function getProvinceCode()
@@ -164,7 +221,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $provinceCode
+     * Set the province code/state code
+     *
+     * @param string $provinceCode Code or abbreviation
+     *
+     * @return void
      */
     public function setProvinceCode($provinceCode)
     {
@@ -172,6 +233,8 @@ class Address extends Model
     }
 
     /**
+     * Get the postal code/zip code
+     *
      * @return string
      */
     public function getPostalCode()
@@ -180,7 +243,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $postalCode
+     * Get the postal code/zip code
+     *
+     * @param string $postalCode Postal/zip code
+     *
+     * @return void
      */
     public function setPostalCode($postalCode)
     {
@@ -188,6 +255,8 @@ class Address extends Model
     }
 
     /**
+     * Get the two-letter ISO-3166 country code
+     *
      * @return string
      */
     public function getCountryCode()
@@ -196,7 +265,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $countryCode
+     * Set two-letter ISO-3166 country code
+     *
+     * @param string $countryCode The two letter code
+     *
+     * @return void
      */
     public function setCountryCode($countryCode)
     {
@@ -204,6 +277,8 @@ class Address extends Model
     }
 
     /**
+     * Get the geographical latitude
+     *
      * @return string
      */
     public function getLatitude()
@@ -212,7 +287,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $latitude
+     * Set the geographical latitude
+     *
+     * @param string $latitude The numeric value
+     *
+     * @return void
      */
     public function setLatitude($latitude)
     {
@@ -220,6 +299,8 @@ class Address extends Model
     }
 
     /**
+     * Get the geographical longitude
+     *
      * @return string
      */
     public function getLongitude()
@@ -228,7 +309,11 @@ class Address extends Model
     }
 
     /**
-     * @param string $longitude
+     * Get the geographical longitude
+     *
+     * @param string $longitude The numeric value
+     *
+     * @return void
      */
     public function setLongitude($longitude)
     {

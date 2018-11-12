@@ -14,6 +14,11 @@
 namespace Signifyd\Models;
 
 use Signifyd\Core\Model;
+use Signifyd\Models\Card;
+use Signifyd\Models\Purchase;
+use Signifyd\Models\Recipient;
+use Signifyd\Models\UserAccount;
+use Signifyd\Models\Seller;
 
 /**
  * Class CaseModel
@@ -27,39 +32,57 @@ use Signifyd\Core\Model;
 class CaseModel extends Model
 {
     /**
-     * The purchase data that will be sent to Signifyd
+     * Data related to purchase event represented in
+     * this Case Creation request.
      *
-     * @var \Signifyd\Models\Purchase
+     * @var Purchase
      */
     public $purchase;
 
     /**
-     * The recipient data that will be sent to Signifyd
+     * Data related to person or organization receiving
+     * the items purchased.
      *
-     * @var \Signifyd\Models\Recipient
+     * @var Recipient
      */
     public $recipient;
 
     /**
-     * The card data that will be sent to Signifyd
+     * Data related to the card that was used for the
+     * purchase and its cardholder.
      *
-     * @var \Signifyd\Models\Card
+     * @var Card
      */
     public $card;
 
     /**
-     * The user account data that will be sent to Signifyd
+     * If you allow customers to create an account before
+     * placing an orders these data values are details from
+     * that account.
      *
      * @var \Signifyd\Models\UserAccount
      */
     public $userAccount;
 
     /**
-     * The seller data that will be sent to Signifyd
+     * All data related to the seller of the product.
      *
      * @var \Signifyd\Models\Seller
      */
     public $seller;
+
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
+    protected $fields = [
+        'purchase',
+        'recipient',
+        'card',
+        'userAccount',
+        'seller'
+    ];
 
     /**
      * CaseModel constructor.
@@ -68,7 +91,57 @@ class CaseModel extends Model
      */
     public function __construct($case = [])
     {
+        // Check if something was passed to the class
+        if (is_array($case) && !empty($case)) {
+            foreach ($this->fields as $field) {
+                // init the class name
+                $class = '\Signifyd\Models\\' . ucfirst($field);
+                if (is_array($case[$field]) && !empty($case[$field])) {
+                    // instantiate the class
+                    $object = new $class($case[$field]);
+                    $this->{'set' . $field}($object);
+                } elseif ($case[$field] instanceof $class) {
+                    $this->{'set' . $field}($case[$field]);
+                }
+            }
 
+            /*
+            if (is_array($case['purchase']) && !empty($case['purchase'])) {
+                $purchase = new Purchase($case['purchase']);
+                $this->setPurchase($purchase);
+            } elseif ($case['purchase'] instanceof Purchase) {
+                $this->setPurchase($case['purchase']);
+            }
+
+            if (is_array($case['recipient']) && !empty($case['recipient'])) {
+                $recipient = new Recipient($case['recipient']);
+                $this->setRecipient($recipient);
+            } elseif ($case['recipient'] instanceof Recipient) {
+                $this->setRecipient($case['recipient']);
+            }
+
+            if (is_array($case['card']) && !empty($case['card'])) {
+                $card = new Card($case['card']);
+                $this->setCard($card);
+            } elseif ($case['card'] instanceof Card) {
+                $this->setCard($case['card']);
+            }
+
+            if (is_array($case['userAccount']) && !empty($case['userAccount'])) {
+                $userAccount = new UserAccount($case['userAccount']);
+                $this->setUserAccount($userAccount);
+            } elseif ($case['userAccount'] instanceof UserAccount) {
+                $this->setUserAccount($case['userAccount']);
+            }
+
+            if (is_array($case['seller']) && !empty($case['seller'])) {
+                $seller = new Seller($case['seller']);
+                $this->setSeller($seller);
+            } elseif ($case['seller'] instanceof Seller) {
+                $this->setSeller($case['seller']);
+            }
+            */
+        }
     }
 
     /**
@@ -78,6 +151,117 @@ class CaseModel extends Model
      */
     public function validate()
     {
+        //TODO add code to validate the case
         return true;
+    }
+
+    /**
+     * Get the purchase
+     *
+     * @return Purchase
+     */
+    public function getPurchase()
+    {
+        return $this->purchase;
+    }
+
+    /**
+     * Set the purchase data
+     *
+     * @param Purchase $purchase The purchase data
+     *
+     * @return void
+     */
+    public function setPurchase($purchase)
+    {
+        $this->purchase = $purchase;
+    }
+
+    /**
+     * Get the recipient
+     *
+     * @return Recipient
+     */
+    public function getRecipient()
+    {
+        return $this->recipient;
+    }
+
+    /**
+     * Set the recipient
+     *
+     * @param Recipient $recipient Recipient data
+     *
+     * @return void
+     */
+    public function setRecipient($recipient)
+    {
+        $this->recipient = $recipient;
+    }
+
+    /**
+     * Get the card data
+     *
+     * @return Card
+     */
+    public function getCard()
+    {
+        return $this->card;
+    }
+
+    /**
+     * Set the card data
+     *
+     * @param Card $card Card data
+     *
+     * @return void
+     */
+    public function setCard($card)
+    {
+        $this->card = $card;
+    }
+
+    /**
+     * Get the user account
+     *
+     * @return UserAccount
+     */
+    public function getUserAccount()
+    {
+        return $this->userAccount;
+    }
+
+    /**
+     * Set the user account
+     *
+     * @param UserAccount $userAccount User Account data
+     *
+     * @return void
+     */
+    public function setUserAccount($userAccount)
+    {
+        $this->userAccount = $userAccount;
+    }
+
+    /**
+     * Get the seller
+     *
+     * @return Seller
+     */
+    public function getSeller()
+    {
+        return $this->seller;
+    }
+
+    /**
+     * Set the seller
+     *
+     * @param Seller $seller Seller data
+     *
+     * @return void
+     */
+    public function setSeller($seller)
+    {
+        $this->seller = $seller;
     }
 }

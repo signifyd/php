@@ -14,6 +14,7 @@
 namespace Signifyd\Core;
 
 use Signifyd\Core\Exceptions\ConnectionException;
+use Signifyd\Core\Exceptions\InvalidClassException;
 
 /**
  * Class Connection
@@ -97,14 +98,16 @@ class Connection
             CURLOPT_CONNECTTIMEOUT => $this->settings->getTimeout(),
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => $this->settings->getApiKey(),
-            CURLOPT_VERBOSE => 1,
             CURLOPT_HEADER => 1,
-            CURLOPT_USERAGENT => 'Signifyd SDK',
+            CURLOPT_USERAGENT => 'Signifyd PHP SDK',
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_URL => $url
         ];
+        if (true === $this->settings->isConsoleOut()) {
+            $options[CURLOPT_VERBOSE] = 1;
+        }
 
-        if ($this->settings->isSSLVerification() === false) {
+        if (false === $this->settings->isSSLVerification()) {
             $options[CURLOPT_SSL_VERIFYPEER] = false;
             $options[CURLOPT_SSL_VERIFYHOST] = false;
         }
@@ -132,10 +135,12 @@ class Connection
      * @param string $endpoint The url where to send the request
      * @param string $payload  The data to be send
      * @param string $method   The REST method type
+     * @param string $type     Api type for response
      *
      * @return bool|mixed
+     * @throws InvalidClassException
      */
-    public function callApi($endpoint, $payload, $method)
+    public function callApi($endpoint, $payload = '', $method = 'get', $type = 'case')
     {
         $url = $this->makeUrl($endpoint);
         $this->headers[] = "Content-length: " . strlen($payload);
@@ -156,7 +161,7 @@ class Connection
         $this->logger->info("Raw response: " . $response);
         $this->logger->error("Curl error: " . $error);
 
-        $responseObj = $this->handleResponse($info, $response, $error);
+        $responseObj = $this->handleResponse($info, $response, $error, $type);
 
         return $responseObj;
     }
@@ -179,15 +184,25 @@ class Connection
     /**
      * Handle the response from Signifyd api
      *
-     * @param array  $info     The curl info
-     * @param array  $response The response received from Signifyd
-     * @param string $error    The curl error
+     * @param array $info The curl info
+     * @param string $response The response received from Signifyd
+     * @param string $error The curl error
      *
      * @return object
+     *
+     * @throws InvalidClassException
      */
-    public function handleResponse($info, $response, $error)
+    public function handleResponse($info, $response, $error, $type)
     {
-        $responseObj = new \Signifyd\Core\Response();
+        $responseClass = '\Signifyd\Core\Response\\' . ucfirst($type) . 'Response';
+        try {
+            // The definition is for Response class because all the other response classes extend the Response class
+            /** @var \Signifyd\Core\Response $responseObj */
+            $responseObj = new $responseClass();
+        } catch (\Exception $e) {
+            throw new InvalidClassException('The class' . $responseClass . ' was not found');
+        }
+
         if ($info['http_code'] == 0) {
             $responseObj->setError($info['http_code'], $error);
         }

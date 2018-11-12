@@ -31,22 +31,65 @@ class Guarantee extends Model
      */
     public $caseId;
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'caseId'
     ];
 
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'caseId' => []
     ];
 
-    public function __construct()
+    /**
+     * Guarantee constructor.
+     *
+     * @param array $data Guarantee data
+     */
+    public function __construct($data = [])
     {
 
     }
 
+    /**
+     * Validate the guarantee
+     *
+     * @return bool
+     */
     public function validate()
     {
+        //TODO add code to validate the guarantee
+        return true;
+    }
 
+    /**
+     * Get the case Id
+     *
+     * @return mixed
+     */
+    public function getCaseId()
+    {
+        return $this->caseId;
+    }
+
+    /**
+     * Set the case id
+     *
+     * @param mixed $caseId The case id
+     *
+     * @return void
+     */
+    public function setCaseId($caseId)
+    {
+        $this->caseId = $caseId;
     }
 
 }

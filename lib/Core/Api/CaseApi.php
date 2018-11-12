@@ -15,9 +15,12 @@ namespace Signifyd\Core\Api;
 
 use Signifyd\Core\Connection;
 use Signifyd\Core\Exceptions\CaseModelException;
+use Signifyd\Core\Exceptions\InvalidClassException;
 use Signifyd\Core\Logging;
+use Signifyd\Core\Response\CaseResponse;
 use Signifyd\Core\Settings;
 use Signifyd\Models\CaseModel;
+use Signifyd\Models\PaymentUpdate;
 
 /**
  * Class CaseApi
@@ -77,6 +80,7 @@ class CaseApi
      * @return bool|\Signifyd\Core\Response
      *
      * @throws CaseModelException
+     * @throws InvalidClassException
      */
     public function createCase($case)
     {
@@ -91,7 +95,8 @@ class CaseApi
             }
         } elseif ($case instanceof CaseModel) {
             $case->validate();
-            //$valid = $case->validate();
+//            $valid = $case->validate();
+            $valid = true;
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
                 return false;
@@ -106,7 +111,7 @@ class CaseApi
         $this->logger->info(
             'Calling connection call Api with case: ' . $case->toJson()
         );
-        $response = $this->connection->callApi('cases', $case->toJson(), 'post');
+        $response = $this->connection->callApi('cases', $case->toJson(), 'post', 'case');
 
         return $response;
     }
@@ -114,107 +119,157 @@ class CaseApi
     /**
      * Getting the case from Signifyd
      *
-     * @param \Signifyd\Models\CaseModel $case The case Data
+     * @param $caseId
      *
-     * @return \Signifyd\Core\Response
+     * @return CaseResponse
+     *
+     * @throws InvalidClassException
      */
-    public function getCase($case)
+    public function getCase($caseId)
     {
-        $response = $this->connection->callApi($case, 'get', 'get');
+        $this->logger->info('Get case method called');
+        if (false === is_numeric($caseId)) {
+            $this->logger->error('Invalid case id for get case' . $caseId);
+            $caseResponse = new CaseResponse();
+            $caseResponse->setIsError(true);
+            $caseResponse->setErrorMessage('Invalid case id');
+            return $caseResponse;
+        }
 
-        return new \Signifyd\Core\Response($response);
+        $this->logger->info(
+            'Calling connection call get case api with caseId: ' . $caseId
+        );
+
+        $endpoint = 'cases' . $caseId;
+        $response = $this->connection->callApi($endpoint);
+
+        return $response;
     }
 
     /**
      * Close a case in Signifyd
      *
-     * @param \Signifyd\Models\CaseModel $case The case data
+     * @param $caseId
      *
-     * @return \Signifyd\Core\Response
+     * @return CaseResponse
+     *
+     * @throws InvalidClassException
      */
-    public function closeCase($case)
+    public function closeCase($caseId)
     {
-        $response = $this->connection->callApi($case, 'close', 'put');
+        $this->logger->info('Close case method called');
+        if (false === is_numeric($caseId)) {
+            $this->logger->error('Invalid case id for get case' . $caseId);
+            $caseResponse = new CaseResponse();
+            $caseResponse->setIsError(true);
+            $caseResponse->setErrorMessage('Invalid case id');
+            return $caseResponse;
+        }
 
-        return new \Signifyd\Core\Response($response);
+        // TODO need to move this to a model ???
+        $caseSend = ['status' => 'DISMISSED'];
+        $this->logger->info(
+            'Calling connection call get case api with caseId: ' . $caseId
+        );
+
+        $endpoint = 'cases' . $caseId;
+        $payload = json_encode($caseSend);
+        $response = $this->connection->callApi($endpoint, $payload, 'put');
+
+        return $response;
     }
 
     /**
      * Update payment in Signifyd
      *
-     * @param \Signifyd\Models\CaseModel $case The case data
+     * @param \Signifyd\Models\PaymentUpdate $paymentUpdate The update case data
      *
-     * @return \Signifyd\Core\Response
+     * @return \Signifyd\Core\Response\CaseResponse
+     *
+     * @throws InvalidClassException
+     * @throws CaseModelException
      */
-    public function updatePayment($case)
+    public function updatePayment($paymentUpdate)
     {
-        $response = $this->connection->callApi($case, 'updatePayment', 'put');
+        $this->logger->info('Get case method called');
+        if (is_array($paymentUpdate)) {
+            $paymentUpdate = new \Signifyd\Models\PaymentUpdate($paymentUpdate);
+            //$valid = $paymentUpdate->validate();
+            $valid = true;
+            if (false === $valid) {
+                $this->logger->error('Case not valid after array init');
+                $caseResponse = new CaseResponse();
+                $caseResponse->setIsError(true);
+                $caseResponse->setErrorMessage('Case not valid after array init');
+                return $caseResponse;
+            }
+        } elseif ($paymentUpdate instanceof PaymentUpdate) {
+//            $valid = $paymentUpdate->validate();
+            $valid = true;
+            if (false === $valid) {
+                $this->logger->error('Case not valid after object init');
+                $caseResponse = new CaseResponse();
+                $caseResponse->setIsError(true);
+                $caseResponse->setErrorMessage('Case not valid after object init');
+                return $caseResponse;
+            }
+        } else {
+            $this->logger->error('Invalid parameter for payment update');
+            throw new CaseModelException(
+                'Invalid parameter for payment update'
+            );
+        }
 
-        return new \Signifyd\Core\Response($response);
+        $this->logger->info(
+            'Calling connection call payment update api with payment: ' . $paymentUpdate->toJson()
+        );
+
+        $endpoint = 'cases' . $paymentUpdate->getCaseId();
+        unset($paymentUpdate->caseId);
+        $response = $this->connection->callApi($endpoint, $paymentUpdate->toJson(), 'put');
+
+        return $response;
     }
 
     /**
      * Update an investigation in Signifyd
      *
-     * @param \Signifyd\Models\CaseModel $case The case data
+     * @param $caseId
+     * @param $investigationUpdate
      *
      * @return \Signifyd\Core\Response
+     *
+     * @throws InvalidClassException
      */
-    public function updateInvestigationLabel($case)
+    public function updateInvestigationLabel($caseId, $investigationUpdate)
     {
-        $response = $this->connection->callApi($case, 'updateInvestigation', 'put');
+        $this->logger->info('Update investigation label method called');
+        if (false === is_numeric($caseId)) {
+            $this->logger->error('Invalid case id for update investigation label' . $caseId);
+            $caseResponse = new CaseResponse();
+            $caseResponse->setIsError(true);
+            $caseResponse->setErrorMessage('Invalid case id');
+            return $caseResponse;
+        }
 
-        return new \Signifyd\Core\Response($response);
+        if (false === is_numeric($caseId)) {
+            $this->logger->error('Invalid case id for update investigation label' . $caseId);
+            $caseResponse = new CaseResponse();
+            $caseResponse->setIsError(true);
+            $caseResponse->setErrorMessage('Invalid case id');
+            return $caseResponse;
+        }
+
+        // TODO need to move this to a model ???
+        $caseSend = ['reviewDisposition' => $investigationUpdate];
+        $this->logger->info(
+            'Calling connection call get case api with caseId: ' . $caseId
+        );
+
+        $endpoint = 'cases' . $caseId;
+        $payload = json_encode($caseSend);
+        $response = $this->connection->callApi($endpoint, $payload, 'put');
+
+        return $response;
     }
-
-    //    public function createCase($case)
-    //    {
-    //        $curl = $this->_setupPostJsonRequest($this->makeUrl("cases"), $case);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)?
-    //          false : json_decode($response)->investigationId;
-    //    }
-    //
-    //    public function getCase($caseId, $entry = null)
-    //    {
-    //        $url = $this->makeUrl("cases/$caseId");
-    //        if ($entry != null) {
-    //            $url .= "/$entry";
-    //        }
-    //        $curl = $this->_setupGetRequest($url);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)? false : json_decode($response);
-    //    }
-    //
-    //    public function closeCase($caseId)
-    //    {
-    //        $url = $this->makeUrl("cases/$caseId");
-    //        $blob = array('status' => 'DISMISSED');
-    //        $curl = $this->_setupPutJsonRequest($url, $blob);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)? false : json_decode($response);
-    //    }
-
-    //    public function updatePayment($caseId, $paymentUpdate)
-    //    {
-    //        $url = $this->makeUrl("cases/$caseId");
-    //        $blob = array("purchase" => $paymentUpdate);
-    //        $curl = $this->_setupPutJsonRequest($url, $blob);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)? false : true;
-    //    }
-
-    //    public function updateInvestigationLabel($caseId, $investigationUpdate)
-    //    {
-    //        $url = $this->makeUrl("cases/$caseId");
-    //        $blob = array("reviewDisposition" => $investigationUpdate);
-    //        $curl = $this->_setupPutJsonRequest($url, $blob);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)? false : true;
-    //    }
 }

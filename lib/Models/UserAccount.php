@@ -27,16 +27,81 @@ use Signifyd\Core\Model;
  */
 class UserAccount extends Model
 {
+    /**
+     * The primary email address associated with the account.
+     *
+     * @var string
+     */
     public $emailAddress;
+
+    /**
+     * The username associated with the account.
+     * Please supply this even if it is the same
+     * as the email address.
+     *
+     * @var string
+     */
     public $username;
+
+    /**
+     * The phone number associated with the account.
+     *
+     * @var string
+     */
     public $phone;
+
+    /**
+     * The date when the account was created.
+     * yyyy-MM-dd'T'HH:mm:ssZ
+     *
+     * @var string
+     */
     public $createdDate;
+
+    /**
+     * Your unique identifier for the account.
+     *
+     * @var string
+     */
     public $accountNumber;
+
+    /**
+     * The unique identifier for the last order placed
+     * by this account, prior to the current order.
+     *
+     * @var string
+     */
     public $lastOrderId;
+
+    /**
+     * The total count of orders placed by this account
+     * since it was created, including the current order.
+     *
+     * @var int
+     */
     public $aggregateOrderCount;
+
+    /**
+     * The total amount spent by this account since it
+     * was created, including the current order.
+     *
+     * @var int
+     */
     public $aggregateOrderDollars;
+
+    /**
+     * The last time a change was made to this account
+     * other than an order being placed. yyyy-MM-dd'T'HH:mm:ssZ
+     *
+     * @var string
+     */
     public $lastUpdateDate;
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'emailAddress',
         'username',
@@ -49,6 +114,11 @@ class UserAccount extends Model
         'lastUpdateDate'
     ];
 
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'emailAddress' => [],
         'username' => [],
@@ -61,17 +131,38 @@ class UserAccount extends Model
         'lastUpdateDate' => []
     ];
 
-    public function __construct($item)
+    /**
+     * UserAccount constructor.
+     *
+     * @param array $data The user account data
+     */
+    public function __construct($data = [])
     {
+        if (!empty($data) && is_array($data)) {
+            foreach ($data as $field => $value) {
+                if (!in_array($field, $this->fields)) {
+                    continue;
+                }
 
-    }
-
-    public function validate()
-    {
-
+                $this->{'set' . ucfirst($field)}($value);
+            }
+        }
     }
 
     /**
+     * Validate the user account
+     *
+     * @return bool
+     */
+    public function validate()
+    {
+        //TODO add code to validate the user account
+        return true;
+    }
+
+    /**
+     * Get the email address
+     *
      * @return mixed
      */
     public function getEmailAddress()
@@ -80,7 +171,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $emailAddress
+     * Set the email address
+     *
+     * @param mixed $emailAddress The email address
+     *
+     * @return void
      */
     public function setEmailAddress($emailAddress)
     {
@@ -88,6 +183,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the username
+     *
      * @return mixed
      */
     public function getUsername()
@@ -96,7 +193,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $username
+     * Set the username
+     *
+     * @param mixed $username The username
+     *
+     * @return void
      */
     public function setUsername($username)
     {
@@ -104,6 +205,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the phone number
+     *
      * @return mixed
      */
     public function getPhone()
@@ -112,7 +215,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $phone
+     * Set the phone number
+     *
+     * @param mixed $phone The phone number
+     *
+     * @return void
      */
     public function setPhone($phone)
     {
@@ -120,6 +227,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the account creation date
+     *
      * @return mixed
      */
     public function getCreatedDate()
@@ -128,7 +237,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $createdDate
+     * Set the creation date
+     *
+     * @param mixed $createdDate The creation date
+     *
+     * @return void
      */
     public function setCreatedDate($createdDate)
     {
@@ -136,6 +249,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the account number
+     *
      * @return mixed
      */
     public function getAccountNumber()
@@ -144,7 +259,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $accountNumber
+     * Set the account number
+     *
+     * @param mixed $accountNumber The account id
+     *
+     * @return void
      */
     public function setAccountNumber($accountNumber)
     {
@@ -152,6 +271,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the last order id
+     *
      * @return mixed
      */
     public function getLastOrderId()
@@ -160,7 +281,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $lastOrderId
+     * Set the last order id
+     *
+     * @param mixed $lastOrderId The id of the last order
+     *
+     * @return void
      */
     public function setLastOrderId($lastOrderId)
     {
@@ -168,6 +293,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the aggregate order count
+     *
      * @return mixed
      */
     public function getAggregateOrderCount()
@@ -176,7 +303,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $aggregateOrderCount
+     * Set  the aggregate order count
+     *
+     * @param mixed $aggregateOrderCount Total number of orders
+     *
+     * @return void
      */
     public function setAggregateOrderCount($aggregateOrderCount)
     {
@@ -184,6 +315,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get the aggregate order dollars
+     *
      * @return mixed
      */
     public function getAggregateOrderDollars()
@@ -192,7 +325,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $aggregateOrderDollars
+     * Set the aggregate order dollars
+     *
+     * @param mixed $aggregateOrderDollars Total value of orders
+     *
+     * @return void
      */
     public function setAggregateOrderDollars($aggregateOrderDollars)
     {
@@ -200,6 +337,8 @@ class UserAccount extends Model
     }
 
     /**
+     * Get last update date
+     *
      * @return mixed
      */
     public function getLastUpdateDate()
@@ -208,7 +347,11 @@ class UserAccount extends Model
     }
 
     /**
-     * @param mixed $lastUpdateDate
+     * Set the last update date
+     *
+     * @param mixed $lastUpdateDate The account update date
+     *
+     * @return void
      */
     public function setLastUpdateDate($lastUpdateDate)
     {

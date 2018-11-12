@@ -1,6 +1,6 @@
 <?php
 /**
- * The Connection Exception class for the Signifyd SDK
+ * The Invalid Class Exception class for the Signifyd SDK
  *
  * PHP version 5.6
  *
@@ -17,7 +17,7 @@ use \Exception;
 use Throwable;
 
 /**
- * Class ConnectionException
+ * Class InvalidClassException
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -25,7 +25,7 @@ use Throwable;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class ConnectionException extends Exception
+class InvalidClassException extends Exception
 {
     /**
      * ConnectionException constructor.

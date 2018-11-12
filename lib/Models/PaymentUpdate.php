@@ -27,23 +27,45 @@ use Signifyd\Core\Model;
  */
 class PaymentUpdate extends Model
 {
+    public $caseId;
+
     /**
+     * The gateway that processed the transaction.
+     *
      * @var string
      */
     public $paymentGateway;
+
     /**
+     * The unique identifier provided by the payment
+     * gateway for this order. If you have provided
+     * us with credentials for your payment gateway
+     * we can obtain additional details about the order,
+     * like AVS and CVV status, from your payment provider.
+     *
      * @var string
      */
     public $transactionId;
+
     /**
+     * The response code from the address verification system (AVS)
+     *
      * @var string
      */
     public $avsResponseCode;
+
     /**
+     * The response code from the card verification value (CVV) check
+     *
      * @var string
      */
     public $cvvResponseCode;
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'paymentGateway',
         'transactionId',
@@ -51,6 +73,11 @@ class PaymentUpdate extends Model
         'cvvResponseCode'
     ];
 
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'paymentGateway' => [],
         'transactionId' => [],
@@ -58,13 +85,128 @@ class PaymentUpdate extends Model
         'cvvResponseCode' => []
     ];
 
-    public function __construct()
+    /**
+     * PaymentUpdate constructor.
+     *
+     * @param array $data The payment update data
+     */
+    public function __construct($data = [])
     {
 
     }
 
+    /**
+     * Validate the payment update
+     *
+     * @return bool
+     */
     public function validate()
     {
+        //TODO add code to validate the payment update
+        return true;
+    }
 
+    /**
+     * Get the payment gateway
+     *
+     * @return string
+     */
+    public function getPaymentGateway()
+    {
+        return $this->paymentGateway;
+    }
+
+    /**
+     * Set the payment gateway
+     *
+     * @param string $paymentGateway The payment gateway value
+     *
+     * @return void
+     */
+    public function setPaymentGateway($paymentGateway)
+    {
+        $this->paymentGateway = $paymentGateway;
+    }
+
+    /**
+     * Get the transaction id
+     *
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+    /**
+     * Set the transaction id
+     *
+     * @param string $transactionId The transaction Id
+     *
+     * @return void
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
+    }
+
+    /**
+     * Get the avs code
+     *
+     * @return string
+     */
+    public function getAvsResponseCode()
+    {
+        return $this->avsResponseCode;
+    }
+
+    /**
+     * Set the avs code
+     *
+     * @param string $avsResponseCode The code from the payment gateway
+     *
+     * @return void
+     */
+    public function setAvsResponseCode($avsResponseCode)
+    {
+        $this->avsResponseCode = $avsResponseCode;
+    }
+
+    /**
+     * Get the cvv code
+     *
+     * @return string
+     */
+    public function getCvvResponseCode()
+    {
+        return $this->cvvResponseCode;
+    }
+
+    /**
+     * Set the cvv code
+     *
+     * @param string $cvvResponseCode The code from the payment gateway
+     *
+     * @return void
+     */
+    public function setCvvResponseCode($cvvResponseCode)
+    {
+        $this->cvvResponseCode = $cvvResponseCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCaseId()
+    {
+        return $this->caseId;
+    }
+
+    /**
+     * @param mixed $caseId
+     */
+    public function setCaseId($caseId)
+    {
+        $this->caseId = $caseId;
     }
 }

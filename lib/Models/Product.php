@@ -289,4 +289,26 @@ class Product extends Model
     {
         $this->itemSubCategory = $itemSubCategory;
     }
+
+    /**
+     * Get the item url
+     *
+     * @return mixed
+     */
+    public function getItemUrl()
+    {
+        return $this->itemUrl;
+    }
+
+    /**
+     * Set the item url
+     *
+     * @param mixed $itemUrl The url of the item
+     *
+     * @return void
+     */
+    public function setItemUrl($itemUrl)
+    {
+        $this->itemUrl = $itemUrl;
+    }
 }

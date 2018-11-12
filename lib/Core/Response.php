@@ -22,7 +22,7 @@ namespace Signifyd\Core;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class Response
+abstract class Response
 {
     /**
      * Response constructor.

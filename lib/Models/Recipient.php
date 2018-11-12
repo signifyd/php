@@ -17,7 +17,8 @@ use Signifyd\Core\Model;
 
 /**
  * Class Recipient
- * Info on the person who will receive the order. May not be that same as the person who placed it.
+ * Info on the person who will receive the order.
+ * May not be that same as the person who placed it.
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -27,12 +28,53 @@ use Signifyd\Core\Model;
  */
 class Recipient extends Model
 {
+    /**
+     * The full name of the person receiving the goods.
+     * If this item is being shipped, then this field
+     * is the person it is being shipping to
+     *
+     * @var string
+     */
     public $fullName;
+
+    /**
+     * When this purchase was completed, you likely sent
+     * a confirmation email or you will be sending a confirmation
+     * email to someone once you approve the order
+     *
+     * @var string
+     */
     public $confirmationEmail;
+
+    /**
+     * The phone number that you would call if there was
+     * something wrong with this order or the phone number
+     * that was supplied with the shipping information.
+     *
+     * @var string
+     */
     public $confirmationPhone;
+
+    /**
+     * If provided by the buyer, the name of the recipient's
+     * company or organization.
+     *
+     * @var string
+     */
     public $organization;
+
+    /**
+     * The address to which the order will be delivered.
+     *
+     * @var \Signifyd\Models\Address
+     */
     public $deliveryAddress;
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'fullName',
         'confirmationEmail',
@@ -40,6 +82,11 @@ class Recipient extends Model
         'organization'
     ];
 
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'fullName' => [],
         'confirmationEmail' => [],
@@ -47,12 +94,41 @@ class Recipient extends Model
         'organization' => []
     ];
 
-    public function __construct()
-    {
 
+    /**
+     * Recipient constructor.
+     *
+     * @param array $data The recipient data
+     */
+    public function __construct($data = [])
+    {
+        if (!empty($data) && is_array($data)) {
+            foreach ($data as $field => $value) {
+                if (!in_array($field, $this->fields)) {
+                    continue;
+                }
+
+                $this->{'set' . ucfirst($field)}($value);
+            }
+
+            //TODO need to add the delivery address
+        }
     }
 
     /**
+     * Validate the user account
+     *
+     * @return bool
+     */
+    public function validate()
+    {
+        //TODO add code to validate the user account
+        return true;
+    }
+
+    /**
+     * Get the full name
+     *
      * @return mixed
      */
     public function getFullName()
@@ -61,7 +137,11 @@ class Recipient extends Model
     }
 
     /**
-     * @param mixed $fullName
+     * Set the full name
+     *
+     * @param mixed $fullName The full name
+     *
+     * @return void
      */
     public function setFullName($fullName)
     {
@@ -69,6 +149,8 @@ class Recipient extends Model
     }
 
     /**
+     * Get the confirmation email
+     *
      * @return mixed
      */
     public function getConfirmationEmail()
@@ -77,7 +159,11 @@ class Recipient extends Model
     }
 
     /**
-     * @param mixed $confirmationEmail
+     * Set the confirmation email
+     *
+     * @param mixed $confirmationEmail The email
+     *
+     * @return void
      */
     public function setConfirmationEmail($confirmationEmail)
     {
@@ -85,6 +171,8 @@ class Recipient extends Model
     }
 
     /**
+     * Get the confirmation phone
+     *
      * @return mixed
      */
     public function getConfirmationPhone()
@@ -93,7 +181,11 @@ class Recipient extends Model
     }
 
     /**
-     * @param mixed $confirmationPhone
+     * Set the confirmation phone
+     *
+     * @param mixed $confirmationPhone The phone number
+     *
+     * @return void
      */
     public function setConfirmationPhone($confirmationPhone)
     {
@@ -101,6 +193,8 @@ class Recipient extends Model
     }
 
     /**
+     * Get the organization
+     *
      * @return mixed
      */
     public function getOrganization()
@@ -109,7 +203,11 @@ class Recipient extends Model
     }
 
     /**
-     * @param mixed $organization
+     * Set the organization
+     *
+     * @param mixed $organization The organization name
+     *
+     * @return void
      */
     public function setOrganization($organization)
     {
@@ -117,6 +215,8 @@ class Recipient extends Model
     }
 
     /**
+     * Get the delivery address
+     *
      * @return mixed
      */
     public function getDeliveryAddress()
@@ -125,7 +225,11 @@ class Recipient extends Model
     }
 
     /**
-     * @param mixed $deliveryAddress
+     * Set the delivery address
+     *
+     * @param object $deliveryAddress The delivery address
+     *
+     * @return void
      */
     public function setDeliveryAddress($deliveryAddress)
     {

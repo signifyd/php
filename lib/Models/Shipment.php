@@ -27,11 +27,39 @@ use Signifyd\Core\Model;
  */
 class Shipment extends Model
 {
+    /**
+     * The name of the shipper
+     *
+     * @var string
+     */
     public $shipper;
+
+    /**
+     * The type of the shipment method used
+     *
+     * @var string
+     */
     public $shippingMethod;
+
+    /**
+     * The amount charged to the customer for shipping the product
+     *
+     * @var float
+     */
     public $shippingPrice;
+
+    /**
+     * Tracking number
+     *
+     * @var string
+     */
     public $trackingNumber;
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'shipper',
         'shippingMethod',
@@ -39,6 +67,11 @@ class Shipment extends Model
         'trackingNumber'
     ];
 
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'shipper' => [],
         'shippingMethod' => [],
@@ -46,6 +79,11 @@ class Shipment extends Model
         'trackingNumber' => []
     ];
 
+    /**
+     * Shipment constructor.
+     *
+     * @param array $item Shipment data
+     */
     public function __construct($item = [])
     {
         if (!empty($item) && is_array($item)) {
@@ -59,12 +97,20 @@ class Shipment extends Model
         }
     }
 
+    /**
+     * Validate the shipment
+     *
+     * @return bool
+     */
     public function validate()
     {
-
+        //TODO add code to validate the shipment
+        return true;
     }
 
     /**
+     * Get the shipper
+     *
      * @return mixed
      */
     public function getShipper()
@@ -73,7 +119,11 @@ class Shipment extends Model
     }
 
     /**
-     * @param mixed $shipper
+     * Set the shipper
+     *
+     * @param mixed $shipper The shipper name
+     *
+     * @return void
      */
     public function setShipper($shipper)
     {
@@ -81,6 +131,8 @@ class Shipment extends Model
     }
 
     /**
+     * Get the shipping method
+     *
      * @return mixed
      */
     public function getShippingMethod()
@@ -89,7 +141,11 @@ class Shipment extends Model
     }
 
     /**
-     * @param mixed $shippingMethod
+     * Set the shipping method
+     *
+     * @param mixed $shippingMethod The shipping method
+     *
+     * @return void
      */
     public function setShippingMethod($shippingMethod)
     {
@@ -97,6 +153,8 @@ class Shipment extends Model
     }
 
     /**
+     * Get the shipping price
+     *
      * @return mixed
      */
     public function getShippingPrice()
@@ -105,7 +163,11 @@ class Shipment extends Model
     }
 
     /**
-     * @param mixed $shippingPrice
+     * Set the shipping price
+     *
+     * @param mixed $shippingPrice The shipping price
+     *
+     * @return void
      */
     public function setShippingPrice($shippingPrice)
     {
@@ -113,6 +175,8 @@ class Shipment extends Model
     }
 
     /**
+     * Get the tracking number
+     *
      * @return mixed
      */
     public function getTrackingNumber()
@@ -121,7 +185,11 @@ class Shipment extends Model
     }
 
     /**
-     * @param mixed $trackingNumber
+     * Set the tracking number
+     *
+     * @param mixed $trackingNumber The number received from the shipper
+     *
+     * @return void
      */
     public function setTrackingNumber($trackingNumber)
     {

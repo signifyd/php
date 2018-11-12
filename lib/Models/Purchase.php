@@ -1,8 +1,15 @@
 <?php
-
 /**
- * Copyright © 2015 SIGNIFYD Inc. All rights reserved.
- * See LICENSE.txt for license details.
+ * Purchase model for the Signifyd SDK
+ *
+ * PHP version 5.6
+ *
+ * @category  Signifyd_Fraud_Protection
+ * @package   Signifyd\Core
+ * @author    Signifyd <info@signifyd.com>
+ * @copyright 2018 SIGNIFYD Inc. All rights reserved.
+ * @license   See LICENSE.txt for license details.
+ * @link      https://www.signifyd.com/
  */
 namespace Signifyd\Models;
 
@@ -13,39 +20,144 @@ use Signifyd\Models\DiscountCode;
 
 /**
  * Class Purchase
- * Info on the placed order
+ * Data related to purchase event represented in this Case
+ * Creation request.
+ *
+ * @category Signifyd_Fraud_Protection
+ * @package  Signifyd\Core
+ * @author   Signifyd <info@signifyd.com>
+ * @license  See LICENSE.txt for license details.
+ * @link     https://www.signifyd.com/
  */
 class Purchase extends Model
 {
+    /**
+     * The unique ID for the user's browsing session. This is
+     * to be used in conjunction with the Signifyd Fingerprinting
+     * Javascript.
+     *
+     * @var string
+     */
     public $orderSessionId;
-    public $browserIpAddress;
-    public $orderId;
-    public $createdAt; // datetime
-    public $paymentGateway;
-    public $paymentMethod;
-    public $currency;
-    public $avsResponseCode;
-    public $cvvResponseCode;
-    public $transactionId;
-    public $orderChannel;
-    public $receivedBy;
-    public $totalPrice; //double
 
     /**
+     * The IP Address of the browser that was used to make the
+     * purchase. This is the IP Address that was used to connect
+     * to your site and make the purchase.
+     *
+     * @var string
+     */
+    public $browserIpAddress;
+
+    /**
+     * A string uniquely identifying this order.
+     *
+     * @var string
+     */
+    public $orderId;
+
+    /**
+     * The date and time when the order was placed, shown on the
+     * signifyd console. Format yyyy-MM-dd'T'HH:mm:ssZ
+     *
+     * @var string
+     */
+    public $createdAt;
+
+    /**
+     * The gateway that processed the transaction.
+     *
+     * @var string
+     */
+    public $paymentGateway;
+
+    /**
+     * The method the user used to complete the purchase.
+     *
+     * @var string
+     */
+    public $paymentMethod;
+
+    /**
+     * The currency type of the order, in 3 letter ISO 4217 format.
+     *
+     * @var string
+     */
+    public $currency = 'USD';
+
+    /**
+     * The response code from the address verification system (AVS).
+     *
+     * @var string
+     */
+    public $avsResponseCode;
+
+    /**
+     * The response code from the card verification value (CVV) check.
+     *
+     * @var string
+     */
+    public $cvvResponseCode;
+
+    /**
+     * The unique identifier provided by the payment gateway
+     * for this order.
+     *
+     * @var string
+     */
+    public $transactionId;
+
+    /**
+     * The method used by the buyer to place the order.
+     *
+     * @var string
+     */
+    public $orderChannel;
+
+    /**
+     * If the order was was taken by a customer service or sales
+     * agent, his or her name
+     *
+     * @var string
+     */
+    public $receivedBy;
+
+    /**
+     * The total price of the order, including shipping price and taxes.
+     *
+     * @var float
+     */
+    public $totalPrice;
+
+    /**
+     * The products purchased in the transaction.
+     *
      * @var array $products Array of Product objects
      */
     public $products = [];
 
     /**
+     * The shipments associated with this purchase.
+     *
      * @var array $shipments Array of Shipment objects
      */
     public $shipments = [];
 
     /**
+     * Any discount codes, coupons, or promotional codes used
+     * during checkout to receive a discount on the order.
+     * You can only provide the discount code and the discount
+     * amount OR the discount percentage.
+     *
      * @var array $discountCodes Array of DiscountCode objects
      */
     public $discountCodes = [];
 
+    /**
+     * The class attributes
+     *
+     * @var array $fields The list of class fields
+     */
     protected $fields = [
         'orderSessionId',
         'browserIpAddress',
@@ -64,7 +176,11 @@ class Purchase extends Model
         'shipments',
         'discountCodes'
     ];
-
+    /**
+     * The validation rules
+     *
+     * @var array $fieldsValidation List of rules
+     */
     protected $fieldsValidation = [
         'orderSessionId' => [],
         'browserIpAddress' => ['required'],
@@ -87,15 +203,20 @@ class Purchase extends Model
         'discountCodes'
     ];
 
+    /**
+     * Purchase constructor.
+     *
+     * @param array $data The purchase data
+     */
     public function __construct($data = [])
     {
         if (!empty($data)) {
             foreach ($data as $field => $value) {
-               if (!in_array($field, $this->fields)) {
-                   continue;
-               }
+                if (!in_array($field, $this->fields)) {
+                    continue;
+                }
 
-               $this->{'set' . ucfirst($field)}($value);
+                $this->{'set' . ucfirst($field)}($value);
             }
 
             if (isset($data['products']) && is_array($data['products'])) {
@@ -121,34 +242,64 @@ class Purchase extends Model
         }
     }
 
-    public function validate($purchase)
+    /**
+     * Validate the purchase
+     *
+     * @return bool
+     */
+    public function validate()
     {
-        if (is_array($purchase)) {
-
-            return true;
-        } elseif (is_object($purchase)) {
-            return true;
-        } else {
-            return false;
-        }
+        //        if (is_array($purchase)) {
+        //
+        //            return true;
+        //        } elseif (is_object($purchase)) {
+        //            return true;
+        //        } else {
+        //            return false;
+        //        }
+        //TODO add code to validate the purchase
+        return true;
     }
 
+    /**
+     * Add product item to the products array
+     *
+     * @param \Signifyd\Models\Product $product Product Item
+     *
+     * @return void
+     */
     public function addProduct($product)
     {
         $this->products[] = $product;
     }
 
+    /**
+     * Add shipment item to the shipments array
+     *
+     * @param \Signifyd\Models\Shipment $shipment Shipment Item
+     *
+     * @return void
+     */
     public function addShipment($shipment)
     {
         $this->shipments[] = $shipment;
     }
 
+    /**
+     * Add the discount code item to the discount code array
+     *
+     * @param \Signifyd\Models\DiscountCode $discountCode Discount Item
+     *
+     * @return void
+     */
     public function addDiscountCode($discountCode)
     {
         $this->discountCodes[] = $discountCode;
     }
 
     /**
+     * Get the order session id
+     *
      * @return mixed
      */
     public function getOrderSessionId()
@@ -157,7 +308,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $orderSessionId
+     * Set the order session id
+     *
+     * @param mixed $orderSessionId The session id
+     *
+     * @return void
      */
     public function setOrderSessionId($orderSessionId)
     {
@@ -165,6 +320,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the browser ip address
+     *
      * @return mixed
      */
     public function getBrowserIpAddress()
@@ -173,7 +330,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $browserIpAddress
+     * Set the browser ip address
+     *
+     * @param mixed $browserIpAddress The ip address
+     *
+     * @return void
      */
     public function setBrowserIpAddress($browserIpAddress)
     {
@@ -181,6 +342,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the order creation date
+     *
      * @return mixed
      */
     public function getCreatedAt()
@@ -189,7 +352,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $createdAt
+     * Set the order creation date
+     *
+     * @param mixed $createdAt The create date
+     *
+     * @return void
      */
     public function setCreatedAt($createdAt)
     {
@@ -197,6 +364,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the order id
+     *
      * @return mixed
      */
     public function getOrderId()
@@ -205,7 +374,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $orderId
+     * Set the order id
+     *
+     * @param mixed $orderId The order id
+     *
+     * @return void
      */
     public function setOrderId($orderId)
     {
@@ -213,6 +386,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the payment gateway
+     *
      * @return mixed
      */
     public function getPaymentGateway()
@@ -221,7 +396,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $paymentGateway
+     * Set the payment gateway
+     *
+     * @param mixed $paymentGateway The name of payment gateway
+     *
+     * @return void
      */
     public function setPaymentGateway($paymentGateway)
     {
@@ -229,6 +408,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the payment method
+     *
      * @return mixed
      */
     public function getPaymentMethod()
@@ -237,7 +418,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $paymentMethod
+     * Set the payment method
+     *
+     * @param mixed $paymentMethod The payment method name
+     *
+     * @return void
      */
     public function setPaymentMethod($paymentMethod)
     {
@@ -245,6 +430,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the currency
+     *
      * @return mixed
      */
     public function getCurrency()
@@ -253,7 +440,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $currency
+     * Set the order currency
+     *
+     * @param mixed $currency Currency code
+     *
+     * @return void
      */
     public function setCurrency($currency)
     {
@@ -261,6 +452,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the AVS code
+     *
      * @return mixed
      */
     public function getAvsResponseCode()
@@ -269,7 +462,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $avsResponseCode
+     * Set the AVS code
+     *
+     * @param mixed $avsResponseCode Code received from gateway
+     *
+     * @return void
      */
     public function setAvsResponseCode($avsResponseCode)
     {
@@ -277,6 +474,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the CVV code
+     *
      * @return mixed
      */
     public function getCvvResponseCode()
@@ -285,7 +484,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $cvvResponseCode
+     * Set the CVV code
+     *
+     * @param mixed $cvvResponseCode Code received from gateway
+     *
+     * @return void
      */
     public function setCvvResponseCode($cvvResponseCode)
     {
@@ -293,6 +496,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the transaction id
+     *
      * @return mixed
      */
     public function getTransactionId()
@@ -301,7 +506,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $transactionId
+     * Set the transaction id
+     *
+     * @param mixed $transactionId Id received from gateway
+     *
+     * @return void
      */
     public function setTransactionId($transactionId)
     {
@@ -309,6 +518,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get the order channel
+     *
      * @return mixed
      */
     public function getOrderChannel()
@@ -317,7 +528,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $orderChannel
+     * Set the order channel
+     *
+     * @param mixed $orderChannel The order channel
+     *
+     * @return void
      */
     public function setOrderChannel($orderChannel)
     {
@@ -325,6 +540,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get received by
+     *
      * @return mixed
      */
     public function getReceivedBy()
@@ -333,7 +550,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $receivedBy
+     * Set received by
+     *
+     * @param mixed $receivedBy Who took the order
+     *
+     * @return void
      */
     public function setReceivedBy($receivedBy)
     {
@@ -341,6 +562,8 @@ class Purchase extends Model
     }
 
     /**
+     * Get total price
+     *
      * @return mixed
      */
     public function getTotalPrice()
@@ -349,7 +572,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $totalPrice
+     * Set the total price of the order
+     *
+     * @param mixed $totalPrice The total value of order
+     *
+     * @return void
      */
     public function setTotalPrice($totalPrice)
     {
@@ -357,7 +584,9 @@ class Purchase extends Model
     }
 
     /**
-     * @return mixed
+     * Get a list of products
+     *
+     * @return array
      */
     public function getProducts()
     {
@@ -365,7 +594,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $products
+     * Set a list of products
+     *
+     * @param array $products Array of products
+     *
+     * @return void
      */
     public function setProducts($products)
     {
@@ -373,7 +606,9 @@ class Purchase extends Model
     }
 
     /**
-     * @return mixed
+     * Get a list of shipments
+     *
+     * @return array
      */
     public function getShipments()
     {
@@ -381,7 +616,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $shipments
+     * Set a list of shipments
+     *
+     * @param array $shipments Array of shipments
+     *
+     * @return void
      */
     public function setShipments($shipments)
     {
@@ -389,7 +628,9 @@ class Purchase extends Model
     }
 
     /**
-     * @return mixed
+     * Get a list of discount codes
+     *
+     * @return array
      */
     public function getDiscountCodes()
     {
@@ -397,7 +638,11 @@ class Purchase extends Model
     }
 
     /**
-     * @param mixed $discountCodes
+     * Set a list of discount codes
+     *
+     * @param array $discountCodes Array of discount codes
+     *
+     * @return void
      */
     public function setDiscountCodes($discountCodes)
     {
