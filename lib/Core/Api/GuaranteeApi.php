@@ -13,7 +13,14 @@
  */
 namespace Signifyd\Core\Api;
 
+use Signifyd\Core\Connection;
+use Signifyd\Core\Exceptions\GuaranteeException;
+use Signifyd\Core\Exceptions\InvalidClassException;
+use Signifyd\Core\Logging;
 use Signifyd\Core\Response;
+use Signifyd\Core\Response\GuaranteeResponse;
+use Signifyd\Core\Settings;
+use Signifyd\Models\Guarantee;
 
 /**
  * Class GuaranteeApi
@@ -26,16 +33,33 @@ use Signifyd\Core\Response;
  */
 class GuaranteeApi
 {
+    public $settings;
+
+    public $connection;
+
+    public $logger;
+
     /**
      * GuaranteeApi constructor.
      *
      * @param array $args The settings values
      *
      * @throws \Signifyd\Core\Exceptions\LoggerException
+     * @throws \Signifyd\Core\Exceptions\ConnectionException
      */
     public function __construct($args = [])
     {
+        if (is_array($args) && !empty($args)) {
+            $this->settings = new Settings($args);
+        } elseif ($args instanceof Settings) {
+            $this->settings = $args;
+        } else {
+            $this->settings = new Settings([]);
+        }
 
+        $this->logger = new Logging($this->settings);
+        $this->connection = new Connection($this->settings);
+        $this->logger->info('GuaranteeApi initialized');
     }
 
     /**
@@ -44,47 +68,95 @@ class GuaranteeApi
      * @param \Signifyd\Models\Guarantee $guarantee The guarantee data
      *
      * @return Response
+     *
+     * @throws InvalidClassException
+     * @throws GuaranteeException
      */
     public function createGuarantee($guarantee)
     {
-        $response = '';
+        $this->logger->info('CreateCase method called');
+        if (is_array($guarantee)) {
+            $case = new Guarantee($guarantee);
+            //$valid = $case->validate();
+            $valid = true;
+            if (false === $valid) {
+                $this->logger->error('Guarantee not valid after array init');
+                $guaranteeResponse = new GuaranteeResponse();
+                $guaranteeResponse->setIsError(true);
+                $guaranteeResponse->setErrorMessage(
+                    'Guarantee not valid after array init'
+                );
+                return $guaranteeResponse;
+            }
+        } elseif ($guarantee instanceof Guarantee) {
+            //$valid = $guarantee->validate();
+            $valid = true;
+            if (false === $valid) {
+                $this->logger->error('Guarantee not valid after object init');
+                $guaranteeResponse = new GuaranteeResponse();
+                $guaranteeResponse->setIsError(true);
+                $guaranteeResponse->setErrorMessage(
+                    'Guarantee not valid after object init'
+                );
+                return $guaranteeResponse;
+            }
+        } else {
+            $this->logger->error('Invalid parameter for create case');
+            throw new GuaranteeException(
+                'Invalid parameter for create case'
+            );
+        }
 
-        return new Response($response);
+        $this->logger->info(
+            'Connection call create guarantee api with guarantee: '
+            . $guarantee->toJson()
+        );
+        $response = $this->connection->callApi(
+            'guarantees',
+            $guarantee->toJson(),
+            'post',
+            'guarantee'
+        );
+
+        return $response;
     }
 
     /**
      * Cancel a guarantee in Signifyd
      *
-     * @param \Signifyd\Models\Guarantee $guarantee The guarantee data
+     * @param int $caseId The case id
      *
      * @return Response
+     *
+     * @throws InvalidClassException
      */
-    public function cancelGuarantee($guarantee)
+    public function cancelGuarantee($caseId)
     {
-        $response = '';
+        $this->logger->info('Cancel guarantee case method called');
+        if (false === is_numeric($caseId)) {
+            $this->logger->error('Invalid case id for get case' . $caseId);
+            $guaranteeResponse = new GuaranteeResponse();
+            $guaranteeResponse->setIsError(true);
+            $guaranteeResponse->setErrorMessage('Invalid case id');
+            return $guaranteeResponse;
+        }
 
-        return new Response($response);
+        // TODO need to move this to a model ???
+        $guaranteeSend = ['guaranteeDisposition' => 'CANCELED'];
+        $this->logger->info(
+            'Connection call cancel guarantee api with caseId: ' . $caseId
+        );
+
+        $endpoint = 'cases/' . $caseId . '/guarantee';
+        $payload = json_encode($guaranteeSend);
+        $response = $this->connection->callApi(
+            $endpoint,
+            $payload,
+            'put',
+            'guarantee'
+        );
+
+        return $response;
     }
 
-    //    public function createGuarantee($guarantee)
-    //    {
-    //        $curl = $this->_setupPostJsonRequest(
-    //      $this->makeUrl("guarantees"), $guarantee
-    //);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)? false :
-    // json_decode($response)->disposition;
-    //    }
-    //
-    //    public function cancelGuarantee($caseId)
-    //    {
-    //        $url = $this->makeUrl("cases/$caseId/guarantee");
-    //        $blob = ['guaranteeDisposition' => 'CANCELED'];
-    //        $curl = $this->_setupPutJsonRequest($url, $blob);
-    //        $response = $this->curlCall($curl);
-    //
-    //        return ($response === false)? false :
-    // json_decode($response)->disposition;
-    //    }
 }

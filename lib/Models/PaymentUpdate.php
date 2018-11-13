@@ -195,6 +195,8 @@ class PaymentUpdate extends Model
     }
 
     /**
+     * Set the case id
+     *
      * @return mixed
      */
     public function getCaseId()
@@ -203,7 +205,11 @@ class PaymentUpdate extends Model
     }
 
     /**
-     * @param mixed $caseId
+     * Get the case id
+     *
+     * @param mixed $caseId The id of the case
+     *
+     * @return void
      */
     public function setCaseId($caseId)
     {

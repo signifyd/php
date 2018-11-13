@@ -140,7 +140,7 @@ class Connection
      * @return bool|mixed
      * @throws InvalidClassException
      */
-    public function callApi($endpoint, $payload = '', $method = 'get', $type = 'case')
+    public function callApi($endpoint,$payload = '',$method = 'get',$type = 'case')
     {
         $url = $this->makeUrl($endpoint);
         $this->headers[] = "Content-length: " . strlen($payload);
@@ -184,9 +184,10 @@ class Connection
     /**
      * Handle the response from Signifyd api
      *
-     * @param array $info The curl info
+     * @param array  $info     The curl info
      * @param string $response The response received from Signifyd
-     * @param string $error The curl error
+     * @param string $error    The curl error
+     * @param string $type     The response type
      *
      * @return object
      *
@@ -196,11 +197,18 @@ class Connection
     {
         $responseClass = '\Signifyd\Core\Response\\' . ucfirst($type) . 'Response';
         try {
-            // The definition is for Response class because all the other response classes extend the Response class
-            /** @var \Signifyd\Core\Response $responseObj */
+            // The definition is for Response class because all the other response
+            // classes extend the Response class
+            /**
+             * The response object based on type
+             *
+             * @var \Signifyd\Core\Response $responseObj
+             */
             $responseObj = new $responseClass();
         } catch (\Exception $e) {
-            throw new InvalidClassException('The class' . $responseClass . ' was not found');
+            throw new InvalidClassException(
+                'The class' . $responseClass . ' was not found'
+            );
         }
 
         if ($info['http_code'] == 0) {
@@ -217,6 +225,8 @@ class Connection
     }
 
     /**
+     * Get the curl resource
+     *
      * @return resource
      */
     public function getCurl()

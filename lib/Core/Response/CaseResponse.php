@@ -1,6 +1,6 @@
 <?php
 /**
- * The main response object of the Signifyd SDK
+ * The case response object of the Signifyd SDK
  *
  * PHP version 5.6
  *
