@@ -97,6 +97,8 @@ class GuaranteeResponse extends Response
     public $errorMessage;
 
     /**
+     * Is the response in error
+     *
      * @return bool
      */
     public function isError()
@@ -105,7 +107,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param bool $isError
+     * Set the error for the response object
+     *
+     * @param bool $isError The error state
+     *
+     * @return void
      */
     public function setIsError($isError)
     {
@@ -113,6 +119,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get the error message
+     *
      * @return string
      */
     public function getErrorMessage()
@@ -121,7 +129,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param string $errorMessage
+     * Set the error message
+     *
+     * @param string $errorMessage The error message
+     *
+     * @return void
      */
     public function setErrorMessage($errorMessage)
     {
@@ -129,6 +141,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get the case id
+     *
      * @return mixed
      */
     public function getCaseId()
@@ -137,7 +151,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $caseId
+     * Set the case id
+     *
+     * @param mixed $caseId The id of the case
+     *
+     * @return void
      */
     public function setCaseId($caseId)
     {
@@ -145,6 +163,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get the disposition
+     *
      * @return mixed
      */
     public function getDisposition()
@@ -153,7 +173,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $disposition
+     * Set the disposition
+     *
+     * @param mixed $disposition The disposition
+     *
+     * @return void
      */
     public function setDisposition($disposition)
     {
@@ -161,6 +185,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get the reviewed by
+     *
      * @return mixed
      */
     public function getReviewedBy()
@@ -169,7 +195,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $reviewedBy
+     * Set the reviewed by
+     *
+     * @param mixed $reviewedBy The reviewer
+     *
+     * @return void
      */
     public function setReviewedBy($reviewedBy)
     {
@@ -177,6 +207,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get reviewed at
+     *
      * @return mixed
      */
     public function getReviewedAt()
@@ -185,7 +217,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $reviewedAt
+     * Set the reviewed at
+     *
+     * @param mixed $reviewedAt Reviewed date
+     *
+     * @return void
      */
     public function setReviewedAt($reviewedAt)
     {
@@ -193,6 +229,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get the submitted by
+     *
      * @return mixed
      */
     public function getSubmittedBy()
@@ -201,7 +239,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $submittedBy
+     * Set the submitted by
+     *
+     * @param mixed $submittedBy Submitted by
+     *
+     * @return void
      */
     public function setSubmittedBy($submittedBy)
     {
@@ -209,6 +251,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get submitted at
+     *
      * @return mixed
      */
     public function getSubmittedAt()
@@ -217,7 +261,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $submittedAt
+     * Set submitted at
+     *
+     * @param mixed $submittedAt Submission date
+     *
+     * @return void
      */
     public function setSubmittedAt($submittedAt)
     {
@@ -225,6 +273,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get the re-review count
+     *
      * @return mixed
      */
     public function getRereviewCount()
@@ -233,7 +283,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $rereviewCount
+     * Set the re-review count
+     *
+     * @param mixed $rereviewCount The count
+     *
+     * @return void
      */
     public function setRereviewCount($rereviewCount)
     {
@@ -241,6 +295,8 @@ class GuaranteeResponse extends Response
     }
 
     /**
+     * Get guarantee id
+     *
      * @return mixed
      */
     public function getGuaranteeId()
@@ -249,7 +305,11 @@ class GuaranteeResponse extends Response
     }
 
     /**
-     * @param mixed $guaranteeId
+     * Set the guarantee id
+     *
+     * @param mixed $guaranteeId The id of the guarantee
+     *
+     * @return void
      */
     public function setGuaranteeId($guaranteeId)
     {

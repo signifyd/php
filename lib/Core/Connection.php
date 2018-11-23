@@ -98,7 +98,7 @@ class Connection
             CURLOPT_CONNECTTIMEOUT => $this->settings->getTimeout(),
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => $this->settings->getApiKey(),
-            CURLOPT_HEADER => 1,
+//            CURLOPT_HEADER => 1,
             CURLOPT_USERAGENT => 'Signifyd PHP SDK',
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_URL => $url
@@ -116,7 +116,7 @@ class Connection
             $options[CURLOPT_POST] = true;
         } elseif ($method == 'put') {
             $options[CURLOPT_CUSTOMREQUEST] = "PUT";
-        } elseif ($method != 'get') {
+        } elseif ($method == 'get') {
             $options[CURLOPT_CUSTOMREQUEST] = "GET";
         } else {
             throw new ConnectionException(

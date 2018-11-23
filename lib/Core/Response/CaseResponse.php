@@ -138,6 +138,11 @@ class CaseResponse extends Response
      */
     public $updatedAt;
 
+    public $orderOutcome;
+    public $currency;
+    public $adjustedScore;
+    public $testInvestigation;
+
     /**
      * If the response was in error
      *
@@ -152,15 +157,23 @@ class CaseResponse extends Response
      */
     public $errorMessage;
 
+    /**
+     * CaseResponse constructor.
+     */
     public function __construct()
     {
     }
 
     /**
-     * @param string $response
+     * Set the object
+     *
+     * @param string $response The received response
+     *
+     * @return bool|CaseResponse
      */
     public function setObject($response)
     {
+//        var_dump($response);
         $responseArr = json_decode($response, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             $this->setIsError(true);
@@ -168,18 +181,36 @@ class CaseResponse extends Response
             return $this;
         }
 
-        var_dump($responseArr);
+//        var_dump($responseArr);
+//
+        foreach ($responseArr as $itemKey => $item) {
+            $method = 'set' . ucfirst($itemKey);
+            if (method_exists($this, $method)) {
+                $this->{$method}($item);
+            } else {
+                var_dump('Method does not exist: ' . $method);
+            }
+//            try {
+//
+//            } catch (\Exception $e) {
+////                $this->logger
+//                var_dump('Method does not exist');
+//            }
 
-        foreach ($responseArr as $item) {
-
+//            var_dump($itemKey);
+//            var_dump($item);
         }
 
         return true;
     }
 
     /**
-     * @param $httpCode
-     * @param $error
+     * Set the error
+     *
+     * @param int    $httpCode The response code
+     * @param string $error    The response
+     *
+     * @return void
      */
     public function setError($httpCode, $error)
     {
@@ -187,15 +218,21 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the eligible for guarantee
+     *
      * @return bool
      */
-    public function isGuaranteeEligible()
+    public function getGuaranteeEligible()
     {
         return $this->guaranteeEligible;
     }
 
     /**
-     * @param bool $guaranteeEligible
+     * Set guarantee eligible
+     *
+     * @param bool $guaranteeEligible Is guarantee available
+     *
+     * @return void
      */
     public function setGuaranteeEligible($guaranteeEligible)
     {
@@ -203,6 +240,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the guarantee disposition
+     *
      * @return string
      */
     public function getGuaranteeDisposition()
@@ -211,7 +250,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $guaranteeDisposition
+     * Set the guarantee disposition
+     *
+     * @param string $guaranteeDisposition The disposition
+     *
+     * @return void
      */
     public function setGuaranteeDisposition($guaranteeDisposition)
     {
@@ -219,6 +262,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the guarantee status
+     *
      * @return string
      */
     public function getStatus()
@@ -227,7 +272,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $status
+     * Set the guarantee status
+     *
+     * @param string $status Guarantee status
+     *
+     * @return void
      */
     public function setStatus($status)
     {
@@ -235,6 +284,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the case id
+     *
      * @return int
      */
     public function getCaseId()
@@ -243,7 +294,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param int $caseId
+     * Set the case id
+     *
+     * @param int $caseId The id of the case
+     *
+     * @return void
      */
     public function setCaseId($caseId)
     {
@@ -251,6 +306,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the uuid
+     *
      * @return string
      */
     public function getUuid()
@@ -259,7 +316,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $uuid
+     * Set the uuid
+     *
+     * @param string $uuid The uuid
+     *
+     * @return void
      */
     public function setUuid($uuid)
     {
@@ -267,6 +328,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the headline
+     *
      * @return string
      */
     public function getHeadline()
@@ -275,7 +338,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $headline
+     * Set the Headline
+     *
+     * @param string $headline The headline
+     *
+     * @return void
      */
     public function setHeadline($headline)
     {
@@ -283,6 +350,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the order id
+     *
      * @return string
      */
     public function getOrderId()
@@ -291,7 +360,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $orderId
+     * Set the order id
+     *
+     * @param string $orderId The id of the order
+     *
+     * @return void
      */
     public function setOrderId($orderId)
     {
@@ -299,6 +372,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get order create date
+     *
      * @return string
      */
     public function getOrderDate()
@@ -307,7 +382,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $orderDate
+     * Set the order create date
+     *
+     * @param string $orderDate Order date
+     *
+     * @return void
      */
     public function setOrderDate($orderDate)
     {
@@ -315,6 +394,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the order amount
+     *
      * @return float
      */
     public function getOrderAmount()
@@ -323,7 +404,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param float $orderAmount
+     * Set the order amount
+     *
+     * @param float $orderAmount The amount of the order
+     *
+     * @return void
      */
     public function setOrderAmount($orderAmount)
     {
@@ -331,6 +416,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the associated team
+     *
      * @return string
      */
     public function getAssociatedTeam()
@@ -339,7 +426,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $associatedTeam
+     * Set the associated team
+     *
+     * @param string $associatedTeam The team
+     *
+     * @return void
      */
     public function setAssociatedTeam($associatedTeam)
     {
@@ -347,6 +438,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the review disposition
+     *
      * @return string
      */
     public function getReviewDisposition()
@@ -355,7 +448,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $reviewDisposition
+     * Set the review disposition
+     *
+     * @param string $reviewDisposition The disposition
+     *
+     * @return void
      */
     public function setReviewDisposition($reviewDisposition)
     {
@@ -363,6 +460,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get created at for the signifyd case
+     *
      * @return string
      */
     public function getCreatedAt()
@@ -371,7 +470,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $createdAt
+     * Set the case created at
+     *
+     * @param string $createdAt The case created at
+     *
+     * @return void
      */
     public function setCreatedAt($createdAt)
     {
@@ -379,6 +482,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the case updated at
+     *
      * @return string
      */
     public function getUpdatedAt()
@@ -387,7 +492,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $updatedAt
+     * Set the case updated at
+     *
+     * @param string $updatedAt The case updated date
+     *
+     * @return void
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -395,6 +504,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Is the response in error
+     *
      * @return bool
      */
     public function isError()
@@ -403,7 +514,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param bool $isError
+     * Set the error for the response object
+     *
+     * @param bool $isError The error state
+     *
+     * @return void
      */
     public function setIsError($isError)
     {
@@ -411,6 +526,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the error message
+     *
      * @return string
      */
     public function getErrorMessage()
@@ -419,11 +536,100 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param string $errorMessage
+     * Set the error message
+     *
+     * @param string $errorMessage The error message
+     *
+     * @return void
      */
     public function setErrorMessage($errorMessage)
     {
         $this->errorMessage = $errorMessage;
+    }
+
+    public function setInvestigationId($investigationId)
+    {
+        $this->setCaseId($investigationId);
+    }
+
+    /**
+     * @return int
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
+
+    /**
+     * @param int $score
+     */
+    public function setScore($score)
+    {
+        $this->score = $score;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderOutcome()
+    {
+        return $this->orderOutcome;
+    }
+
+    /**
+     * @param mixed $orderOutcome
+     */
+    public function setOrderOutcome($orderOutcome)
+    {
+        $this->orderOutcome = $orderOutcome;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdjustedScore()
+    {
+        return $this->adjustedScore;
+    }
+
+    /**
+     * @param mixed $adjustedScore
+     */
+    public function setAdjustedScore($adjustedScore)
+    {
+        $this->adjustedScore = $adjustedScore;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTestInvestigation()
+    {
+        return $this->testInvestigation;
+    }
+
+    /**
+     * @param mixed $testInvestigation
+     */
+    public function setTestInvestigation($testInvestigation)
+    {
+        $this->testInvestigation = $testInvestigation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param mixed $currency
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
     }
 
 }
