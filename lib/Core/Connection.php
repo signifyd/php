@@ -204,7 +204,7 @@ class Connection
              *
              * @var \Signifyd\Core\Response $responseObj
              */
-            $responseObj = new $responseClass();
+            $responseObj = new $responseClass($this->logger);
         } catch (\Exception $e) {
             throw new InvalidClassException(
                 'The class' . $responseClass . ' was not found'
@@ -213,6 +213,7 @@ class Connection
 
         if ($info['http_code'] == 0) {
             $responseObj->setError($info['http_code'], $error);
+            return $responseObj;
         }
 
         if ($info['http_code'] >= 200 && $info['http_code'] < 300) {
@@ -232,6 +233,43 @@ class Connection
     public function getCurl()
     {
         return $this->curl;
+    }
+
+    /**
+     * Return an array of HTTP response headers
+     *
+     * @param string $rawHeaders The raw response headers
+     *
+     * @return array $headers Array of HTTP response headers
+     */
+    protected function buildResponseHeaders($rawHeaders)
+    {
+        // ref/credit: http://php.net/manual/en/function.http-parse-headers.php#112986
+        $headers = array();
+        $key = '';
+
+        foreach (explode("\n", $rawHeaders) as $i => $h) {
+            $h = explode(':', $h, 2);
+            if (isset($h[1])) {
+                if (!isset($headers[$h[0]])){
+                    $headers[$h[0]] = trim($h[1]);
+                } elseif (is_array($headers[$h[0]])) {
+                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
+                } else {
+                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
+                }
+
+                $key = $h[0];
+            } else {
+                if (substr($h[0], 0, 1) == "\t") {
+                    $headers[$key] .= "\r\n\t".trim($h[0]);
+                } elseif (!$key) {
+                    $headers[0] = trim($h[0]);trim($h[0]);
+                }
+            }
+        }
+
+        return $headers;
     }
 
 }

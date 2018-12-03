@@ -81,6 +81,7 @@ class CaseApi
      *
      * @throws CaseModelException
      * @throws InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
     public function createCase($case)
     {
@@ -91,7 +92,7 @@ class CaseApi
             $valid = true;
             if (false === $valid) {
                 $this->logger->error('Case not valid after array init');
-                $caseResponse = new CaseResponse();
+                $caseResponse = new CaseResponse($this->logger);
                 $caseResponse->setIsError(true);
                 $caseResponse->setErrorMessage('Case not valid after array init');
                 return $caseResponse;
@@ -101,7 +102,7 @@ class CaseApi
             $valid = true;
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
-                $caseResponse = new CaseResponse();
+                $caseResponse = new CaseResponse($this->logger);
                 $caseResponse->setIsError(true);
                 $caseResponse->setErrorMessage('Case not valid after object init');
                 return $caseResponse;
@@ -134,13 +135,14 @@ class CaseApi
      * @return CaseResponse
      *
      * @throws InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
     public function getCase($caseId)
     {
         $this->logger->info('Get case method called');
         if (false === is_numeric($caseId)) {
             $this->logger->error('Invalid case id for get case' . $caseId);
-            $caseResponse = new CaseResponse();
+            $caseResponse = new CaseResponse($this->logger);
             $caseResponse->setIsError(true);
             $caseResponse->setErrorMessage('Invalid case id');
             return $caseResponse;
@@ -164,13 +166,14 @@ class CaseApi
      * @return CaseResponse
      *
      * @throws InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
     public function closeCase($caseId)
     {
         $this->logger->info('Close case method called');
         if (false === is_numeric($caseId)) {
             $this->logger->error('Invalid case id for get case' . $caseId);
-            $caseResponse = new CaseResponse();
+            $caseResponse = new CaseResponse($this->logger);
             $caseResponse->setIsError(true);
             $caseResponse->setErrorMessage('Invalid case id');
             return $caseResponse;
@@ -198,6 +201,7 @@ class CaseApi
      *
      * @throws InvalidClassException
      * @throws CaseModelException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
     public function updatePayment($paymentUpdate)
     {
@@ -208,7 +212,7 @@ class CaseApi
             $valid = true;
             if (false === $valid) {
                 $this->logger->error('Case not valid after array init');
-                $caseResponse = new CaseResponse();
+                $caseResponse = new CaseResponse($this->logger);
                 $caseResponse->setIsError(true);
                 $caseResponse->setErrorMessage('Case not valid after array init');
                 return $caseResponse;
@@ -218,7 +222,7 @@ class CaseApi
             $valid = true;
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
-                $caseResponse = new CaseResponse();
+                $caseResponse = new CaseResponse($this->logger);
                 $caseResponse->setIsError(true);
                 $caseResponse->setErrorMessage('Case not valid after object init');
                 return $caseResponse;
@@ -249,12 +253,13 @@ class CaseApi
     /**
      * Update an investigation in Signifyd
      *
-     * @param int    $caseId              The case id
+     * @param int $caseId The case id
      * @param string $investigationUpdate The review disposition
      *
      * @return \Signifyd\Core\Response
      *
      * @throws InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
     public function updateInvestigationLabel($caseId, $investigationUpdate)
     {
@@ -263,7 +268,7 @@ class CaseApi
             $this->logger->error(
                 'Invalid case id for update investigation label' . $caseId
             );
-            $caseResponse = new CaseResponse();
+            $caseResponse = new CaseResponse($this->logger);
             $caseResponse->setIsError(true);
             $caseResponse->setErrorMessage('Invalid case id');
             return $caseResponse;
@@ -273,7 +278,7 @@ class CaseApi
             $this->logger->error(
                 'Invalid case id for update investigation label' . $caseId
             );
-            $caseResponse = new CaseResponse();
+            $caseResponse = new CaseResponse($this->logger);
             $caseResponse->setIsError(true);
             $caseResponse->setErrorMessage('Invalid case id');
             return $caseResponse;

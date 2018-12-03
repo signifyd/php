@@ -97,6 +97,62 @@ class GuaranteeResponse extends Response
     public $errorMessage;
 
     /**
+     * @var \Signifyd\Core\Logging
+     */
+    public $logger;
+
+    /**
+     * GuaranteeResponse constructor.
+     *
+     */
+    public function __construct($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Set the object
+     *
+     * @param string $response The received response
+     *
+     * @return bool|GuaranteeResponse
+     */
+    public function setObject($response)
+    {
+        $responseArr = json_decode($response, true);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            $this->setIsError(true);
+            $this->setErrorMessage(json_last_error_msg());
+            return $this;
+        }
+
+        foreach ($responseArr as $itemKey => $item) {
+            $method = 'set' . ucfirst($itemKey);
+            if (method_exists($this, $method)) {
+                $this->{$method}($item);
+            } else {
+                $this->logger->error('Method does not exist: ' . $method);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Set the error
+     *
+     * @param int    $httpCode The response code
+     * @param string $error    The response
+     *
+     * @return void
+     */
+    public function setError($httpCode, $error)
+    {
+        $this->setIsError(true);
+        $this->setErrorMessage($error);
+    }
+
+    /**
      * Is the response in error
      *
      * @return bool

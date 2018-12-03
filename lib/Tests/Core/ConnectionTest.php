@@ -30,20 +30,21 @@ use Signifyd\Core\Settings;
 class ConnectionTest extends TestCase
 {
     /**
-     * Testing settings with no argument passed
-     *
-     * @return void
+     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * @expectedExceptionMessage Settings should be a \Signifyd\Core\Settings instance
      */
-//    public function testFailed()
-//    {
-//        $this->fail('Connection Test is working');
-//    }
+    public function testConnectionWithoutSettings()
+    {
+        $connection = new Connection([]);
+    }
 
-//    public function testConnectionWithoutSettings()
-//    {
-//        $connection = new Connection([]);
-//        $this->expectException('Settings should be a \Signifyd\Core\Settings instance');
-//    }
+    /**
+     * @expectedException ArgumentCountError
+     */
+    public function testConnectionWithoutSettingsAttribute()
+    {
+        $connection = new Connection();
+    }
 
     public function testMakeUrlEmpty()
     {
@@ -71,4 +72,59 @@ class ConnectionTest extends TestCase
         $curl = $connection->getCurl();
         $this->assertInternalType('resource', $curl);
     }
+
+    /**
+     * @expectedException ArgumentCountError
+     */
+    public function testInitCurlNoParams()
+    {
+        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $connection = new Connection($settings);
+        $connection->initCurl();
+    }
+
+    /**
+     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * @expectedExceptionMessage Method  is not supported.
+     */
+    public function testInitCurlEmptyParams()
+    {
+        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $connection = new Connection($settings);
+        $connection->initCurl('','');
+    }
+
+    /**
+     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * @expectedExceptionMessage Method head is not supported.
+     */
+    public function testInitCurlWithHeadMethod()
+    {
+        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $connection = new Connection($settings);
+        $connection->initCurl('','head');
+    }
+
+    /**
+     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * @expectedExceptionMessage Method patch is not supported.
+     */
+    public function testInitCurlWithPatchMethod()
+    {
+        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $connection = new Connection($settings);
+        $connection->initCurl('','patch');
+    }
+
+    /**
+     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * @expectedExceptionMessage Method delete is not supported.
+     */
+    public function testInitCurlWithDeleteMethod()
+    {
+        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $connection = new Connection($settings);
+        $connection->initCurl('','delete');
+    }
+
 }

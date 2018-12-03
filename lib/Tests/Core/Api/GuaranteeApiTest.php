@@ -26,6 +26,17 @@ use PHPUnit\Framework\TestCase;
  */
 class GuaranteeApiTest extends TestCase
 {
+    public $guaranteeData = [];
+
+
+    public function setUp()
+    {
+        $this->guaranteeData = [
+            'caseId' => 111111111111
+        ];
+
+    }
+
     /**
      * Testing settings with no argument passed
      *

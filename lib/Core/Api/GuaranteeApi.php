@@ -67,7 +67,7 @@ class GuaranteeApi
      *
      * @param \Signifyd\Models\Guarantee $guarantee The guarantee data
      *
-     * @return Response
+     * @return GuaranteeResponse
      *
      * @throws InvalidClassException
      * @throws GuaranteeException
@@ -76,12 +76,12 @@ class GuaranteeApi
     {
         $this->logger->info('CreateCase method called');
         if (is_array($guarantee)) {
-            $case = new Guarantee($guarantee);
-            //$valid = $case->validate();
+            $guarantee = new Guarantee($guarantee);
+            //$valid = $guarantee->validate();
             $valid = true;
             if (false === $valid) {
                 $this->logger->error('Guarantee not valid after array init');
-                $guaranteeResponse = new GuaranteeResponse();
+                $guaranteeResponse = new GuaranteeResponse($this->logger);
                 $guaranteeResponse->setIsError(true);
                 $guaranteeResponse->setErrorMessage(
                     'Guarantee not valid after array init'
@@ -93,7 +93,7 @@ class GuaranteeApi
             $valid = true;
             if (false === $valid) {
                 $this->logger->error('Guarantee not valid after object init');
-                $guaranteeResponse = new GuaranteeResponse();
+                $guaranteeResponse = new GuaranteeResponse($this->logger);
                 $guaranteeResponse->setIsError(true);
                 $guaranteeResponse->setErrorMessage(
                     'Guarantee not valid after object init'
@@ -124,18 +124,18 @@ class GuaranteeApi
     /**
      * Cancel a guarantee in Signifyd
      *
-     * @param int $caseId The case id
+     * @param \Signifyd\Models\Guarantee $guarantee The guarantee data
      *
      * @return Response
      *
      * @throws InvalidClassException
      */
-    public function cancelGuarantee($caseId)
+    public function cancelGuarantee($guarantee)
     {
         $this->logger->info('Cancel guarantee case method called');
-        if (false === is_numeric($caseId)) {
-            $this->logger->error('Invalid case id for get case' . $caseId);
-            $guaranteeResponse = new GuaranteeResponse();
+        if (false === is_numeric($guarantee->getCaseId())) {
+            $this->logger->error('Invalid case id for get case' . $guarantee->getCaseId());
+            $guaranteeResponse = new GuaranteeResponse($this->logger);
             $guaranteeResponse->setIsError(true);
             $guaranteeResponse->setErrorMessage('Invalid case id');
             return $guaranteeResponse;
@@ -144,10 +144,10 @@ class GuaranteeApi
         // TODO need to move this to a model ???
         $guaranteeSend = ['guaranteeDisposition' => 'CANCELED'];
         $this->logger->info(
-            'Connection call cancel guarantee api with caseId: ' . $caseId
+            'Connection call cancel guarantee api with caseId: ' . $guarantee->getCaseId()
         );
 
-        $endpoint = 'cases/' . $caseId . '/guarantee';
+        $endpoint = 'cases/' . $guarantee->getCaseId() . '/guarantee';
         $payload = json_encode($guaranteeSend);
         $response = $this->connection->callApi(
             $endpoint,

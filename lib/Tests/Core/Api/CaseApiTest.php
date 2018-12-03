@@ -28,6 +28,7 @@ class CaseApiTest extends TestCase
 {
 
     public $caseData = [];
+
     /**
      * Testing settings with no argument passed
      *
@@ -38,7 +39,7 @@ class CaseApiTest extends TestCase
         $this->fail('Case api test is working');
     }
 
-    public function setUp()/* The :void return type declaration that should be here would cause a BC issue */
+    public function setUp()
     {
         $this->caseData = [
             "purchase" => [

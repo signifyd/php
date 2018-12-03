@@ -138,11 +138,30 @@ class CaseResponse extends Response
      */
     public $updatedAt;
 
+    /**
+     * @var
+     */
     public $orderOutcome;
+
+    /**
+     * @var
+     */
     public $currency;
+
+    /**
+     * @var
+     */
     public $adjustedScore;
+
+    /**
+     * @var
+     */
     public $testInvestigation;
 
+    /**
+     * @var
+     */
+    public $logger;
     /**
      * If the response was in error
      *
@@ -159,9 +178,11 @@ class CaseResponse extends Response
 
     /**
      * CaseResponse constructor.
+     *
      */
-    public function __construct()
+    public function __construct($logger)
     {
+        $this->logger = $logger;
     }
 
     /**
@@ -188,17 +209,8 @@ class CaseResponse extends Response
             if (method_exists($this, $method)) {
                 $this->{$method}($item);
             } else {
-                var_dump('Method does not exist: ' . $method);
+                $this->logger->error('Method does not exist: ' . $method);
             }
-//            try {
-//
-//            } catch (\Exception $e) {
-////                $this->logger
-//                var_dump('Method does not exist');
-//            }
-
-//            var_dump($itemKey);
-//            var_dump($item);
         }
 
         return true;
@@ -214,7 +226,8 @@ class CaseResponse extends Response
      */
     public function setError($httpCode, $error)
     {
-
+        $this->setIsError(true);
+        $this->setErrorMessage($error);
     }
 
     /**
