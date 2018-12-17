@@ -1,6 +1,6 @@
 <?php
 /**
- * Guarantee model for the Signifyd SDK
+ * Webhook model for the Signifyd SDK
  *
  * PHP version 5.6
  *
@@ -16,7 +16,8 @@ namespace Signifyd\Models;
 use Signifyd\Core\Model;
 
 /**
- * Class Guarantee
+ * Class Webhook
+ * Info for the account that placed the order. May not be the recipient
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -24,12 +25,21 @@ use Signifyd\Core\Model;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class Guarantee extends Model
+class Webhook extends Model
 {
     /**
-     * Case id
+     * The type/topic of the event
+     *
+     * @var string $event
      */
-    public $caseId;
+    public $event;
+
+    /**
+     * The URL to which the webhook data should be sent when the event is triggered
+     *
+     * @var string $url
+     */
+    public $url;
 
     /**
      * The class attributes
@@ -37,7 +47,8 @@ class Guarantee extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'caseId'
+        'event',
+        'url'
     ];
 
     /**
@@ -46,13 +57,14 @@ class Guarantee extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'caseId' => []
+        'event' => [],
+        'url' => []
     ];
 
     /**
-     * Guarantee constructor.
+     * Webhook constructor.
      *
-     * @param array $data Guarantee data
+     * @param array $data The webhook data
      */
     public function __construct($data = [])
     {
@@ -68,7 +80,7 @@ class Guarantee extends Model
     }
 
     /**
-     * Validate the guarantee
+     * Validate the user account
      *
      * @return bool
      */
@@ -76,30 +88,47 @@ class Guarantee extends Model
     {
         $valid = [];
 
-        //TODO add code to validate the guarantee
+        //TODO add code to validate the webhook
         return (!isset($valid[0]))? true : false;
     }
 
+
     /**
-     * Get the case Id
+     * Get the webhook url
      *
      * @return mixed
      */
-    public function getCaseId()
+    public function getUrl()
     {
-        return $this->caseId;
+        return $this->url;
     }
 
     /**
-     * Set the case id
+     * Set the webhook rul
      *
-     * @param mixed $caseId The case id
+     * @param mixed $url Webhook url
      *
      * @return void
      */
-    public function setCaseId($caseId)
+    public function setUrl($url)
     {
-        $this->caseId = $caseId;
+        $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param mixed $event
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
     }
 
 }

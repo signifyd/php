@@ -92,7 +92,15 @@ class PaymentUpdate extends Model
      */
     public function __construct($data = [])
     {
+        if (!empty($data)) {
+            foreach ($data as $field => $value) {
+                if (!in_array($field, $this->fields)) {
+                    continue;
+                }
 
+                $this->{'set' . ucfirst($field)}($value);
+            }
+        }
     }
 
     /**
@@ -102,8 +110,18 @@ class PaymentUpdate extends Model
      */
     public function validate()
     {
-        //TODO add code to validate the payment update
-        return true;
+        $valid = [];
+        // validate avs response code
+        if (!$this->avsCvvValidate($this->getAvsResponseCode())) {
+            $valid[] = false;
+        }
+
+        // validate cvv response code
+        if (!$this->avsCvvValidate($this->getCvvResponseCode())) {
+            $valid[] = false;
+        }
+
+        return (!isset($valid[0]))? true : false;
     }
 
     /**

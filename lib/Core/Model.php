@@ -105,4 +105,29 @@ class Model
         //TODO add code to validate for float
         return true;
     }
+
+    public function enumValid($fieldValue, $allowedValues)
+    {
+        if (empty($fieldValue)) {
+            //TODO if field is empty as it is not required should the valid be triggered?
+            return true;
+        }
+
+        $lowerFieldValue = strtolower($fieldValue);
+        if (in_array($lowerFieldValue, $allowedValues)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function avsCvvValidate($code)
+    {
+        $avsCvvValidCodes = "YASRUZNWXBTPCDGIMF";
+        if (false === strpos($avsCvvValidCodes, $code)) {
+            return false;
+        }
+
+        return true;
+    }
 }

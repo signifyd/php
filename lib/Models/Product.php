@@ -88,8 +88,10 @@ class Product extends Model
      */
     public function validate()
     {
+        $valid = [];
+
         //TODO add code to validate product data
-        return true;
+        return (!isset($valid[0]))? true : false;
     }
 
     /**

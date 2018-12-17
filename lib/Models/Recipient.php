@@ -111,7 +111,10 @@ class Recipient extends Model
                 $this->{'set' . ucfirst($field)}($value);
             }
 
-            //TODO need to add the delivery address
+            if (isset($data['deliveryAddress']) && !empty($data['deliveryAddress'])) {
+                $deliveryAddress = new Address($data['deliveryAddress']);
+                $this->setDeliveryAddress($deliveryAddress);
+            }
         }
     }
 
@@ -122,8 +125,10 @@ class Recipient extends Model
      */
     public function validate()
     {
-        //TODO add code to validate the user account
-        return true;
+        $valid = [];
+
+        //TODO add code to validate the recipient
+        return (!isset($valid[0]))? true : false;
     }
 
     /**

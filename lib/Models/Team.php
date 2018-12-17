@@ -1,6 +1,6 @@
 <?php
 /**
- * Guarantee model for the Signifyd SDK
+ * Team model for the Signifyd SDK
  *
  * PHP version 5.6
  *
@@ -16,7 +16,8 @@ namespace Signifyd\Models;
 use Signifyd\Core\Model;
 
 /**
- * Class Guarantee
+ * Class Team
+ * Info for the account that placed the order. May not be the recipient
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -24,12 +25,21 @@ use Signifyd\Core\Model;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class Guarantee extends Model
+class Team extends Model
 {
     /**
-     * Case id
+     * Id of the team
+     *
+     * @var int $teamId
      */
-    public $caseId;
+    public $teamId;
+
+    /**
+     * Name of the team
+     *
+     * @var string $teamName
+     */
+    public $teamName;
 
     /**
      * The class attributes
@@ -37,7 +47,8 @@ class Guarantee extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'caseId'
+        'teamId',
+        'teamName'
     ];
 
     /**
@@ -46,13 +57,14 @@ class Guarantee extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'caseId' => []
+        'teamId' => [],
+        'teamName' => []
     ];
 
     /**
-     * Guarantee constructor.
+     * Team constructor.
      *
-     * @param array $data Guarantee data
+     * @param array $data The team data
      */
     public function __construct($data = [])
     {
@@ -68,7 +80,7 @@ class Guarantee extends Model
     }
 
     /**
-     * Validate the guarantee
+     * Validate the team
      *
      * @return bool
      */
@@ -76,30 +88,52 @@ class Guarantee extends Model
     {
         $valid = [];
 
-        //TODO add code to validate the guarantee
+        //TODO add code to validate the team
         return (!isset($valid[0]))? true : false;
     }
 
     /**
-     * Get the case Id
+     * Get the Team Id
      *
-     * @return mixed
+     * @return int
      */
-    public function getCaseId()
+    public function getTeamId()
     {
-        return $this->caseId;
+        return $this->teamId;
     }
 
     /**
-     * Set the case id
+     * Set the team id
      *
-     * @param mixed $caseId The case id
+     * @param int $teamId The id of the team
      *
      * @return void
      */
-    public function setCaseId($caseId)
+    public function setTeamId($teamId)
     {
-        $this->caseId = $caseId;
+        $this->teamId = $teamId;
+    }
+
+    /**
+     * Get the team name
+     *
+     * @return string
+     */
+    public function getTeamName()
+    {
+        return $this->teamName;
+    }
+
+    /**
+     * Set the team name
+     *
+     * @param string $teamName The team name
+     *
+     * @return void
+     */
+    public function setTeamName($teamName)
+    {
+        $this->teamName = $teamName;
     }
 
 }

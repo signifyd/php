@@ -58,6 +58,8 @@ class Connection
      */
     protected $logger;
 
+    private $retryIntervals = [0.25, 0.5, 1, 2, 3];
+
     /**
      * Connection constructor.
      *
@@ -99,6 +101,7 @@ class Connection
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => $this->settings->getApiKey(),
 //            CURLOPT_HEADER => 1,
+//            CURLINFO_HEADER_OUT => 1,
             CURLOPT_USERAGENT => 'Signifyd PHP SDK',
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_URL => $url
@@ -151,15 +154,58 @@ class Connection
             return false;
         }
 
-        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $payload);
-        $response = curl_exec($this->curl);
-        $info = curl_getinfo($this->curl);
-        $error = curl_error($this->curl);
-        curl_close($this->curl);
+        $retryCurlErrorNumber = [
+            1 => 'CURLE_UNSUPPORTED_PROTOCOL',
+            2 => 'CURLE_FAILED_INIT',
+            3 => 'CURLE_URL_MALFORMAT',
+            4 => 'CURLE_URL_MALFORMAT_USER',
+            5 => 'CURLE_COULDNT_RESOLVE_PROXY',
+            6 => 'CURLE_COULDNT_RESOLVE_HOST',
+            7 => 'CURLE_COULDNT_CONNECT',
+            8 => 'CURLE_FTP_WEIRD_SERVER_REPLY',
+            9 => 'CURLE_REMOTE_ACCESS_DENIED',
+            23 => 'CURLE_WRITE_ERROR',
+            25 => 'CURLE_UPLOAD_FAILED',
+            26 => 'CURLE_READ_ERROR',
+            27 => 'CURLE_OUT_OF_MEMORY',
+            28 => 'CURLE_OPERATION_TIMEDOUT',
+            34 => 'CURLE_HTTP_POST_ERROR',
+            51 => 'CURLE_PEER_FAILED_VERIFICATION',
+            55 => 'CURLE_SEND_ERROR',
+            56 => 'CURLE_RECV_ERROR',
+            65 => 'CURLE_SEND_FAIL_REWIND',
+            67 => 'CURLE_LOGIN_DENIED'
+        ];
 
-        $this->logger->info("Raw request: " . json_encode($info));
-        $this->logger->info("Raw response: " . $response);
-        $this->logger->error("Curl error: " . $error);
+        $retry = 0;
+        while($retry <= 4) {
+            $status = true;
+            $this->logger->info("Raw payload: " . $payload);
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $payload);
+            $response = curl_exec($this->curl);
+            $this->logger->info("Raw response: " . $response);
+            $info = curl_getinfo($this->curl);
+            $this->logger->info("Raw request: " . json_encode($info));
+            $error = curl_error($this->curl);
+            $this->logger->error("Curl error: " . $error);
+            $curlErrorNo = curl_error($this->curl);
+            $this->logger->error("Curl errorNo: " . $curlErrorNo);
+            curl_close($this->curl);
+
+            if ($info['http_code'] == 409 || $info['http_code'] > 500) {
+                $status = false;
+            }
+
+            if (!isset($retryCurlErrorNumber[$curlErrorNo]) && $status === true) {
+                break;
+            }
+
+            $this->logger->info("Retry in effect No: " . $retry);
+            sleep($this->retryIntervals[$retry]);
+            $retry++;
+        }
+
+
 
         $responseObj = $this->handleResponse($info, $response, $error, $type);
 
@@ -244,19 +290,26 @@ class Connection
      */
     protected function buildResponseHeaders($rawHeaders)
     {
-        // ref/credit: http://php.net/manual/en/function.http-parse-headers.php#112986
+        // ref/credit:
+        // http://php.net/manual/en/function.http-parse-headers.php#112986
         $headers = array();
         $key = '';
 
         foreach (explode("\n", $rawHeaders) as $i => $h) {
             $h = explode(':', $h, 2);
             if (isset($h[1])) {
-                if (!isset($headers[$h[0]])){
+                if (!isset($headers[$h[0]])) {
                     $headers[$h[0]] = trim($h[1]);
                 } elseif (is_array($headers[$h[0]])) {
-                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
+                    $headers[$h[0]] = array_merge(
+                        $headers[$h[0]],
+                        array(trim($h[1]))
+                    );
                 } else {
-                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
+                    $headers[$h[0]] = array_merge(
+                        array($headers[$h[0]]),
+                        array(trim($h[1]))
+                    );
                 }
 
                 $key = $h[0];

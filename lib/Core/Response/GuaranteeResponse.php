@@ -13,6 +13,7 @@
  */
 namespace Signifyd\Core\Response;
 
+use Signifyd\Core\Logging;
 use Signifyd\Core\Response;
 
 /**
@@ -97,13 +98,16 @@ class GuaranteeResponse extends Response
     public $errorMessage;
 
     /**
-     * @var \Signifyd\Core\Logging
+     * The logging class
+     *
+     * @var Logging
      */
     public $logger;
 
     /**
      * GuaranteeResponse constructor.
      *
+     * @param Logging $logger The logging object
      */
     public function __construct($logger)
     {

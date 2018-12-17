@@ -47,6 +47,9 @@ class CaseApi
      */
     public $connection;
 
+    /**
+     * @var Logging
+     */
     public $logger;
 
     /**
@@ -88,8 +91,7 @@ class CaseApi
         $this->logger->info('CreateCase method called');
         if (is_array($case)) {
             $case = new CaseModel($case);
-            //$valid = $case->validate();
-            $valid = true;
+            $valid = $case->validate();
             if (false === $valid) {
                 $this->logger->error('Case not valid after array init');
                 $caseResponse = new CaseResponse($this->logger);
@@ -98,8 +100,7 @@ class CaseApi
                 return $caseResponse;
             }
         } elseif ($case instanceof CaseModel) {
-            //$valid = $case->validate();
-            $valid = true;
+            $valid = $case->validate();
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
                 $caseResponse = new CaseResponse($this->logger);
@@ -208,8 +209,7 @@ class CaseApi
         $this->logger->info('Get case method called');
         if (is_array($paymentUpdate)) {
             $paymentUpdate = new PaymentUpdate($paymentUpdate);
-            //$valid = $paymentUpdate->validate();
-            $valid = true;
+            $valid = $paymentUpdate->validate();
             if (false === $valid) {
                 $this->logger->error('Case not valid after array init');
                 $caseResponse = new CaseResponse($this->logger);
@@ -218,8 +218,7 @@ class CaseApi
                 return $caseResponse;
             }
         } elseif ($paymentUpdate instanceof PaymentUpdate) {
-            //$valid = $paymentUpdate->validate();
-            $valid = true;
+            $valid = $paymentUpdate->validate();
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
                 $caseResponse = new CaseResponse($this->logger);
@@ -253,7 +252,7 @@ class CaseApi
     /**
      * Update an investigation in Signifyd
      *
-     * @param int $caseId The case id
+     * @param int    $caseId              The case id
      * @param string $investigationUpdate The review disposition
      *
      * @return \Signifyd\Core\Response

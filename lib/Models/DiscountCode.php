@@ -67,8 +67,10 @@ class DiscountCode extends Model
      */
     public function validate()
     {
+        $valid = [];
+
         //TODO add code to validate the discount
-        return true;
+        return (!isset($valid[0]))? true : false;
     }
 
     /**

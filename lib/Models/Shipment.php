@@ -104,8 +104,28 @@ class Shipment extends Model
      */
     public function validate()
     {
+        $valid = [];
+        $allowedShipper = [
+            "fedex", "dhl", "shipwire", "usps", "ups"
+        ];
+
+        $validShipper = $this->enumValid($this->getShipper(), $allowedShipper);
+        if (false === $validShipper) {
+            $valid[] = false;
+        }
+
+        $allowedShippingMethod = [
+            "express", "electronic", "first_class", "first_class_international", "free", "freight", "ground",
+            "international", "overnight", "priority", "priority_international", "pickup", "standard", "store_to_store",
+            "two_day"
+        ];
+        $validMethod = $this->enumValid($this->getShippingMethod(), $allowedShippingMethod);
+        if (false === $validMethod) {
+            $valid[] = false;
+        }
+
         //TODO add code to validate the shipment
-        return true;
+        return (isset($valid[0]))? false : true;
     }
 
     /**

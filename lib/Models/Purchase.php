@@ -130,6 +130,13 @@ class Purchase extends Model
     public $totalPrice;
 
     /**
+     * The decision on the order
+     *
+     * @var string
+     */
+    public $customerOrderRecommendation;
+
+    /**
      * The products purchased in the transaction.
      *
      * @var array $products Array of Product objects
@@ -168,6 +175,7 @@ class Purchase extends Model
         'currency',
         'avsResponseCode',
         'cvvResponseCode',
+        'customerOrderRecommendation',
         'transactionId',
         'orderChannel',
         'receivedBy',
@@ -183,18 +191,19 @@ class Purchase extends Model
      */
     protected $fieldsValidation = [
         'orderSessionId' => [],
-        'browserIpAddress' => ['required'],
-        'orderId' => ['required'],
-        'createdAt' => ['required', 'datetime'],
-        'paymentGateway' => ['required'],
-        'paymentMethod' => ['required'],
-        'currency' => ['required'],
-        'avsResponseCode' => ['required'],
-        'cvvResponseCode' => ['required'],
-        'transactionId' => ['required'],
-        'orderChannel' => ['required'],
-        'receivedBy' => ['required'],
-        'totalPrice' => ['required', 'double'],
+        'browserIpAddress' => [],
+        'orderId' => [],
+        'createdAt' => [],
+        'paymentGateway' => [],
+        'paymentMethod' => [],
+        'currency' => [],
+        'avsResponseCode' => [],
+        'cvvResponseCode' => [],
+        'customerOrderRecommendation' => [],
+        'transactionId' => [],
+        'orderChannel' => [],
+        'receivedBy' => [],
+        'totalPrice' => [],
     ];
 
     protected $objectFields = [
@@ -213,6 +222,10 @@ class Purchase extends Model
         if (!empty($data)) {
             foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
+                    continue;
+                }
+
+                if (in_array($field, $this->objectFields)) {
                     continue;
                 }
 
@@ -249,16 +262,35 @@ class Purchase extends Model
      */
     public function validate()
     {
-        //        if (is_array($purchase)) {
-        //
-        //            return true;
-        //        } elseif (is_object($purchase)) {
-        //            return true;
-        //        } else {
-        //            return false;
-        //        }
-        //TODO add code to validate the purchase
-        return true;
+        $valid = [];
+
+        $allowedMethods = [
+            "ach", "ali_pay", "apple_pay", "amazon_payments", "android_pay", "bitcoin", "cash", "check", "credit_card",
+            "free", "google_pay", "loan", "paypal_account", "reward_points", "store_credit", "samsung_pay", "visa_checkout"
+        ];
+        $validMethod = $this->enumValid($this->getPaymentMethod(), $allowedMethods);
+        if (false === $validMethod) {
+            $valid[] = false;
+        }
+
+        $allowedChannels = [
+            "web", "phone", "mobile_app", "social", "marketplace", "in_store_kiosk"
+        ];
+        $validChannel = $this->enumValid($this->getOrderChannel(), $allowedChannels);
+        if (false === $validChannel) {
+            $valid[] = false;
+        }
+
+        $allowedCustomerRecommendation = [
+            "decline_policy", "decline_fraud", "approve", "review", "reject"
+        ];
+        $validRecommend = $this->enumValid($this->getCustomerOrderRecommendation(), $allowedCustomerRecommendation);
+        if (false === $validRecommend) {
+            $valid[] = false;
+        }
+
+
+        return (isset($valid[0]))? false : true;
     }
 
     /**
@@ -649,4 +681,72 @@ class Purchase extends Model
         $this->discountCodes = $discountCodes;
     }
 
+    /**
+     * Get the customer order recommendation
+     *
+     * @return string
+     */
+    public function getCustomerOrderRecommendation()
+    {
+        return $this->customerOrderRecommendation;
+    }
+
+    /**
+     * Set the customer order recommendation
+     *
+     * @param string $customerOrderRecommendation The recommendation
+     *
+     * @return void
+     */
+    public function setCustomerOrderRecommendation($customerOrderRecommendation)
+    {
+        $this->customerOrderRecommendation = $customerOrderRecommendation;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function validatePaymentMethod()
+    {
+        $paymentMethod= $this->getOrderChannel();
+        if (empty($paymentMethod)) {
+            //TODO if payment method is empty as it is not required should the valid be triggered?
+            return true;
+        }
+
+        $allowedMethods = [
+            "ach", "ali_pay", "apple_pay", "amazon_payments", "android_pay", "bitcoin", "cash", "check", "credit_card",
+            "free", "google_pay", "loan", "paypal_account", "reward_points", "store_credit", "samsung_pay", "visa_checkout"
+        ];
+
+        $lowerPaymnetMethod = strtolower($paymentMethod);
+        if (in_array($lowerPaymnetMethod, $allowedMethods)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function validateOrderChannel()
+    {
+        $orderChannel = $this->getOrderChannel();
+        if (empty($orderChannel)) {
+            //TODO if order channel is empty as it is not required should the valid be triggered?
+            return true;
+        }
+
+        $allowedChannels = [
+            "web", "phone", "mobile_app", "social", "marketplace", "in_store_kiosk"
+        ];
+
+        $lowerOrderChannel = strtolower($orderChannel);
+        if (in_array($lowerOrderChannel, $allowedChannels)) {
+            return true;
+        }
+
+        return false;
+    }
 }

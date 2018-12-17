@@ -136,8 +136,13 @@ class Card extends Model
      */
     public function validate()
     {
+        $valid = [];
+//        if (strlen($this->getLast4()) !== 4) {
+//            $valid[] = false;
+//        }
+
         //TODO add code to validate the address
-        return true;
+        return (!isset($valid[0]))? true : false;
     }
 
     /**

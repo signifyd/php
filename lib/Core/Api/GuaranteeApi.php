@@ -33,10 +33,19 @@ use Signifyd\Models\Guarantee;
  */
 class GuaranteeApi
 {
+    /**
+     * @var Settings
+     */
     public $settings;
 
+    /**
+     * @var Connection
+     */
     public $connection;
 
+    /**
+     * @var Logging
+     */
     public $logger;
 
     /**
@@ -77,8 +86,7 @@ class GuaranteeApi
         $this->logger->info('CreateCase method called');
         if (is_array($guarantee)) {
             $guarantee = new Guarantee($guarantee);
-            //$valid = $guarantee->validate();
-            $valid = true;
+            $valid = $guarantee->validate();
             if (false === $valid) {
                 $this->logger->error('Guarantee not valid after array init');
                 $guaranteeResponse = new GuaranteeResponse($this->logger);
@@ -89,8 +97,7 @@ class GuaranteeApi
                 return $guaranteeResponse;
             }
         } elseif ($guarantee instanceof Guarantee) {
-            //$valid = $guarantee->validate();
-            $valid = true;
+            $valid = $guarantee->validate();
             if (false === $valid) {
                 $this->logger->error('Guarantee not valid after object init');
                 $guaranteeResponse = new GuaranteeResponse($this->logger);
@@ -134,7 +141,9 @@ class GuaranteeApi
     {
         $this->logger->info('Cancel guarantee case method called');
         if (false === is_numeric($guarantee->getCaseId())) {
-            $this->logger->error('Invalid case id for get case' . $guarantee->getCaseId());
+            $this->logger->error(
+                'Invalid case id for get case' . $guarantee->getCaseId()
+            );
             $guaranteeResponse = new GuaranteeResponse($this->logger);
             $guaranteeResponse->setIsError(true);
             $guaranteeResponse->setErrorMessage('Invalid case id');
@@ -144,7 +153,8 @@ class GuaranteeApi
         // TODO need to move this to a model ???
         $guaranteeSend = ['guaranteeDisposition' => 'CANCELED'];
         $this->logger->info(
-            'Connection call cancel guarantee api with caseId: ' . $guarantee->getCaseId()
+            'Connection call cancel guarantee api with caseId: '
+            . $guarantee->getCaseId()
         );
 
         $endpoint = 'cases/' . $guarantee->getCaseId() . '/guarantee';

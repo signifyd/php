@@ -13,6 +13,7 @@
  */
 namespace Signifyd\Core\Response;
 
+use Signifyd\Core\Logging;
 use Signifyd\Core\Response;
 
 /**
@@ -139,29 +140,40 @@ class CaseResponse extends Response
     public $updatedAt;
 
     /**
-     * @var
+     * The outcome of the order
+     *
+     * @var string
      */
     public $orderOutcome;
 
     /**
-     * @var
+     * The currency of the order
+     *
+     * @var string
      */
     public $currency;
 
     /**
-     * @var
+     * The adjusted score
+     *
+     * @var int
      */
     public $adjustedScore;
 
     /**
-     * @var
+     * Is a test investigation
+     *
+     * @var bool
      */
     public $testInvestigation;
 
     /**
-     * @var
+     * The logger object
+     *
+     * @var \Signifyd\Core\Logging
      */
     public $logger;
+
     /**
      * If the response was in error
      *
@@ -179,6 +191,7 @@ class CaseResponse extends Response
     /**
      * CaseResponse constructor.
      *
+     * @param Logging $logger The logger
      */
     public function __construct($logger)
     {
@@ -560,12 +573,22 @@ class CaseResponse extends Response
         $this->errorMessage = $errorMessage;
     }
 
+
+    /**
+     * Set the investigation id to the case id
+     *
+     * @param int $investigationId The case id
+     *
+     * @return void
+     */
     public function setInvestigationId($investigationId)
     {
         $this->setCaseId($investigationId);
     }
 
     /**
+     * Get the case score
+     *
      * @return int
      */
     public function getScore()
@@ -574,7 +597,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param int $score
+     * Set the case score
+     *
+     * @param int $score The score
+     *
+     * @return void
      */
     public function setScore($score)
     {
@@ -582,6 +609,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the order outcome
+     *
      * @return mixed
      */
     public function getOrderOutcome()
@@ -590,7 +619,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param mixed $orderOutcome
+     * Set the order outcome
+     *
+     * @param mixed $orderOutcome The outcome
+     *
+     * @return void
      */
     public function setOrderOutcome($orderOutcome)
     {
@@ -598,6 +631,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the adjusted score
+     *
      * @return mixed
      */
     public function getAdjustedScore()
@@ -606,7 +641,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param mixed $adjustedScore
+     * Set the adjusted code
+     *
+     * @param mixed $adjustedScore The adjusted score
+     *
+     * @return void
      */
     public function setAdjustedScore($adjustedScore)
     {
@@ -614,6 +653,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get test investigation
+     *
      * @return mixed
      */
     public function getTestInvestigation()
@@ -622,7 +663,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param mixed $testInvestigation
+     * Set the test investigation flag
+     *
+     * @param mixed $testInvestigation The test investigation flag
+     *
+     * @return void
      */
     public function setTestInvestigation($testInvestigation)
     {
@@ -630,6 +675,8 @@ class CaseResponse extends Response
     }
 
     /**
+     * Get the currency
+     *
      * @return mixed
      */
     public function getCurrency()
@@ -638,7 +685,11 @@ class CaseResponse extends Response
     }
 
     /**
-     * @param mixed $currency
+     * Set the currency
+     *
+     * @param mixed $currency The currency iso code
+     *
+     * @return void
      */
     public function setCurrency($currency)
     {

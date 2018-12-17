@@ -32,7 +32,7 @@ class UserAccount extends Model
      *
      * @var string
      */
-    public $emailAddress;
+    public $email;
 
     /**
      * The username associated with the account.
@@ -103,7 +103,7 @@ class UserAccount extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'emailAddress',
+        'email',
         'username',
         'phone',
         'createdDate',
@@ -120,7 +120,7 @@ class UserAccount extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'emailAddress' => [],
+        'email' => [],
         'username' => [],
         'phone' => [],
         'createdDate' => [],
@@ -156,8 +156,10 @@ class UserAccount extends Model
      */
     public function validate()
     {
+        $valid = [];
+
         //TODO add code to validate the user account
-        return true;
+        return (!isset($valid[0]))? true : false;
     }
 
     /**
@@ -165,21 +167,21 @@ class UserAccount extends Model
      *
      * @return mixed
      */
-    public function getEmailAddress()
+    public function getEmail()
     {
-        return $this->emailAddress;
+        return $this->email;
     }
 
     /**
      * Set the email address
      *
-     * @param mixed $emailAddress The email address
+     * @param mixed $email The email address
      *
      * @return void
      */
-    public function setEmailAddress($emailAddress)
+    public function setEmail($email)
     {
-        $this->emailAddress = $emailAddress;
+        $this->email = $email;
     }
 
     /**

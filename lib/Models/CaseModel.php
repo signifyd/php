@@ -104,43 +104,6 @@ class CaseModel extends Model
                     $this->{'set' . $field}($case[$field]);
                 }
             }
-
-            /*
-            if (is_array($case['purchase']) && !empty($case['purchase'])) {
-                $purchase = new Purchase($case['purchase']);
-                $this->setPurchase($purchase);
-            } elseif ($case['purchase'] instanceof Purchase) {
-                $this->setPurchase($case['purchase']);
-            }
-
-            if (is_array($case['recipient']) && !empty($case['recipient'])) {
-                $recipient = new Recipient($case['recipient']);
-                $this->setRecipient($recipient);
-            } elseif ($case['recipient'] instanceof Recipient) {
-                $this->setRecipient($case['recipient']);
-            }
-
-            if (is_array($case['card']) && !empty($case['card'])) {
-                $card = new Card($case['card']);
-                $this->setCard($card);
-            } elseif ($case['card'] instanceof Card) {
-                $this->setCard($case['card']);
-            }
-
-            if (is_array($case['userAccount']) && !empty($case['userAccount'])) {
-                $userAccount = new UserAccount($case['userAccount']);
-                $this->setUserAccount($userAccount);
-            } elseif ($case['userAccount'] instanceof UserAccount) {
-                $this->setUserAccount($case['userAccount']);
-            }
-
-            if (is_array($case['seller']) && !empty($case['seller'])) {
-                $seller = new Seller($case['seller']);
-                $this->setSeller($seller);
-            } elseif ($case['seller'] instanceof Seller) {
-                $this->setSeller($case['seller']);
-            }
-            */
         }
     }
 
@@ -151,8 +114,16 @@ class CaseModel extends Model
      */
     public function validate()
     {
-        //TODO add code to validate the case
-        return true;
+        $valid = [];
+        foreach ($this->fields as $field) {
+            $obj = $this->{'get' . ucfirst($field)}();
+            $objValid = $obj->validate();
+            if (false === $objValid) {
+                $valid[] = false;
+            }
+        }
+
+        return (!isset($valid[0]))? true : false;
     }
 
     /**
