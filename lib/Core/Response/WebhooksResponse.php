@@ -112,19 +112,14 @@ class WebhooksResponse extends Response
             return $this;
         }
 
-        if (isset($responseArr[0])) {
-            $this->setResponseArray($responseArr);
-        } else {
-            foreach ($responseArr as $itemKey => $item) {
-                $method = 'set' . ucfirst($itemKey);
-                if (method_exists($this, $method)) {
-                    $this->{$method}($item);
-                } else {
-                    $this->logger->error('Method does not exist: ' . $method);
-                }
+        foreach ($responseArr as $itemKey => $item) {
+            $method = 'set' . ucfirst($itemKey);
+            if (method_exists($this, $method)) {
+                $this->{$method}($item);
+            } else {
+                $this->logger->error('Method does not exist: ' . $method);
             }
         }
-
 
         return true;
     }
@@ -297,27 +292,4 @@ class WebhooksResponse extends Response
         $this->team = $team;
     }
 
-    /**
-     * @return array
-     */
-    public function getResponseArray()
-    {
-        return $this->responseArray;
-    }
-
-    /**
-     * @param array $responseArray
-     */
-    public function setResponseArray($responseArr)
-    {
-        $responseArrObj = [];
-        foreach ($responseArr as $responseWebhook) {
-            $obj = new \Signifyd\Core\Response\WebhooksResponse($this->logger);
-            $encodedObj = json_encode($responseWebhook);
-            $obj->setObject($encodedObj);
-            $responseArrObj[] = $obj;
-        }
-
-        $this->responseArray = $responseArrObj;
-    }
 }

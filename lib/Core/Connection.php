@@ -58,7 +58,12 @@ class Connection
      */
     protected $logger;
 
-    private $retryIntervals = [0.25, 0.5, 1, 2, 3];
+    /**
+     * The timings of the curl retry
+     *
+     * @var array The retry timings
+     */
+    private $_retryIntervals = [0.25, 0.5, 1, 2, 3];
 
     /**
      * Connection constructor.
@@ -100,8 +105,6 @@ class Connection
             CURLOPT_CONNECTTIMEOUT => $this->settings->getTimeout(),
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => $this->settings->getApiKey(),
-//            CURLOPT_HEADER => 1,
-//            CURLINFO_HEADER_OUT => 1,
             CURLOPT_USERAGENT => 'Signifyd PHP SDK',
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_URL => $url
@@ -178,14 +181,14 @@ class Connection
         ];
 
         $retry = 0;
-        while($retry <= 4) {
+        while ($retry <= 4) {
             $status = true;
             $this->logger->info("Raw payload: " . $payload);
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $payload);
             $response = curl_exec($this->curl);
-            $this->logger->info("Raw response: " . $response);
             $info = curl_getinfo($this->curl);
             $this->logger->info("Raw request: " . json_encode($info));
+            $this->logger->info("Raw response: " . $response);
             $error = curl_error($this->curl);
             $this->logger->error("Curl error: " . $error);
             $curlErrorNo = curl_error($this->curl);
@@ -201,7 +204,7 @@ class Connection
             }
 
             $this->logger->info("Retry in effect No: " . $retry);
-            sleep($this->retryIntervals[$retry]);
+            sleep($this->_retryIntervals[$retry]);
             $retry++;
         }
 

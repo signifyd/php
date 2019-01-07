@@ -19,6 +19,7 @@ use Signifyd\Core\Exceptions\InvalidClassException;
 use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Exceptions\WebhookModelException;
 use Signifyd\Core\Logging;
+use Signifyd\Core\Response\WebhooksBulkResponse;
 use Signifyd\Core\Response\WebhooksResponse;
 use Signifyd\Core\Settings;
 use Signifyd\Models\Webhook;
@@ -118,7 +119,7 @@ class WebhooksApi
      *
      * @param array|object $webHooks Webhook data
      *
-     * @return bool|mixed
+     * @return
      *
      * @throws InvalidClassException
      * @throws WebhookModelException
@@ -132,7 +133,7 @@ class WebhooksApi
                 $valid = $webHooks->validate();
                 if (false === $valid) {
                     $this->logger->error('Webhook not valid after array init');
-                    $webHookResponse = new WebhooksResponse($this->logger);
+                    $webHookResponse = new WebhooksBulkResponse($this->logger);
                     $webHookResponse->setIsError(true);
                     $webHookResponse->setErrorMessage(
                         'Webhook not valid after array init'
@@ -146,7 +147,7 @@ class WebhooksApi
                     $valid = $webHooksObj->validate();
                     if (false === $valid) {
                         $this->logger->error('Webhook not valid after array init');
-                        $webHookResponse = new WebhooksResponse($this->logger);
+                        $webHookResponse = new WebhooksBulkResponse($this->logger);
                         $webHookResponse->setIsError(true);
                         $webHookResponse->setErrorMessage(
                             'Webhook not valid after array init'
@@ -162,7 +163,7 @@ class WebhooksApi
             $valid = $webHooks->validate();
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
-                $webHookResponse = new WebhooksResponse($this->logger);
+                $webHookResponse = new WebhooksBulkResponse($this->logger);
                 $webHookResponse->setIsError(true);
                 $webHookResponse->setErrorMessage(
                     'Webhook not valid after object init'
@@ -188,7 +189,7 @@ class WebhooksApi
             $endpoint,
             $payload,
             'post',
-            'webhooks'
+            'webhooksBulk'
         );
 
         return $response;
@@ -199,7 +200,7 @@ class WebhooksApi
      *
      * @param mixed $webHooks Webhooks data
      *
-     * @return bool|mixed
+     * @return \Signifyd\Core\Response\WebhooksBulkResponse
      *
      * @throws InvalidClassException
      * @throws WebhookModelException
@@ -212,7 +213,7 @@ class WebhooksApi
             $valid = $webHook->validate();
             if (false === $valid) {
                 $this->logger->error('Webhook not valid after array init');
-                $webHookResponse = new WebhooksResponse($this->logger);
+                $webHookResponse = new WebhooksBulkResponse($this->logger);
                 $webHookResponse->setIsError(true);
                 $webHookResponse->setErrorMessage(
                     'Webhook not valid after array init'
@@ -223,7 +224,7 @@ class WebhooksApi
             $valid = $webHooks->validate();
             if (false === $valid) {
                 $this->logger->error('Webhook not valid after object init');
-                $webHookResponse = new WebhooksResponse($this->logger);
+                $webHookResponse = new WebhooksBulkResponse($this->logger);
                 $webHookResponse->setIsError(true);
                 $webHookResponse->setErrorMessage(
                     'Webhook not valid after object init'
@@ -247,7 +248,7 @@ class WebhooksApi
             $endpoint,
             $payload,
             'put',
-            'webhooks'
+            'webhooksBulk'
         );
 
         return $response;
@@ -256,14 +257,14 @@ class WebhooksApi
     /**
      * Retrieve all webhooks for a team.
      *
-     * @return array $response List of webhooks
+     * @return \Signifyd\Core\Response\WebhooksBulkResponse $response List of webhooks
      *
      * @throws InvalidClassException
      */
     public function getWebhooks()
     {
         $endpoint = 'teams/webhooks';
-        $response = $this->connection->callApi($endpoint, '', 'get', 'webhooks');
+        $response = $this->connection->callApi($endpoint, '', 'get', 'webhooksBulk');
 
         return $response;
     }

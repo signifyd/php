@@ -9,7 +9,7 @@ $caseData = [
         "orderSessionId" => "uha3d98weicm20eufhl2341qe",
         "browserIpAddress" => "192.168.1.200",
         "orderId" => "19420",
-        "createdAt" => "2018-12-09T17:54:31-05:00",
+        "createdAt" => date(DATE_ATOM),
         "paymentGateway" => "stripe",
         "paymentMethod" => "credit_card",
         "transactionId" => "1a2sf3f44e21r1",
@@ -18,7 +18,7 @@ $caseData = [
         "cvvResponseCode" => "M",
         "orderChannel" => "PHONE",
         "receivedBy" => "John Doeeee",
-        "totalPrice" => 78.99,
+        "totalPrice" => 109.98,
         "customerOrderRecommendation" => "APPROVE",
         "products" => [
             [
@@ -102,12 +102,12 @@ $caseData = [
         "email" => "bob@gmail.com",
         "username" => "bobbo",
         "phone" => "5555551212",
-        "createdDate" => "2018-12-09T17:54:31-05:00",
+        "createdDate" => date(DATE_ATOM),
         "accountNumber" => "54321",
         "lastOrderId" => "4321",
         "aggregateOrderCount" => 40,
         "aggregateOrderDollars" => 5000,
-        "lastUpdateDate" => "2018-12-09T17:54:31-05:00"
+        "lastUpdateDate" => date(DATE_ATOM)
     ],
     "seller" => [
         "name" => "We sell awesome stuff, Inc.",
@@ -115,11 +115,11 @@ $caseData = [
         "username" => "awesomestuff1234",
         "phone" => "8883334545",
         "domain" => "wesellawesomestuff.com",
-        "createdDate" => "2018-12-09T17:54:31-05:00",
+        "createdDate" => date(DATE_ATOM),
         "accountNumber" => "54321",
         "aggregateOrderCount" => 4000,
         "aggregateOrderDollars" => 3000000,
-        "lastUpdateDate" => "2018-12-09T17:54:31-05:00",
+        "lastUpdateDate" => date(DATE_ATOM),
         "onboardingIpAddress" => "192.122.1.1",
         "onboardingEmail" => "wesellawesomestuff@gmail.com",
         "tags" => [
@@ -147,16 +147,25 @@ $caseData = [
 
 try {
     // console out means that all the logs will be displayed instantly in the terminal
-    $caseApi = new \Signifyd\Core\Api\CaseApi(['apiKey' => $apiKey, 'consoleOut' => true]);
+//    $caseApi = new \Signifyd\Core\Api\CaseApi(['apiKey' => $apiKey, 'consoleOut' => true]);
+    $caseApi = new \Signifyd\Core\Api\CaseApi(['apiKey' => $apiKey]);
     $case = new \Signifyd\Models\CaseModel($caseData);
 
     /**
      * @var \Signifyd\Core\Response\CaseResponse $response
      */
     $response = $caseApi->createCase($case);
+    if ($response->isError() === true) {
+        var_dump($response->getErrorMessage());
+        return;
+    }
+
     $caseId = $response->getCaseId();
     echo "=========== create case ========" . PHP_EOL;
-    echo $caseId . PHP_EOL;
+    var_dump($response);
+    echo "==========================" . PHP_EOL;
+    var_dump($caseId);
+//    echo $caseId . PHP_EOL;
     echo "=========== end create case ========". PHP_EOL;
 } catch (Exception $e) {
     var_dump($e->__toString());

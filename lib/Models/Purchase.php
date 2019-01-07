@@ -258,19 +258,21 @@ class Purchase extends Model
     /**
      * Validate the purchase
      *
-     * @return bool
+     * @return array|bool
      */
     public function validate()
     {
         $valid = [];
 
         $allowedMethods = [
-            "ach", "ali_pay", "apple_pay", "amazon_payments", "android_pay", "bitcoin", "cash", "check", "credit_card",
-            "free", "google_pay", "loan", "paypal_account", "reward_points", "store_credit", "samsung_pay", "visa_checkout"
+            "ach", "ali_pay", "apple_pay", "amazon_payments", "android_pay",
+            "bitcoin", "cash", "check", "credit_card", "free", "google_pay",
+            "loan", "paypal_account", "reward_points", "store_credit",
+            "samsung_pay", "visa_checkout"
         ];
         $validMethod = $this->enumValid($this->getPaymentMethod(), $allowedMethods);
         if (false === $validMethod) {
-            $valid[] = false;
+            $valid[] = 'Invalid payment method';
         }
 
         $allowedChannels = [
@@ -278,19 +280,22 @@ class Purchase extends Model
         ];
         $validChannel = $this->enumValid($this->getOrderChannel(), $allowedChannels);
         if (false === $validChannel) {
-            $valid[] = false;
+            $valid[] = 'Invalid order channel';
         }
 
         $allowedCustomerRecommendation = [
             "decline_policy", "decline_fraud", "approve", "review", "reject"
         ];
-        $validRecommend = $this->enumValid($this->getCustomerOrderRecommendation(), $allowedCustomerRecommendation);
+        $validRecommend = $this->enumValid(
+            $this->getCustomerOrderRecommendation(),
+            $allowedCustomerRecommendation
+        );
         if (false === $validRecommend) {
-            $valid[] = false;
+            $valid[] = 'Invalid customer order recommendation';
         }
 
 
-        return (isset($valid[0]))? false : true;
+        return (isset($valid[0]))? $valid : true;
     }
 
     /**
@@ -701,52 +706,5 @@ class Purchase extends Model
     public function setCustomerOrderRecommendation($customerOrderRecommendation)
     {
         $this->customerOrderRecommendation = $customerOrderRecommendation;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function validatePaymentMethod()
-    {
-        $paymentMethod= $this->getOrderChannel();
-        if (empty($paymentMethod)) {
-            //TODO if payment method is empty as it is not required should the valid be triggered?
-            return true;
-        }
-
-        $allowedMethods = [
-            "ach", "ali_pay", "apple_pay", "amazon_payments", "android_pay", "bitcoin", "cash", "check", "credit_card",
-            "free", "google_pay", "loan", "paypal_account", "reward_points", "store_credit", "samsung_pay", "visa_checkout"
-        ];
-
-        $lowerPaymnetMethod = strtolower($paymentMethod);
-        if (in_array($lowerPaymnetMethod, $allowedMethods)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function validateOrderChannel()
-    {
-        $orderChannel = $this->getOrderChannel();
-        if (empty($orderChannel)) {
-            //TODO if order channel is empty as it is not required should the valid be triggered?
-            return true;
-        }
-
-        $allowedChannels = [
-            "web", "phone", "mobile_app", "social", "marketplace", "in_store_kiosk"
-        ];
-
-        $lowerOrderChannel = strtolower($orderChannel);
-        if (in_array($lowerOrderChannel, $allowedChannels)) {
-            return true;
-        }
-
-        return false;
     }
 }

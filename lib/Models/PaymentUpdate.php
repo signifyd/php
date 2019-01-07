@@ -106,22 +106,22 @@ class PaymentUpdate extends Model
     /**
      * Validate the payment update
      *
-     * @return bool
+     * @return array|bool
      */
     public function validate()
     {
         $valid = [];
         // validate avs response code
         if (!$this->avsCvvValidate($this->getAvsResponseCode())) {
-            $valid[] = false;
+            $valid[] = 'Invalid AVS code';
         }
 
         // validate cvv response code
         if (!$this->avsCvvValidate($this->getCvvResponseCode())) {
-            $valid[] = false;
+            $valid[] = 'Invalid CVV code';
         }
 
-        return (!isset($valid[0]))? true : false;
+        return (!isset($valid[0]))? true : $valid;
     }
 
     /**

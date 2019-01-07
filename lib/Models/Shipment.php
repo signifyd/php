@@ -100,7 +100,7 @@ class Shipment extends Model
     /**
      * Validate the shipment
      *
-     * @return bool
+     * @return array|bool
      */
     public function validate()
     {
@@ -111,21 +111,24 @@ class Shipment extends Model
 
         $validShipper = $this->enumValid($this->getShipper(), $allowedShipper);
         if (false === $validShipper) {
-            $valid[] = false;
+            $valid[] = 'Invalid Shipper';
         }
 
         $allowedShippingMethod = [
-            "express", "electronic", "first_class", "first_class_international", "free", "freight", "ground",
-            "international", "overnight", "priority", "priority_international", "pickup", "standard", "store_to_store",
-            "two_day"
+            "express", "electronic", "first_class", "first_class_international",
+            "free", "freight", "ground", "international", "overnight", "priority",
+            "priority_international", "pickup", "standard", "store_to_store", "two_day"
         ];
-        $validMethod = $this->enumValid($this->getShippingMethod(), $allowedShippingMethod);
+        $validMethod = $this->enumValid(
+            $this->getShippingMethod(),
+            $allowedShippingMethod
+        );
         if (false === $validMethod) {
-            $valid[] = false;
+            $valid[] = 'Invalid Shipping Method';
         }
 
         //TODO add code to validate the shipment
-        return (isset($valid[0]))? false : true;
+        return (isset($valid[0]))? $valid : true;
     }
 
     /**

@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 class CaseApiTest extends TestCase
 {
 
+    public $apiKey;
     public $caseData = [];
 
     /**
@@ -34,11 +35,16 @@ class CaseApiTest extends TestCase
      *
      * @return void
      */
-    public function testFile()
+    public function testFail()
     {
         $this->fail('Case api test is working');
     }
 
+    /**
+     * Setup the case data
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->caseData = [
@@ -182,6 +188,20 @@ class CaseApiTest extends TestCase
             ]
         ];
 
+    }
+
+
+    /**
+     * @throws \Signifyd\Core\Exceptions\ConnectionException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testAddFulfillment()
+    {
+        $caseApi = new \Signifyd\Core\Api\CaseApi(['apiKey' => $this->apiKey]);
+        $fulfillment1 = new \Signifyd\Models\Fulfillment([]);
+        $fulfillments = [$fulfillment1];
+        $response = $caseApi->addFulfillment($fulfillments);
+        $this->assertObjectHasAttribute('caseId', $response);
     }
 
 }

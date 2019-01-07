@@ -29,6 +29,9 @@ class GuaranteeApiTest extends TestCase
     public $guaranteeData = [];
 
 
+    /**
+     * Setup guarantee data
+     */
     public function setUp()
     {
         $this->guaranteeData = [
@@ -42,7 +45,7 @@ class GuaranteeApiTest extends TestCase
      *
      * @return void
      */
-    public function testFile()
+    public function testFail()
     {
         $this->fail('Guarantee api test is working');
     }

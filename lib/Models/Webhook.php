@@ -116,6 +116,8 @@ class Webhook extends Model
     }
 
     /**
+     * Get the event
+     *
      * @return mixed
      */
     public function getEvent()
@@ -124,7 +126,11 @@ class Webhook extends Model
     }
 
     /**
-     * @param mixed $event
+     * Set the event
+     *
+     * @param mixed $event Event
+     *
+     * @return void
      */
     public function setEvent($event)
     {

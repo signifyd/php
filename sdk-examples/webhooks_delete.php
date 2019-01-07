@@ -15,6 +15,11 @@ try {
      * @var \Signifyd\Core\Response\WebhooksResponse $response
      */
     $response = $webhooksApi->deleteWebhook($webhook);
+    if ($response->isError() === true) {
+        var_dump($response->getErrorMessage());
+        return;
+    }
+
     echo "=========== delete webhook ========" . PHP_EOL;
     var_dump($response);
     echo "=========== end delete webhooks ========". PHP_EOL;

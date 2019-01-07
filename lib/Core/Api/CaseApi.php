@@ -15,11 +15,14 @@ namespace Signifyd\Core\Api;
 
 use Signifyd\Core\Connection;
 use Signifyd\Core\Exceptions\CaseModelException;
+use Signifyd\Core\Exceptions\FulfillmentException;
 use Signifyd\Core\Exceptions\InvalidClassException;
 use Signifyd\Core\Logging;
 use Signifyd\Core\Response\CaseResponse;
+use Signifyd\Core\Response\FulfillmentBulkResponse;
 use Signifyd\Core\Settings;
 use Signifyd\Models\CaseModel;
+use Signifyd\Models\Fulfillment;
 use Signifyd\Models\PaymentUpdate;
 
 /**
@@ -48,7 +51,9 @@ class CaseApi
     public $connection;
 
     /**
-     * @var Logging
+     * The logger object
+     *
+     * @var Logging The logger class
      */
     public $logger;
 
@@ -92,21 +97,13 @@ class CaseApi
         if (is_array($case)) {
             $case = new CaseModel($case);
             $valid = $case->validate();
-            if (false === $valid) {
-                $this->logger->error('Case not valid after array init');
-                $caseResponse = new CaseResponse($this->logger);
-                $caseResponse->setIsError(true);
-                $caseResponse->setErrorMessage('Case not valid after array init');
-                return $caseResponse;
+            if (true !== $valid) {
+                $this->logger->error('Case not valid after array init: ' . json_encode($valid));
             }
         } elseif ($case instanceof CaseModel) {
             $valid = $case->validate();
-            if (false === $valid) {
-                $this->logger->error('Case not valid after object init');
-                $caseResponse = new CaseResponse($this->logger);
-                $caseResponse->setIsError(true);
-                $caseResponse->setErrorMessage('Case not valid after object init');
-                return $caseResponse;
+            if (true !== $valid) {
+                $this->logger->error('Case not valid after object init: ' . json_encode($valid));
             }
         } else {
             $this->logger->error('Invalid parameter for create case');
@@ -143,10 +140,6 @@ class CaseApi
         $this->logger->info('Get case method called');
         if (false === is_numeric($caseId)) {
             $this->logger->error('Invalid case id for get case' . $caseId);
-            $caseResponse = new CaseResponse($this->logger);
-            $caseResponse->setIsError(true);
-            $caseResponse->setErrorMessage('Invalid case id');
-            return $caseResponse;
         }
 
         $this->logger->info(
@@ -155,40 +148,6 @@ class CaseApi
 
         $endpoint = 'cases/' . $caseId;
         $response = $this->connection->callApi($endpoint);
-
-        return $response;
-    }
-
-    /**
-     * Close a case in Signifyd
-     *
-     * @param int $caseId The case id
-     *
-     * @return CaseResponse
-     *
-     * @throws InvalidClassException
-     * @throws \Signifyd\Core\Exceptions\LoggerException
-     */
-    public function closeCase($caseId)
-    {
-        $this->logger->info('Close case method called');
-        if (false === is_numeric($caseId)) {
-            $this->logger->error('Invalid case id for get case' . $caseId);
-            $caseResponse = new CaseResponse($this->logger);
-            $caseResponse->setIsError(true);
-            $caseResponse->setErrorMessage('Invalid case id');
-            return $caseResponse;
-        }
-
-        // TODO need to move this to a model ???
-        $caseSend = ['status' => 'DISMISSED'];
-        $this->logger->info(
-            'Connection call close case api with caseId: ' . $caseId
-        );
-
-        $endpoint = 'cases/' . $caseId;
-        $payload = json_encode($caseSend);
-        $response = $this->connection->callApi($endpoint, $payload, 'put');
 
         return $response;
     }
@@ -210,21 +169,13 @@ class CaseApi
         if (is_array($paymentUpdate)) {
             $paymentUpdate = new PaymentUpdate($paymentUpdate);
             $valid = $paymentUpdate->validate();
-            if (false === $valid) {
-                $this->logger->error('Case not valid after array init');
-                $caseResponse = new CaseResponse($this->logger);
-                $caseResponse->setIsError(true);
-                $caseResponse->setErrorMessage('Case not valid after array init');
-                return $caseResponse;
+            if (true !== $valid) {
+                $this->logger->error('Case not valid after array init: ' . json_encode($valid));
             }
         } elseif ($paymentUpdate instanceof PaymentUpdate) {
             $valid = $paymentUpdate->validate();
-            if (false === $valid) {
-                $this->logger->error('Case not valid after object init');
-                $caseResponse = new CaseResponse($this->logger);
-                $caseResponse->setIsError(true);
-                $caseResponse->setErrorMessage('Case not valid after object init');
-                return $caseResponse;
+            if (true !== $valid) {
+                $this->logger->error('Case not valid after object init' . json_encode($valid));
             }
         } else {
             $this->logger->error('Invalid parameter for payment update');
@@ -267,20 +218,12 @@ class CaseApi
             $this->logger->error(
                 'Invalid case id for update investigation label' . $caseId
             );
-            $caseResponse = new CaseResponse($this->logger);
-            $caseResponse->setIsError(true);
-            $caseResponse->setErrorMessage('Invalid case id');
-            return $caseResponse;
         }
 
         if (false === is_numeric($caseId)) {
             $this->logger->error(
                 'Invalid case id for update investigation label' . $caseId
             );
-            $caseResponse = new CaseResponse($this->logger);
-            $caseResponse->setIsError(true);
-            $caseResponse->setErrorMessage('Invalid case id');
-            return $caseResponse;
         }
 
         // TODO need to move this to a model ???
@@ -292,6 +235,70 @@ class CaseApi
         $endpoint = 'cases/' . $caseId;
         $payload = json_encode($caseSend);
         $response = $this->connection->callApi($endpoint, $payload, 'put');
+
+        return $response;
+    }
+
+    /**
+     * Add fulfillments to an order
+     *
+     * @param $fulfillments
+     *
+     * @return FulfillmentBulkResponse
+     *
+     * @throws InvalidClassException
+     * @throws FulfillmentException
+     */
+    public function addFulfillment($fulfillments)
+    {
+        $this->logger->info('Add Fulfillment method called');
+        if (is_array($fulfillments)) {
+            if (isset($fulfillments['id'])) {
+                $fulfillment = new Fulfillment($fulfillments);
+                $valid = $fulfillment->validate();
+                if (true !== $valid) {
+                    $this->logger->error('Fulfillment not valid after array init: ' . json_encode($valid));
+                }
+            } else {
+                $fulfillmentsArr = [];
+                foreach ($fulfillments as $fulfillment) {
+                    $fulfillmentObj = new Fulfillment($fulfillment);
+                    $valid = $fulfillmentObj->validate();
+                    if (true !== $valid) {
+                        $this->logger->error('Fulfillment not valid after array init: ' . json_encode($valid));
+                    }
+
+                    $fulfillmentsArr[] = $fulfillmentObj;
+                }
+
+            }
+        } elseif ($fulfillments instanceof Fulfillment) {
+            $valid = $fulfillments->validate();
+            if (true !== $valid) {
+                $this->logger->error('Fulfillment not valid after object init');
+            }
+
+            $fulfillmentsArr = [$fulfillments];
+        } else {
+            $this->logger->error('Invalid parameter for create fulfillment');
+            throw new FulfillmentException(
+                'Invalid parameter for create fulfillment'
+            );
+        }
+
+        $this->logger->info(
+            'Connection call add fulfillment with: ' . json_encode($fulfillmentsArr)
+        );
+
+        $orderId = $fulfillmentsArr[0]->getOrderId();
+        $payload = json_encode(['fulfillments' => $fulfillmentsArr]);
+        $endpoint = 'fulfillments/' . $orderId;
+        $response = $this->connection->callApi(
+            $endpoint,
+            $payload,
+            'post',
+            'fulfillmentBulk'
+        );
 
         return $response;
     }

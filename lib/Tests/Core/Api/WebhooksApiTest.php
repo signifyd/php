@@ -31,7 +31,7 @@ class WebhooksApiTest extends TestCase
      *
      * @return void
      */
-    public function testFile()
+    public function testFail()
     {
         $this->fail('Webhooks api test is working');
     }

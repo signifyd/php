@@ -207,7 +207,6 @@ class CaseResponse extends Response
      */
     public function setObject($response)
     {
-//        var_dump($response);
         $responseArr = json_decode($response, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             $this->setIsError(true);
@@ -215,8 +214,6 @@ class CaseResponse extends Response
             return $this;
         }
 
-//        var_dump($responseArr);
-//
         foreach ($responseArr as $itemKey => $item) {
             $method = 'set' . ucfirst($itemKey);
             if (method_exists($this, $method)) {

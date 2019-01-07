@@ -11,17 +11,22 @@ try {
 
     $paymentUpdate = new Signifyd\Models\PaymentUpdate();
     $paymentUpdate->setCaseId($caseId);
-    $paymentUpdate->setAvsResponseCode('Y');
+    $paymentUpdate->setAvsResponseCode('M');
     $paymentUpdate->setCvvResponseCode('M');
-    $paymentUpdate->setPaymentGateway('authorize_net');
-    $paymentUpdate->setTransactionId(86868495618541658);
+    $paymentUpdate->setPaymentGateway('stripe');
+    $paymentUpdate->setTransactionId('1a2sf3f44e21r1');
     /**
      * @var \Signifyd\Core\Response\CaseResponse $response
      */
     $response = $caseApi->updatePayment($paymentUpdate);
-    echo "=========== create case ========" . PHP_EOL;
+    if ($response->isError() === true) {
+        var_dump($response->getErrorMessage());
+        return;
+    }
+
+    echo "=========== payment update ========" . PHP_EOL;
     var_dump($response);
-    echo "=========== end create case ========". PHP_EOL;
+    echo "=========== end payment update ========". PHP_EOL;
 } catch (Exception $e) {
     var_dump($e->__toString());
 }

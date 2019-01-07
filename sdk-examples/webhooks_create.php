@@ -17,11 +17,18 @@ try {
     ]);
     $webhooks = [$webHook1, $webHook2];
     /**
-     * @var \Signifyd\Core\Response\WebhooksResponse $response
+     * @var \Signifyd\Core\Response\WebhooksBulkResponse $bulkResponse
      */
-    $response = $webhooksApi->createWebhooks($webhooks);
+    $bulkResponse = $webhooksApi->createWebhooks($webhooks);
+    if ($bulkResponse->isError() === true) {
+        var_dump($bulkResponse->getErrorMessage());
+        return;
+    }
+
     echo "=========== create webhooks ========" . PHP_EOL;
-    var_dump($response);
+    foreach ($bulkResponse->getObjects() as $webhook) {
+        var_dump($webhook);
+    }
     echo "=========== end create webhooks ========". PHP_EOL;
 } catch (Exception $e) {
     var_dump($e->__toString());

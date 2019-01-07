@@ -1,4 +1,4 @@
-SIGNIFYD PHP SDK [![Build Status]()]()
+SIGNIFYD PHP SDK [![Build Status](https://travis-ci.org/signifyd/signifyd-php.svg?branch=master)](https://travis-ci.org/signifyd/signifyd-php)
 ================
 
 *** If you have feedback good or bad about the new version of the repository please don't hesitate to contact us at
@@ -132,6 +132,10 @@ Another way is to use the setters and getters of the models so you can add data.
     
     $caseResponse = $caseApi->createCase($case);
 ```
+
+Based on the HTTP response code the createCase method can return the investigationId can be a string of characters or bool false.
+If the HTTP response code is 2xx to 3xx value of the investigationId is the investigation id of the case created in our application.
+If the HTTP response code is other than 2xx to 3xx the investigationId will have the value of false, which indicates that the case creation has failed.
 ##### getCase($caseId);
 Retrieve details about an individual case by investigation id or case id.
 ```php
@@ -140,30 +144,50 @@ Retrieve details about an individual case by investigation id or case id.
     $caseResponse = $caseApi->getCase($caseId);
     ....
 ```
-##### closeCase($caseId);
-Close case using case id, by dismissing it.
+This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
+Based on the HTTP response code the getCase method can return the $case, an array of values or bool false.
+If the HTTP response code is 2xx to 3xx value of the case is an array with the case values from our application.
+If the HTTP response code is other than 2xx to 3xx the case the value of false, which indicates that the retrieving of the case has failed.
+##### addFulfillment($fulfillments);
+This sends the request to our API Endpoint to add fulfillments for order. One way is to send an array with all the data required to the addFulfillment method
 ```php
     ....
-    $caseId = 123456789;
-    $caseResponse = $caseApi->closeCase($caseId);
+    $fulfillmentData = [];
+    $caseResponse = $caseApi->addFulfillment($fulfillmentData);
     ....
 ```
+
 ##### updatePayment($paymentUpdate);
-Close case using case id, by dismissing it.
+Update payment data by sending updated information.
 ```php
     ....
     $caseId = 123456789;
-    $caseResponse = $caseApi->closeCase($caseId);
+    $paymentUpdate = new Signifyd\Models\PaymentUpdate();
+    // Add data to payment update
+
+    $caseResponse = $caseApi->updatePayment($paymentUpdate);
     ....
 ```
+
+This sends the request to our API Endpoint to update the payment for an existing case. As a parameter for this method you need to send a case id and the payment update object (as described above).
+Based on the HTTP response code the updatePayment method can return the bool true or bool false.
+If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
+If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.
+
 ##### updateInvestigationLabel($caseId, $investigationUpdate);
 Close case using case id, by dismissing it.
 ```php
     ....
     $caseId = 123456789;
-    $caseResponse = $caseApi->closeCase($caseId);
+    $investigationLabel = 'Bye Bye';
+    $caseResponse = $caseApi->updateInvestigationLabel($caseId, $investigationUpdate);
     ....
 ```
+This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id and new investigation label.
+Based on the HTTP response code the updateInvestigationLabel method can return the bool true or bool false.
+If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
+If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.
+
 ### GuaranteeApi
 The GuaranteeApi is the class the maps the main guarantee functionality of the Signify API. This class has the methods 
 that work with guarantees.
@@ -231,7 +255,7 @@ Or using the Settings Class
     // This might differ depending on the location of the file from which you your project
     require __DIR__ . '/vendor/autoload.php'; 
     
-    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api"]);
+    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
     $webhooksApi = new \Signifyd\Core\Api\WebhooksApi($settings);
 ``` 
 
@@ -256,6 +280,7 @@ Create webhooks in Signifyd.
 ```php
     ....
     $webhook1 = new \Signifyd\Model\Webhook([]);
+    $webhook2 = new \Signifyd\Model\Webhook([]);
     $webhooks = [$webhook1, $webhook2];
     $webhooksResponse = $webhooksApi->createWebhooks($webhooks);
     ....
@@ -264,6 +289,8 @@ Create webhooks in Signifyd.
 Update webhooks in Signifyd.
 ```php
     ....
+    $webhook1 = new \Signifyd\Model\Webhook([]);
+    $webhook2 = new \Signifyd\Model\Webhook([]);
     $webhooks = [$webhook1, $webhook2];
     $webhooksResponse = $webhooksApi->updateWebhooks($webhooks);
     ....
@@ -272,7 +299,8 @@ Update webhooks in Signifyd.
 Retrive a list of webhooks set in Signifyd.
 ```php
     ....
-    $webhooksResponse = $webhooksApi->getWebhooks($webhooks);
+    $webhooksResponse = $webhooksApi->getWebhooks();
+    $webhooks = $webhooksResponse->getResponseArray();
     ....
 ```
 ##### updateWebhook($webhook);
@@ -302,24 +330,25 @@ Name | Type | Description | Notes
 **guaranteeEligible** | **string** | |
 **guaranteeDisposition** | **string** | |
 **status** | **string** | |
-**caseId** | **string** | |
-**score** | **string** | |
+**caseId** | **integer** | |
+**score** | **integer** | |
 **uuid** | **string** | |
 **headline** | **string** | |
 **orderId** | **string** | |
 **orderDate** | **string** | |
-**orderAmount** | **string** | |
-**associatedTeam** | **string** | |
+**orderAmount** | **float** | |
+**associatedTeam** | **array** | |
 **reviewDisposition** | **string** | |
 **createdAt** | **string** | |
 **updatedAt** | **string** | |
 **orderOutcome** | **string** | |
 **currency** | **string** | |
-**adjustedScore** | **string** | |
-**testInvestigation** | **string** | |
-**logger** | **string** | |
-**isError** | **string** | |
+**adjustedScore** | **integer** | |
+**testInvestigation** | **boolean** | |
+**logger** | **object** | |
+**isError** | **boolean** | |
 **errorMessage** | **string** | |
+
 You can access any value by using the getters methods in the response
 
 ### GuaranteeResponse
@@ -335,9 +364,10 @@ Name | Type | Description | Notes
 **rereviewCount** | **string** | |
 **guaranteeId** | **string** | |
 **caseId** | **string** | |
-**isError** | **string** | |
+**isError** | **boolean** | |
 **errorMessage** | **string** | |
-**logger** | **string** | |
+**logger** | **object** | |
+
 You can access any value by using the getters methods in the response
 
 ### WebhooksResponse
@@ -345,14 +375,16 @@ Webhoook response is the returned value when the webhook api is called
 ##### Parameters
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
-**streetAddress** | **string** | The street number and street name |
-**unit** | **string** | The unit or apartment number |
-**city** | **string** | The city name |
-**provinceCode** | **string** | The code or abbreviation for the province |
-**postalCode** | **string** | The postal code |
-**countryCode** | **string** | The two-letter ISO-3166 country code. If left blank, we will assume US |
-**latitude** | **string** | Geographical latitude |
-**longitude** | **string** | Geographical longitude |
+**id** | **integer** | |
+**eventType** | **string** | |
+**eventDisplayText** | **string** | |
+**url** | **string** | |
+**team** | **array** | |
+**isError** | **boolean** | |
+**errorMessage** | **string** | |
+**responseArray** | **array** | |
+**logger** | **object** | |
+
 You can access any value by using the getters methods in the response
 
 SDK Settings
@@ -362,14 +394,14 @@ Contains a shipping/billing address
 ##### Parameters
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
-**apiKey** | **string** | |
-**apiAddress** | **string** | | "https://api.signifyd.com/v2/";
-**validateData** | **string** | | true;
-**timeout** | **integer** | | 30;
-**retry** | **boolean** | | false;
-**SSLVerification** | | | false;
-**consoleOut** | | | false;
-**logEnabled** | | | true;
+**apiKey** | **string** | The api key from Signifyd |
+**apiAddress** | **string** | The default api url | "https://api.signifyd.com/v2/";
+**validateData** | **string** | To validate or not the data | true;
+**timeout** | **integer** | The default timeout for the curl connection | 30;
+**retry** | **boolean** | Should the SDK retry when it receives know errors | false;
+**SSLVerification** | **boolean** | Should curl check the ssl certificate | false;
+**consoleOut** | **boolean** | Should the SDK output the logs to php://stdout | false;
+**logEnabled** | **boolean** | Should the logs be enabled | true;
 
 SDK Models
 ----------
@@ -389,13 +421,14 @@ Name | Type | Description | Notes
 
 ```php
     // instantiating the address model class
-    $addressData = [];
+    $addressData = ['streetAddress' => '2 Brodway', '...'];
     $address = new \Signifyd\Models\Address($addressData);
 ```
 or
 ```php
     // instantiating the address model class
     $address = new \Signifyd\Models\Address();
+    $address->setSteetAddress('2 Brodway');
 ```
 
 ### Card
@@ -412,14 +445,14 @@ Name | Type | Description | Notes
 **billingAddress** | **object** | The billing address for the card | Address Object
 ```php
     // instantiating the card model class
-    $cardData = [];
+    $cardData = ['cardHolderName' => 'John Doe', '...'];
     $card = new \Signifyd\Models\Card($cardData);
 ```
 or
 ```php
     // instantiating the card model class
-    
     $card = new \Signifyd\Models\Card();
+    $card->setCardHolderName('John Doe');
 ```
 ### CaseModel
 Data related to the case
@@ -433,14 +466,14 @@ Name | Type | Description | Notes
 **seller** | **object** | All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay). | Seller Object
 ```php
     // instantiating the case model class
-    $caseData = [];
+    $caseData = ['purchase' => new \Signifyd\Model\Purchase(), '...'];
     $caseModel = new \Signifyd\Models\CaseModel($caseData);
 ```
 or
 ```php
     // instantiating the case model class
-    
     $caseModel = new \Signifyd\Models\CaseModel();
+    $caseModel->setPurchase(new \Signifyd\Model\Purchase());
 ```
 ### DiscountCode
 Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage
@@ -761,24 +794,6 @@ The purchase class can be found under namespace "Signifyd\Models", located lib/C
 ```
 
 The purchase object has the following properties that need to be filled in:
-```php
-<?php 
-    public $browserIpAddress;
-    public $orderId;
-    public $createdAt; // datetime
-    public $paymentGateway;
-    public $currency;
-    public $avsResponseCode;
-    public $cvvResponseCode;
-    public $transactionId;
-    public $orderChannel;
-    public $receivedBy;
-    public $totalPrice; //double
-
-    public $products; // array of objects
-    public $shipments; // array of objects
-?> 
-```
 
 Example:
 ```php
@@ -810,18 +825,6 @@ The product class can be found under namespace "Signifyd\Models", located lib/Co
 ```
 
 The product object has the following properties that need to be filled in:
-```php
-<?php 
-    public $itemId;
-    public $itemName;
-    public $itemUrl;
-    public $itemImage;
-    public $itemQuantity;
-    public $itemPrice;
-    public $itemWeight;
-?> 
-```
-
 Example:
 ```php
 <?php 
@@ -847,15 +850,6 @@ The recipient class can be found under namespace "Signifyd\Models", located lib/
 ```
 
 The recipient object has the following properties that need to be filled in:
-```php
-<?php 
-    public $fullName;
-    public $confirmationEmail;
-    public $confirmationPhone;
-    public $organization;
-    public $deliveryAddress;
-?> 
-```
 
 The delivery address in it's self an object.
 Example:
@@ -882,19 +876,6 @@ The address class can be found under namespace "Signifyd\Models", located lib/Co
 ```
 
 The address object has the following properties that need to be filled in:
-```php
-<?php 
-    public $streetAddress;
-    public $unit;
-    public $city;
-    public $provinceCode;
-    public $postalCode;
-    public $countryCode;
-    public $latitude;
-    public $longitude;
-?> 
-```
-
 Example:
 ```php
 <?php 
@@ -921,18 +902,6 @@ The card class can be found under namespace "Signifyd\Models", located lib/Core/
 ```
 
 The address object has the following properties that need to be filled in:
-```php
-<?php 
-    public $cardHolderName;
-    public $bin;
-    public $last4;
-    public $expiryMonth;
-    public $expiryYear;
-    public $hash;
-    public $billingAddress;
-?> 
-```
-
 Example:
 ```php
 <?php 
@@ -958,20 +927,6 @@ The userAccount class can be found under namespace "Signifyd\Models", located li
 ```
 
 The userAccount object has the following properties that need to be filled in:
-```php
-<?php 
-    public $emailAddress;
-    public $username;
-    public $phone;
-    public $createdDate;
-    public $accountNumber;
-    public $lastOrderId;
-    public $aggregateOrderCount;
-    public $aggregateOrderDollars;
-    public $lastUpdateDate;
-?> 
-```
-
 Example:
 ```php
 <?php 
@@ -999,15 +954,6 @@ The seller class can be found under namespace "Signifyd\Models", located lib/Cor
 ```
 
 The seller object has the following properties that need to be filled in:
-```php
-<?php 
-    public $name;
-    public $domain;
-    public $shipFromAddress; // Address
-    public $corporateAddress; // Address
-?> 
-```
-
 Example:
 ```php
 <?php 
@@ -1031,15 +977,6 @@ The shipment class can be found under namespace "Signifyd\Models", located lib/C
 ```
 
 The shipment object has the following properties that need to be filled in:
-```php
-<?php 
-    public $shipper;
-    public $shippingMethod;
-    public $shippingPrice;
-    public $trackingNumber;
-?> 
-```
-
 Example:
 ```php
 <?php
@@ -1063,15 +1000,6 @@ The paymentUpdate class can be found under namespace "Signifyd\Models", located 
 ```
 
 The paymentUpdate object has the following properties that need to be filled in:
-```php
-<?php 
-    public $paymentGateway;
-    public $transactionId;
-    public $avsResponseCode;
-    public $cvvResponseCode;
-?> 
-```
-
 Example:
 ```php
 <?php
@@ -1087,22 +1015,6 @@ Example:
 #### 14.	Create Case Method
 
 This sends the request to our API Endpoint to create a new case. As a parameter for this method you need to send a case object that has its properties filled up.
-
-```php
-<?php
-    // instantiating the settings class
-    $settings = new \Signifyd\Core\SignifydSettings();
-    $settings->apiKey = 'YOUR API KEY';
-
-    // instantiating the api class
-    $apiInstance = new \Signifyd\Core\SignifydAPI($settings);
-
-    // $case is the caseModel object as described above
-    // $investicationId is the response from the our API
-    $investigationId = $apiInstance->createCase($case);
-?> 
-```
-
 An example of a JSON object sent to our API:
 ```json
 {
@@ -1225,44 +1137,17 @@ An example of a JSON object sent to our API:
     }
 }
 ```
-
-Based on the HTTP response code the createCase method can return the investigationId can be a string of characters or bool false.
-If the HTTP response code is 2xx to 3xx value of the investigationId is the investigation id of the case created in our application.
-If the HTTP response code is other than 2xx to 3xx the investigationId will have the value of false, which indicates that the case creation has failed.
-
 The usual payload for a response:
-
 {
     "investigationId": 1
 }
 
 #### 15.	Get Case Method
-
-This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
-
-```php
-<?php
-    // instantiating the settings class
-    $settings = new \Signifyd\Core\SignifydSettings();
-    $settings->apiKey = 'YOUR API KEY';
-
-    // instantiating the api class
-    $apiInstance = new \Signifyd\Core\SignifydAPI($settings);
-
-    // $caseId is the id of an existing case
-    $case = $apiInstance->getCase($caseId);
-?> 
-```
-
-Based on the HTTP response code the getCase method can return the $case, an array of values or bool false.
-If the HTTP response code is 2xx to 3xx value of the case is an array with the case values from our application.
-If the HTTP response code is other than 2xx to 3xx the case the value of false, which indicates that the retrieving of the case has failed.
-
 Example of request:
 GET https://api.signifyd.com/v2/cases/caseId
 
 Example of response:
-```
+```json
 {
     guaranteeEligible: false,
     guaranteeDisposition: "APPROVED",
@@ -1282,68 +1167,3 @@ Example of response:
     updatedAt: "2013-03-06T23:17:18+0000"
 } 
 ```
-#### 16.	Close Case Method
-
-This sends the request to our API Endpoint to close a case. As a parameter for this method you need to send a case id.
-```php
-<?php
-    // instantiating the settings class
-    $settings = new \Signifyd\Core\SignifydSettings();
-    $settings->apiKey = 'YOUR API KEY';
-
-    // instantiating the api class
-    $apiInstance = new \Signifyd\Core\SignifydAPI($settings);
-
-    // $caseId is the id of an existing case
-    $case = $apiInstance->closeCase($caseId);
-?> 
-```
-
-Based on the HTTP response code the closeCase method can return the $response, an array of values or bool false.
-If the HTTP response code is 2xx to 3xx, the value of the $case is an array with the case values from our application.
-If the HTTP response code is other than 2xx to 3xx the $case value is false, which indicates that the closing of the case has failed.
-
-
-#### 17.	Update Payment Method
-
-This sends the request to our API Endpoint to update the payment for an existing case. As a parameter for this method you need to send a case id and the payment update object (as described above).
-```php
-<?php
-    // instantiating the settings class
-    $settings = new \Signifyd\Core\SignifydSettings();
-    $settings->apiKey = 'YOUR API KEY';
-
-    // instantiating the api class
-    $apiInstance = new \Signifyd\Core\SignifydAPI($settings);
-
-    // $caseId is the id of an existing case
-    $update = $apiInstance->updatePayment($caseId, $paymentUpdate);
-?> 
-```
-
-Based on the HTTP response code the updatePayment method can return the bool true or bool false.
-If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
-If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.
-
-
-#### 18.	Update Investigation Label Method
-
-This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id and new investigation label.
-
-```php
-<?php
-    // instantiating the settings class
-    $settings = new \Signifyd\Core\SignifydSettings();
-    $settings->apiKey = 'YOUR API KEY';
-
-    // instantiating the api class
-    $apiInstance = new \Signifyd\Core\SignifydAPI($settings);
-
-    // $caseId is the id of an existing case
-    $update = $apiInstance->updateInvestigationLabel($caseId, $investigationUpdate);
-?> 
-```
-
-Based on the HTTP response code the updateInvestigationLabel method can return the bool true or bool false.
-If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
-If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.

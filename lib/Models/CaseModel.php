@@ -110,7 +110,7 @@ class CaseModel extends Model
     /**
      * Validate the case data
      *
-     * @return bool
+     * @return array|bool
      */
     public function validate()
     {
@@ -118,12 +118,12 @@ class CaseModel extends Model
         foreach ($this->fields as $field) {
             $obj = $this->{'get' . ucfirst($field)}();
             $objValid = $obj->validate();
-            if (false === $objValid) {
-                $valid[] = false;
+            if (true !== $objValid) {
+                $valid[] = $objValid;
             }
         }
 
-        return (!isset($valid[0]))? true : false;
+        return (!isset($valid[0]))? true : $valid;
     }
 
     /**

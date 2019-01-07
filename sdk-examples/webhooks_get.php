@@ -8,11 +8,16 @@ try {
     // console out means that all the logs will be displayed instantly in the terminal
     $webhooksApi = new \Signifyd\Core\Api\WebhooksApi(['apiKey' => $apiKey, 'consoleOut' => true]);
     /**
-     * @var \Signifyd\Core\Response\WebhooksResponse $response
+     * @var \Signifyd\Core\Response\WebhooksBulkResponse $bulkResponse
      */
-    $response = $webhooksApi->getWebhooks();
+    $bulkResponse = $webhooksApi->getWebhooks();
+    if ($bulkResponse->isError() === true) {
+        var_dump($bulkResponse->getErrorMessage());
+        return;
+    }
+
     echo "=========== get webhooks ========" . PHP_EOL;
-    foreach ($response->getResponseArray() as $webhook) {
+    foreach ($bulkResponse->getObjects() as $webhook) {
         var_dump($webhook);
     }
     echo "=========== end get webhooks ========". PHP_EOL;

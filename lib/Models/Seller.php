@@ -42,56 +42,78 @@ class Seller extends Model
     public $domain;
 
     /**
+     * Seller email
+     *
      * @var string
      */
     public $email;
 
     /**
+     * Seller username
+     *
      * @var string
      */
     public $username;
 
     /**
+     * The seller account number
+     *
      * @var string
      */
     public $accountNumber;
 
     /**
+     * The seller phone
+     *
      * @var string
      */
     public $phone;
 
     /**
+     * The seller creation date
+     *
      * @var string
      */
     public $createdDate;
 
     /**
+     * The seller aggregate order count
+     *
      * @var int
      */
     public $aggregateOrderCount;
 
     /**
+     * The seller aggregate order dollars
+     *
      * @var float
      */
     public $aggregateOrderDollars;
 
     /**
+     * Seller last update date
+     *
      * @var string
      */
     public $lastUpdateDate;
 
     /**
+     * The seller onboarding ip address
+     *
      * @var string
      */
     public $onboardingIpAddress;
 
     /**
+     * The seller onboarding email
+     *
      * @var string
      */
     public $onboardingEmail;
 
     /**
+     * Seller tags
+     *
      * @var array
      */
     public $tags;
@@ -172,13 +194,17 @@ class Seller extends Model
                 $this->{'set' . ucfirst($field)}($value);
             }
 
-            if (isset($data['shipFromAddress']) && !empty($data['shipFromAddress'])) {
+            if (isset($data['shipFromAddress'])
+                && !empty($data['shipFromAddress'])
+            ) {
                 $shipFromAddress = new Address($data['shipFromAddress']);
                 $this->setShipFromAddress($shipFromAddress);
             }
 
-            if (isset($data['corporateAddress']) && !empty($data['corporateAddress'])) {
-                $corporateAddress= new Address($data['corporateAddress']);
+            if (isset($data['corporateAddress'])
+                && !empty($data['corporateAddress'])
+            ) {
+                $corporateAddress = new Address($data['corporateAddress']);
                 $this->setCorporateAddress($corporateAddress);
             }
         }
@@ -286,6 +312,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the email
+     *
      * @return string
      */
     public function getEmail()
@@ -294,7 +322,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $email
+     * Set the email
+     *
+     * @param string $email Seller email
+     *
+     * @return void
      */
     public function setEmail($email)
     {
@@ -302,6 +334,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the username
+     *
      * @return string
      */
     public function getUsername()
@@ -310,7 +344,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $username
+     * Set the username
+     *
+     * @param string $username The username
+     *
+     * @return void
      */
     public function setUsername($username)
     {
@@ -318,6 +356,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the account number
+     *
      * @return string
      */
     public function getAccountNumber()
@@ -326,7 +366,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $accountNumber
+     * Set the account number
+     *
+     * @param string $accountNumber The seller account number
+     *
+     * @return void
      */
     public function setAccountNumber($accountNumber)
     {
@@ -334,6 +378,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the phone
+     *
      * @return string
      */
     public function getPhone()
@@ -342,7 +388,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $phone
+     * Set the phone
+     *
+     * @param string $phone The seller phone
+     *
+     * @return void
      */
     public function setPhone($phone)
     {
@@ -350,6 +400,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the creation date
+     *
      * @return string
      */
     public function getCreatedDate()
@@ -358,7 +410,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $createdDate
+     * Set the creation date
+     *
+     * @param string $createdDate Seller creation date
+     *
+     * @return void
      */
     public function setCreatedDate($createdDate)
     {
@@ -366,6 +422,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the aggregate order count
+     *
      * @return int
      */
     public function getAggregateOrderCount()
@@ -374,7 +432,11 @@ class Seller extends Model
     }
 
     /**
-     * @param int $aggregateOrderCount
+     * Set the aggregate order count
+     *
+     * @param int $aggregateOrderCount Seller order count
+     *
+     * @return void
      */
     public function setAggregateOrderCount($aggregateOrderCount)
     {
@@ -382,6 +444,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the aggregate order dollars
+     *
      * @return float
      */
     public function getAggregateOrderDollars()
@@ -390,7 +454,11 @@ class Seller extends Model
     }
 
     /**
-     * @param float $aggregateOrderDollars
+     * Set the aggregate order dollars
+     *
+     * @param float $aggregateOrderDollars Seller total order amounts
+     *
+     * @return void
      */
     public function setAggregateOrderDollars($aggregateOrderDollars)
     {
@@ -398,6 +466,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the last update
+     *
      * @return string
      */
     public function getLastUpdateDate()
@@ -406,7 +476,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $lastUpdateDate
+     * Set the last update
+     *
+     * @param string $lastUpdateDate Seller last update
+     *
+     * @return void
      */
     public function setLastUpdateDate($lastUpdateDate)
     {
@@ -414,6 +488,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the onboarding ip address
+     *
      * @return string
      */
     public function getOnboardingIpAddress()
@@ -422,7 +498,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $onboardingIpAddress
+     * Set the onboarding ip address
+     *
+     * @param string $onboardingIpAddress Seller ip address
+     *
+     * @return void
      */
     public function setOnboardingIpAddress($onboardingIpAddress)
     {
@@ -430,6 +510,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the tags
+     *
      * @return array
      */
     public function getTags()
@@ -438,7 +520,11 @@ class Seller extends Model
     }
 
     /**
-     * @param array $tags
+     * Set the tags
+     *
+     * @param array $tags Seller tags
+     *
+     * @return void
      */
     public function setTags($tags)
     {
@@ -446,6 +532,8 @@ class Seller extends Model
     }
 
     /**
+     * Get the onboarding email address
+     *
      * @return string
      */
     public function getOnboardingEmail()
@@ -454,7 +542,11 @@ class Seller extends Model
     }
 
     /**
-     * @param string $onboardingEmail
+     * Set the onboarding email address
+     *
+     * @param string $onboardingEmail Seller onbording email
+     *
+     * @return void
      */
     public function setOnboardingEmail($onboardingEmail)
     {

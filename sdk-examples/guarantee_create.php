@@ -12,6 +12,11 @@ try {
     $guarantee = new \Signifyd\Models\Guarantee(['caseId' => $caseId]);
 
     $guaranteeResponse = $guaranteeApi->createGuarantee($guarantee);
+    if ($guaranteeResponse->isError() === true) {
+        var_dump($guaranteeResponse->getErrorMessage());
+        return;
+    }
+
     echo "=========== create guarantee ========" . PHP_EOL;
     var_dump($guaranteeResponse);
     echo "=========== end create guarantee ========" . PHP_EOL;

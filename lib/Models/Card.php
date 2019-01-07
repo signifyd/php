@@ -137,11 +137,11 @@ class Card extends Model
     public function validate()
     {
         $valid = [];
-//        if (strlen($this->getLast4()) !== 4) {
-//            $valid[] = false;
-//        }
+        //if (strlen($this->getLast4()) !== 4) {
+        //    $valid[] = false;
+        //}
 
-        //TODO add code to validate the address
+        //TODO add code to validate the card
         return (!isset($valid[0]))? true : false;
     }
 

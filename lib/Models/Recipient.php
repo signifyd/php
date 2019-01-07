@@ -111,7 +111,7 @@ class Recipient extends Model
                 $this->{'set' . ucfirst($field)}($value);
             }
 
-            if (isset($data['deliveryAddress']) && !empty($data['deliveryAddress'])) {
+            if (isset($data['deliveryAddress'])&& !empty($data['deliveryAddress'])) {
                 $deliveryAddress = new Address($data['deliveryAddress']);
                 $this->setDeliveryAddress($deliveryAddress);
             }

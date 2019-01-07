@@ -34,17 +34,23 @@ use Signifyd\Models\Guarantee;
 class GuaranteeApi
 {
     /**
+     * The SDK settings
+     *
      * @var Settings
      */
     public $settings;
 
     /**
+     * The curl connection class
+     *
      * @var Connection
      */
     public $connection;
 
     /**
-     * @var Logging
+     * The logger object
+     *
+     * @var Logging The logger class
      */
     public $logger;
 

@@ -106,10 +106,17 @@ class Model
         return true;
     }
 
+    /**
+     * Validate enums
+     *
+     * @param string $fieldValue    The field Value
+     * @param array  $allowedValues Array of allowed values
+     *
+     * @return bool
+     */
     public function enumValid($fieldValue, $allowedValues)
     {
         if (empty($fieldValue)) {
-            //TODO if field is empty as it is not required should the valid be triggered?
             return true;
         }
 
@@ -121,8 +128,19 @@ class Model
         return false;
     }
 
+    /**
+     * Validate the AVS/CVV code
+     *
+     * @param string $code The code value
+     *
+     * @return bool
+     */
     public function avsCvvValidate($code)
     {
+        if (empty($code)) {
+            return true;
+        }
+
         $avsCvvValidCodes = "YASRUZNWXBTPCDGIMF";
         if (false === strpos($avsCvvValidCodes, $code)) {
             return false;

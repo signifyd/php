@@ -13,9 +13,14 @@ try {
      * @var \Signifyd\Core\Response\CaseResponse $response
      */
     $response = $caseApi->updateInvestigationLabel($caseId, $investigationLabel);
-    echo "=========== create case ========" . PHP_EOL;
+    if ($response->isError() === true) {
+        var_dump($response->getErrorMessage());
+        return;
+    }
+
+    echo "=========== update investigation label ========" . PHP_EOL;
     var_dump($response);
-    echo "=========== end create case ========". PHP_EOL;
+    echo "=========== end update investigation label ========". PHP_EOL;
 } catch (Exception $e) {
     var_dump($e->__toString());
 }

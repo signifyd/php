@@ -29,9 +29,17 @@ use Signifyd\Core\Settings;
  */
 class ConnectionTest extends TestCase
 {
+    public $apiKey = 'your api key';
+
     /**
-     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * Test initialize the connection class without settings
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\ConnectionException
      * @expectedExceptionMessage Settings should be a \Signifyd\Core\Settings instance
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testConnectionWithoutSettings()
     {
@@ -39,33 +47,64 @@ class ConnectionTest extends TestCase
     }
 
     /**
-     * @expectedException ArgumentCountError
+     * Test initialize the connection class without any parameter sent
+     *
+     * @expectedException \ArgumentCountError
+     *
+     * @return void
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
     public function testConnectionWithoutSettingsAttribute()
     {
         $connection = new Connection();
     }
 
+    /**
+     * Test the making of the url without sending a parameter
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
+     */
     public function testMakeUrlEmpty()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
         $result = $connection->makeUrl('');
         $this->assertEquals($settings->getApiAddress(), $result);
     }
 
+    /**
+     * Test the make url with an endpoint
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
+     */
     public function testMakeUrlWithEndpoint()
     {
         $endpoint = 'cases';
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
         $result = $connection->makeUrl($endpoint);
         $this->assertEquals($settings->getApiAddress() . $endpoint, $result);
     }
 
+    /**
+     * Test init curl post method
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
+     */
     public function testInitCurlPostMethodInit()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
         $response = $connection->initCurl('endpoint', 'post');
         $this->assertTrue($response);
@@ -74,57 +113,88 @@ class ConnectionTest extends TestCase
     }
 
     /**
-     * @expectedException ArgumentCountError
+     * Test init curl with no parameters
+     *
+     * @expectedException \ArgumentCountError
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testInitCurlNoParams()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
         $connection->initCurl();
     }
 
     /**
-     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * Test init curl with empty params
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\ConnectionException
      * @expectedExceptionMessage Method  is not supported.
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testInitCurlEmptyParams()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
-        $connection->initCurl('','');
+        $connection->initCurl('', '');
     }
 
     /**
-     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * Test init curl with head method
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\ConnectionException
      * @expectedExceptionMessage Method head is not supported.
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testInitCurlWithHeadMethod()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
-        $connection->initCurl('','head');
+        $connection->initCurl('', 'head');
     }
 
     /**
-     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * Test init curl with patch method
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\ConnectionException
      * @expectedExceptionMessage Method patch is not supported.
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testInitCurlWithPatchMethod()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
-        $connection->initCurl('','patch');
+        $connection->initCurl('', 'patch');
     }
 
     /**
-     * @expectedException \Signifyd\Core\Exceptions\ConnectionException
+     * Test init curl with delete method
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\ConnectionException
      * @expectedExceptionMessage Method delete is not supported.
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testInitCurlWithDeleteMethod()
     {
-        $settings = new Settings(['apiKey' => 'lkkdsbaiuhiu2h387y87fdyhwq4grsdfsadf']);
+        $settings = new Settings(['apiKey' => $this->apiKey]);
         $connection = new Connection($settings);
-        $connection->initCurl('','delete');
+        $connection->initCurl('', 'delete');
     }
 
 }
