@@ -2,6 +2,7 @@ SIGNIFYD PHP SDK [![Build Status](https://travis-ci.org/signifyd/signifyd-php.sv
 ================
 
 *** If you have feedback good or bad about the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/)
+*** If you notice something wrong about this SDK in particular, feel free to raise an issue [here](https://github.com/square/connect-php-sdk/issues).
 
 This repository contains the PHP SDK client for the Signifyd APIs. For more info please check the [Signifyd API documentation](https://www.signifyd.com/api/)
 
@@ -142,6 +143,128 @@ Another way is to use the setters and getters of the models so you can add data.
     
     $caseResponse = $caseApi->createCase($case);
 ```
+An example of a JSON object sent to our API:
+```json
+{
+    "purchase": {
+        "orderSessionId": "uha3d98weicm20eufhlqe",
+        "browserIpAddress": "192.168.1.1",
+        "orderId": "4fj58as",
+        "createdAt": "2016-07-11T17:54:31-05:00",
+        "paymentGateway": "stripe",
+        "paymentMethod": "credit_card",
+        "transactionId": "1a2sf3f44f21s1",
+        "currency": "USD",
+        "avsResponseCode": "Y",
+        "cvvResponseCode": "M",
+        "orderChannel": "PHONE",
+        "receivedBy": "John Doe",
+        "totalPrice": 74.99,
+        "products": [
+            {
+                "itemId": "1",
+                "itemName": "Sparkly sandals",
+                "itemUrl": "http://mydomain.com/sparkly-sandals",
+                "itemImage": "http://mydomain.com/images/sparkly-sandals.jpeg",
+                "itemQuantity": 1,
+                "itemPrice": 49.99,
+                "itemWeight": 5
+            },
+            {
+                "itemId": "2",
+                "itemName": "Summer tank top",
+                "itemUrl": "http://mydomain.com/summer-tank",
+                "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
+                "itemQuantity": 1,
+                "itemPrice": 19.99,
+                "itemWeight": 2
+            }
+        ],
+        "shipments": [
+            {
+                "shipper": "UPS",
+                "shippingMethod": "ground",
+                "shippingPrice": 10,
+                "trackingNumber": "3A4U569H1572924642"
+            },
+            {
+                "shipper": "USPS",
+                "shippingMethod": "international",
+                "shippingPrice": 20,
+                "trackingNumber": "9201120200855113889012"
+            }
+        ]
+    },
+    "recipient": {
+        "fullName": "Bob Smith",
+        "confirmationEmail": "bob@gmail.com",
+        "confirmationPhone": "5047130000",
+        "organization": "SIGNIFYD",
+        "deliveryAddress": {
+            "streetAddress": "123 State Street",
+            "unit": "2A",
+            "city": "Chicago",
+            "provinceCode": "IL",
+            "postalCode": "60622",
+            "countryCode": "US",
+            "latitude": 41.92,
+            "longitude": -87.65
+        }
+    },
+    "card": {
+        "cardHolderName": "Robert Smith",
+        "bin": 407441,
+        "last4": "1234",
+        "expiryMonth": 12,
+        "expiryYear": 2015,
+        "billingAddress": {
+            "streetAddress": null,
+            "unit": "2A",
+            "city": "Chicago",
+            "provinceCode": "IL",
+            "postalCode": "60622",
+            "countryCode": "US",
+            "latitude": 41.92,
+            "longitude": -87.65
+        }
+    },
+    "userAccount": {
+        "email": "bob@gmail.com",
+        "username": "bobbo",
+        "phone": "5555551212",
+        "createdDate": "2013-01-18T17:54:31-05:00",
+        "accountNumber": "54321",
+        "lastOrderId": "4321",
+        "aggregateOrderCount": 40,
+        "aggregateOrderDollars": 5000,
+        "lastUpdateDate": "2013-01-18T17:54:31-05:00"
+    },
+    "seller": {
+        "name": "We sell awesome stuff, Inc.",
+        "domain": "wesellawesomestuff.com",
+        "shipFromAddress": {
+            "streetAddress": "1850 Mercer Rd",
+            "unit": null,
+            "city": "Lexington",
+            "provinceCode": "KY",
+            "postalCode": "40511",
+            "countryCode": "US",
+            "latitude": 38.07,
+            "longitude": -84.53
+        },
+        "corporateAddress": {
+            "streetAddress": "410 Terry Ave",
+            "unit": "3L",
+            "city": "Seattle",
+            "provinceCode": "WA",
+            "postalCode": "98109",
+            "countryCode": "US",
+            "latitude": 47.6,
+            "longitude": -122.33
+        }
+    }
+}
+```
 This method with return a `CaseResponse` which will have the `caseId` property populated.
 In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
@@ -186,8 +309,8 @@ For more info about the data that can be added please check the `PaymentUpdate` 
     $paymentUpdate = new Signifyd\Models\PaymentUpdate([
         // Payment update data
     ]);
-    // Add data to payment update
 
+    // Add data to payment update
     $caseResponse = $caseApi->updatePayment($paymentUpdate);
     ....
 ```
@@ -506,7 +629,7 @@ SDK Models
 ### Address
 Contains a shipping/billing address
 The address object is a container for the address information, for the order that was placed in your store.
-The address class can be found under namespace "Signifyd\Models", located lib/Core/Address.php.
+The address class can be found under namespace "Signifyd\Models", located lib/Models/Address.php.
 
 The address object has the following properties that need to be filled in:
 ##### Properties
@@ -536,7 +659,7 @@ or
 ### Card
 Data related to the card that was used for the purchase and its cardholder
 The card object is a container for the card information, for the order that was placed in your store.
-The card class can be found under namespace "Signifyd\Models", located lib/Core/Card.php.
+The card class can be found under namespace "Signifyd\Models", located lib/Models/Card.php.
 
 The address object has the following properties that need to be filled in:
 ##### Properties
@@ -585,7 +708,10 @@ or
     $caseModel->setPurchase(new \Signifyd\Model\Purchase());
 ```
 ### DiscountCode
-Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage
+Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage.
+The discountCode object is the container for discount code related information for the order that was placed in your store.
+The discountCode class can be found under namespace "Signifyd\Models", located lib/Models/DiscountCode.php.
+The discountCode object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 ##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
@@ -605,6 +731,9 @@ or
 ```
 ### Guarantee
 Guarantee data
+The guarantee object is the container for guarantee information that is sent to our API.
+The guarantee class can be found under namespace "Signifyd\Models", located lib/Models/Guarantee.php.
+The guarantee object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 ##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
@@ -623,7 +752,7 @@ or
 ### PaymentUpdate
 Payment update data
 The paymentUpdate object is a container for the payment update information, for the order that was placed in your store.
-The paymentUpdate class can be found under namespace "Signifyd\Models", located lib/Core/PaymentUpdate.php.
+The paymentUpdate class can be found under namespace "Signifyd\Models", located lib/Models/PaymentUpdate.php.
 
 The paymentUpdate object has the following properties that need to be filled in:
 ##### Properties
@@ -647,7 +776,7 @@ or
 ### Product
 The products purchased in the transaction
 The product object is a container for the product information, for the order that was placed in your store.
-The product class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
+The product class can be found under namespace "Signifyd\Models", located lib/Models/Recipient.php.
 The product object has the following properties that need to be filled in:
 ##### Properties
 Name | Type | Description | Notes
@@ -676,7 +805,7 @@ or
 ### Purchase
 Data related to purchase event represented in this Case Creation request.
 The purchase object is a container for the order information, the order that was placed in your store.
-The purchase class can be found under namespace "Signifyd\Models", located lib/Core/Purchase.php.
+The purchase class can be found under namespace "Signifyd\Models", located lib/Models/Purchase.php.
 The purchase object has the following properties that need to be filled in:
 ##### Properties
 Name | Type | Description | Notes
@@ -711,7 +840,7 @@ or
 ### Recipient
 Data related to person or organization receiving the items purchased.
 The recipient object is a container for the recipient information, for the order that was placed in your store.
-The recipient class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
+The recipient class can be found under namespace "Signifyd\Models", located lib/Models/Recipient.php.
 The recipient object has the following properties that need to be filled in:
 
 The delivery address in it's self an object.
@@ -737,7 +866,7 @@ or
 ### Seller
 All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
 The seller object is a container for the seller information, for the order that was placed in your store.
-The seller class can be found under namespace "Signifyd\Models", located lib/Core/Seller.php.
+The seller class can be found under namespace "Signifyd\Models", located lib/Models/Seller.php.
 
 The seller object has the following properties that need to be filled in:
 ##### Properties
@@ -759,7 +888,7 @@ or
 ### Shipment
 The shipments associated with this purchase.
 The shipment object is a container for the shipment information, for the order that was placed in your store.
-The shipment class can be found under namespace "Signifyd\Models", located lib/Core/Shipment.php.
+The shipment class can be found under namespace "Signifyd\Models", located lib/Models/Shipment.php.
 
 The shipment object has the following properties that need to be filled in:
 ##### Properties
@@ -799,7 +928,7 @@ or
 ```
 ### UserAccount
 The userAccount object is a container for the user account information, for the order that was placed in your store.
-The userAccount class can be found under namespace "Signifyd\Models", located lib/Core/UserAccount.php.
+The userAccount class can be found under namespace "Signifyd\Models", located lib/Models/UserAccount.php.
 
 The userAccount object has the following properties that need to be filled in:
 ##### Properties
@@ -825,6 +954,11 @@ or
     $userAccount = new \Signifyd\Models\UserAccount();
 ```
 ### Webhook
+Wehook data
+The webhook object is a container for the user account information, for the order that was placed in your store.
+The webhook class can be found under namespace "Signifyd\Models", located lib/Models/Webhook.php.
+
+The webhook object has the following properties that need to be filled in:
 ##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
@@ -873,128 +1007,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-```
-
-Create Case Method
-An example of a JSON object sent to our API:
-```json
-{
-    "purchase": {
-        "orderSessionId": "uha3d98weicm20eufhlqe",
-        "browserIpAddress": "192.168.1.1",
-        "orderId": "4fj58as",
-        "createdAt": "2016-07-11T17:54:31-05:00",
-        "paymentGateway": "stripe",
-        "paymentMethod": "credit_card",
-        "transactionId": "1a2sf3f44f21s1",
-        "currency": "USD",
-        "avsResponseCode": "Y",
-        "cvvResponseCode": "M",
-        "orderChannel": "PHONE",
-        "receivedBy": "John Doe",
-        "totalPrice": 74.99,
-        "products": [
-            {
-                "itemId": "1",
-                "itemName": "Sparkly sandals",
-                "itemUrl": "http://mydomain.com/sparkly-sandals",
-                "itemImage": "http://mydomain.com/images/sparkly-sandals.jpeg",
-                "itemQuantity": 1,
-                "itemPrice": 49.99,
-                "itemWeight": 5
-            },
-            {
-                "itemId": "2",
-                "itemName": "Summer tank top",
-                "itemUrl": "http://mydomain.com/summer-tank",
-                "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
-                "itemQuantity": 1,
-                "itemPrice": 19.99,
-                "itemWeight": 2
-            }
-        ],
-        "shipments": [
-            {
-                "shipper": "UPS",
-                "shippingMethod": "ground",
-                "shippingPrice": 10,
-                "trackingNumber": "3A4U569H1572924642"
-            },
-            {
-                "shipper": "USPS",
-                "shippingMethod": "international",
-                "shippingPrice": 20,
-                "trackingNumber": "9201120200855113889012"
-            }
-        ]
-    },
-    "recipient": {
-        "fullName": "Bob Smith",
-        "confirmationEmail": "bob@gmail.com",
-        "confirmationPhone": "5047130000",
-        "organization": "SIGNIFYD",
-        "deliveryAddress": {
-            "streetAddress": "123 State Street",
-            "unit": "2A",
-            "city": "Chicago",
-            "provinceCode": "IL",
-            "postalCode": "60622",
-            "countryCode": "US",
-            "latitude": 41.92,
-            "longitude": -87.65
-        }
-    },
-    "card": {
-        "cardHolderName": "Robert Smith",
-        "bin": 407441,
-        "last4": "1234",
-        "expiryMonth": 12,
-        "expiryYear": 2015,
-        "billingAddress": {
-            "streetAddress": null,
-            "unit": "2A",
-            "city": "Chicago",
-            "provinceCode": "IL",
-            "postalCode": "60622",
-            "countryCode": "US",
-            "latitude": 41.92,
-            "longitude": -87.65
-        }
-    },
-    "userAccount": {
-        "email": "bob@gmail.com",
-        "username": "bobbo",
-        "phone": "5555551212",
-        "createdDate": "2013-01-18T17:54:31-05:00",
-        "accountNumber": "54321",
-        "lastOrderId": "4321",
-        "aggregateOrderCount": 40,
-        "aggregateOrderDollars": 5000,
-        "lastUpdateDate": "2013-01-18T17:54:31-05:00"
-    },
-    "seller": {
-        "name": "We sell awesome stuff, Inc.",
-        "domain": "wesellawesomestuff.com",
-        "shipFromAddress": {
-            "streetAddress": "1850 Mercer Rd",
-            "unit": null,
-            "city": "Lexington",
-            "provinceCode": "KY",
-            "postalCode": "40511",
-            "countryCode": "US",
-            "latitude": 38.07,
-            "longitude": -84.53
-        },
-        "corporateAddress": {
-            "streetAddress": "410 Terry Ave",
-            "unit": "3L",
-            "city": "Seattle",
-            "provinceCode": "WA",
-            "postalCode": "98109",
-            "countryCode": "US",
-            "latitude": 47.6,
-            "longitude": -122.33
-        }
-    }
-}
 ```
