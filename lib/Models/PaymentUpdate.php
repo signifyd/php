@@ -27,6 +27,11 @@ use Signifyd\Core\Model;
  */
 class PaymentUpdate extends Model
 {
+    /**
+     * The id of the case that we are updating
+     *
+     * @var string
+     */
     public $caseId;
 
     /**
@@ -67,6 +72,7 @@ class PaymentUpdate extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
+        'caseId',
         'paymentGateway',
         'transactionId',
         'avsResponseCode',
@@ -79,6 +85,7 @@ class PaymentUpdate extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
+        'caseId' => [],
         'paymentGateway' => [],
         'transactionId' => [],
         'avsResponseCode' => [],
@@ -92,7 +99,7 @@ class PaymentUpdate extends Model
      */
     public function __construct($data = [])
     {
-        if (!empty($data)) {
+        if (!empty($data) && is_array($data)) {
             foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
                     continue;

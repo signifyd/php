@@ -176,9 +176,9 @@ class Fulfillment extends Model
      *
      * @param array $data Fulfillment data
      */
-    public function __construct($data)
+    public function __construct($data = [])
     {
-        if (!empty($data)) {
+        if (!empty($data) && is_array($data)) {
             foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
                     continue;
@@ -191,10 +191,10 @@ class Fulfillment extends Model
                 $this->{'set' . ucfirst($field)}($value);
             }
 
-            if (isset($item['deliveryAddress'])
-             && !empty($item['deliveryAddress'])
+            if (isset($data['deliveryAddress'])
+             && !empty($data['deliveryAddress'])
             ) {
-                $deliveryAddress = new Address($item['deliveryAddress']);
+                $deliveryAddress = new Address($data['deliveryAddress']);
                 $this->setDeliveryAddress($deliveryAddress);
             }
         }

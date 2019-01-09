@@ -122,7 +122,7 @@ class Address extends Model
      */
     public function __construct($item = [])
     {
-        if (!empty($item)) {
+        if (!empty($item) && is_array($item)) {
             foreach ($item as $field => $value) {
                 if (!in_array($field, $this->fields)) {
                     continue;

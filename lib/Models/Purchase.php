@@ -219,7 +219,7 @@ class Purchase extends Model
      */
     public function __construct($data = [])
     {
-        if (!empty($data)) {
+        if (!empty($data) && is_array($data)) {
             foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
                     continue;
@@ -294,6 +294,15 @@ class Purchase extends Model
             $valid[] = 'Invalid customer order recommendation';
         }
 
+        // validate avs response code
+        if (!$this->avsCvvValidate($this->getAvsResponseCode())) {
+            $valid[] = 'Invalid AVS code';
+        }
+
+        // validate cvv response code
+        if (!$this->avsCvvValidate($this->getCvvResponseCode())) {
+            $valid[] = 'Invalid CVV code';
+        }
 
         return (isset($valid[0]))? $valid : true;
     }

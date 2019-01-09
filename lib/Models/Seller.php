@@ -185,7 +185,7 @@ class Seller extends Model
      */
     public function __construct($data = [])
     {
-        if (!empty($data)) {
+        if (!empty($data) && is_array($data)) {
             foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
                     continue;

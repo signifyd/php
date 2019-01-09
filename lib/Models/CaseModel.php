@@ -96,6 +96,12 @@ class CaseModel extends Model
             foreach ($this->fields as $field) {
                 // init the class name
                 $class = '\Signifyd\Models\\' . ucfirst($field);
+
+                // make sure no wild data is sent
+                if (array_key_exists($field, $case) === false) {
+                    continue;
+                }
+
                 if (is_array($case[$field]) && !empty($case[$field])) {
                     // instantiate the class
                     $object = new $class($case[$field]);

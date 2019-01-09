@@ -1,7 +1,8 @@
 SIGNIFYD PHP SDK [![Build Status](https://travis-ci.org/signifyd/signifyd-php.svg?branch=master)](https://travis-ci.org/signifyd/signifyd-php)
 ================
 
-*** If you have feedback good or bad about the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/)
+*** If you have feedback good or bad about the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/).
+
 *** If you notice something wrong about this SDK in particular, feel free to raise an issue [here](https://github.com/square/connect-php-sdk/issues).
 
 This repository contains the PHP SDK client for the Signifyd APIs. For more info please check the [Signifyd API documentation](https://www.signifyd.com/api/)
@@ -874,6 +875,19 @@ Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **name** | **string** | The business name of the seller |
 **domain** | **string** | The domain of the seller |
+**email** | **string** | |
+**username** | **string** | |
+**accountNumber** | **string** | |
+**phone** | **string** | |
+**createdDate** | **string** | |
+**aggregateOrderCount** | **integer** | |
+**aggregateOrderDollars** | **integer** | |
+**lastUpdateDate** | **string** | |
+**onboardingIpAddress** | **string** | |
+**onboardingEmail** | **string** | |
+**tags** | **string** | |
+**shipFromAddress** | **object** | |
+**corporateAddres** | **object** | |
 ```php
     // instantiating the seller model class
     $sellerData = ['name' => 'My company', '...'];

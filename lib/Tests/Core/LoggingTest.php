@@ -31,7 +31,7 @@ class LoggingTest extends TestCase
      *
      * @return void
      */
-    public function testFile()
+    public function testFail()
     {
         $this->fail('Logging Test is working');
     }
