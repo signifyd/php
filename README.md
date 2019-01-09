@@ -1,15 +1,13 @@
 SIGNIFYD PHP SDK [![Build Status](https://travis-ci.org/signifyd/signifyd-php.svg?branch=master)](https://travis-ci.org/signifyd/signifyd-php)
 ================
 
-*** If you have feedback good or bad about the new version of the repository please don't hesitate to contact us at
+*** If you have feedback good or bad about the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/)
 
 This repository contains the PHP SDK client for the Signifyd APIs. For more info please check the [Signifyd API documentation](https://www.signifyd.com/api/)
 
 If you are looking for a specific ecommerce integration (eq. [Magento2](https://github.com/signifyd/magento2), Shopify, etc) checkout our listing for the existing integrations.
 
-If you are looking for a sample code that was tested and works, check out the [`sdk-api-examples`](https://github.com/signifyd/signifyd-php/tree/master/sdk-examples) repository.
-
-This document will give an overview on the available methods in the Signifyd PHP SDK. Also examples for this methods will be provided.
+If you are looking for a sample code that was tested and works, check out the [`sdk-examples`](https://github.com/signifyd/signifyd-php/tree/development-not-for-use/sdk-examples) repository.
 
 Overview
 --------
@@ -48,6 +46,13 @@ $ php composer.phar install
 Getting Started
 ---------------
 Please make sure that the SDK was installed. [Installation procedure](installing-sdk)
+There are 3 api classes that each represents the 3 main parts of the API
+
+***CASE API*** Which works with cases which are orders submitted to Signifyd for review. A case contains payment, recipient, product, shipping, and account information.
+
+***GUARANTEE API*** Which works with guarantee which is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to learn more.
+
+***WEBHOOKS API*** Which works with webhooks which are messages sent by SIGNIFYD via HTTP POST to a url you configure on your Notifications page in the SIGNIFYD settings. Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to receive pushed updates about a case, rather than poll SIGNIFYD for status changes.
 
 API Clases
 ----------
@@ -63,7 +68,7 @@ Usage examples:
     // This might differ depending on the location of the file from which you your project
     require __DIR__ . '/vendor/autoload.php'; 
     
-    $caseApi = new \Signifyd\Core\Api\CaseApi(["apiKey" => "your api"]);
+    $caseApi = new \Signifyd\Core\Api\CaseApi(["apiKey" => "your api key"]);
 ``` 
 Or using the Settings Class
 ```php
@@ -84,10 +89,15 @@ based on the data passed to the constructor.
 The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to 
 the model.
 
+***Exception***
+updateInvestigationLabel take 2 parameters which are strings
+
 ##### createCase($case);
 Submit an order for fraud review.
 There are multiple ways for the data to be sent to the createCase method. One way is to send an array with all the data 
 required to the createCase method. This is useful if you know what data needs to be sent. 
+
+For more info about the data that can be added please check the `CaseModel` model.
 ```php
     ....
     // Case data
@@ -132,10 +142,10 @@ Another way is to use the setters and getters of the models so you can add data.
     
     $caseResponse = $caseApi->createCase($case);
 ```
+This method with return a `CaseResponse` which will have the `caseId` property populated.
+In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
-Based on the HTTP response code the createCase method can return the investigationId can be a string of characters or bool false.
-If the HTTP response code is 2xx to 3xx value of the investigationId is the investigation id of the case created in our application.
-If the HTTP response code is other than 2xx to 3xx the investigationId will have the value of false, which indicates that the case creation has failed.
 ##### getCase($caseId);
 Retrieve details about an individual case by investigation id or case id.
 ```php
@@ -144,38 +154,50 @@ Retrieve details about an individual case by investigation id or case id.
     $caseResponse = $caseApi->getCase($caseId);
     ....
 ```
-This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
-Based on the HTTP response code the getCase method can return the $case, an array of values or bool false.
-If the HTTP response code is 2xx to 3xx value of the case is an array with the case values from our application.
-If the HTTP response code is other than 2xx to 3xx the case the value of false, which indicates that the retrieving of the case has failed.
+???This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.???
+
+This method with return a `CaseResponse` which will have all the properties populated.
+In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ##### addFulfillment($fulfillments);
-This sends the request to our API Endpoint to add fulfillments for order. One way is to send an array with all the data required to the addFulfillment method
+This sends the request to our API Endpoint to add fulfillments for order. One way is to send an array with all the data required to the addFulfillment method.
+
+For more info about the data that can be added please check the `Fulfillment` model.
 ```php
     ....
-    $fulfillmentData = [];
+    $fulfillmentData = [
+        // Fulfilment data
+    ];
     $caseResponse = $caseApi->addFulfillment($fulfillmentData);
     ....
 ```
+This method with return a `FulfillmentBulkResponse` which will have the `objects` property populated with `Fulfillment` model all the properties populated.
+In case of error the `FulfillmentBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ##### updatePayment($paymentUpdate);
 Update payment data by sending updated information.
+This sends the request to our API Endpoint to update the payment for an existing case.
+
+For more info about the data that can be added please check the `PaymentUpdate` model.
 ```php
     ....
-    $caseId = 123456789;
-    $paymentUpdate = new Signifyd\Models\PaymentUpdate();
+    $paymentUpdate = new Signifyd\Models\PaymentUpdate([
+        // Payment update data
+    ]);
     // Add data to payment update
 
     $caseResponse = $caseApi->updatePayment($paymentUpdate);
     ....
 ```
-
-This sends the request to our API Endpoint to update the payment for an existing case. As a parameter for this method you need to send a case id and the payment update object (as described above).
-Based on the HTTP response code the updatePayment method can return the bool true or bool false.
-If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
-If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.
+This method with return a `CaseResponse` which will have the properties populated.
+In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ##### updateInvestigationLabel($caseId, $investigationUpdate);
-Close case using case id, by dismissing it.
+Update investigation label for a case.
+This sends the request to our API Endpoint to update the investigation label for a case. As a parameter for this method you need to send a case id and new investigation label.
 ```php
     ....
     $caseId = 123456789;
@@ -183,10 +205,9 @@ Close case using case id, by dismissing it.
     $caseResponse = $caseApi->updateInvestigationLabel($caseId, $investigationUpdate);
     ....
 ```
-This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id and new investigation label.
-Based on the HTTP response code the updateInvestigationLabel method can return the bool true or bool false.
-If the HTTP response code is 2xx to 3xx the value of the $update is a bool true from our application, indicating the success of the update.
-If the HTTP response code is other than 2xx to 3xx the $update value is a bool false, which indicates that the updating of the case has failed.
+This method with return a `CaseResponse` which will have the properties populated.
+In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ### GuaranteeApi
 The GuaranteeApi is the class the maps the main guarantee functionality of the Signify API. This class has the methods 
@@ -222,20 +243,32 @@ the model.
 
 ##### createGuarantee($guarantee);
 Submit a request to guarantee an existing case.
+
+For more info about the data that can be added please check the `Guarantee` model.
 ```php
     ....
     $guarantee = new \Signifyd\Model\Guarantee(['caseId' => 123456]);
     $guaranteeResponse = $guaranteeApi->createGuarantee($quarantee);
     ....
 ```
+This method with return a `GuaranteeResponse` which will have the properties populated.
+In case of error the `GuaranteeResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ##### cancelGuarantee($guarantee);
 A Guarantee can be canceled for orders that no longer require a guarantee.
+
+For more info about the data that can be added please check the `Guarantee` model.
 ```php
     ....
     $quarantee = new \Signifyd\Model\Guarantee(['caseId' => 123456789]);
     $guaranteeResponse = $guaranteeApi->cancelGuarantee($quarantee);
     ....
 ```
+This method with return a `GuaranteeResponse` which will have the properties populated.
+In case of error the `GuaranteeResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ### WebhookApi
 The WebhookApi is the class the maps the main webhooks functionality of the Signify API. This class has the methods 
 that work with webhooks.
@@ -275,56 +308,97 @@ Check if a webhook callback is valid.
     $valid = $webhooksApi->validWebhookRequest($request, $hash, $topic);
     ....
 ```
+This is a helper function which does not connect to signifyd.
+This method with return a boolean `true` in case of a valid request or `false` in case of a invalid request.
+
 ##### createWebhooks($webhooks);
 Create webhooks in Signifyd.
+
+For more info about the data that can be added please check the `Wehbook` model.
 ```php
     ....
-    $webhook1 = new \Signifyd\Model\Webhook([]);
-    $webhook2 = new \Signifyd\Model\Webhook([]);
+    $webhook1 = new \Signifyd\Model\Webhook([
+        // Webhook data
+    ]);
+    $webhook2 = new \Signifyd\Model\Webhook([
+        // Webhook data
+    ]);
     $webhooks = [$webhook1, $webhook2];
-    $webhooksResponse = $webhooksApi->createWebhooks($webhooks);
+    $webhooksBulkResponse = $webhooksApi->createWebhooks($webhooks);
     ....
 ```
+This method with return a `WebhooksBulkResponse` which will have the `objects` property populated with `WebhooksResponse` with all the properties populated.
+In case of error the `WebhooksBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ##### updateWebhooks($webhooks);
 Update webhooks in Signifyd.
+
+For more info about the data that can be added please check the `Wehbook` model.
 ```php
     ....
-    $webhook1 = new \Signifyd\Model\Webhook([]);
-    $webhook2 = new \Signifyd\Model\Webhook([]);
+    $webhook1 = new \Signifyd\Model\Webhook([
+        // Webhook data
+    ]);
+    $webhook2 = new \Signifyd\Model\Webhook([
+        // Webhook data
+    ]);
     $webhooks = [$webhook1, $webhook2];
-    $webhooksResponse = $webhooksApi->updateWebhooks($webhooks);
+    $webhooksBulkResponse = $webhooksApi->updateWebhooks($webhooks);
     ....
 ```
+This method with return a `WebhooksBulkResponse` which will have the `objects` property populated with `WebhooksResponse` with all the properties populated.
+In case of error the `WebhooksBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ##### getWebhooks();
 Retrive a list of webhooks set in Signifyd.
 ```php
     ....
-    $webhooksResponse = $webhooksApi->getWebhooks();
-    $webhooks = $webhooksResponse->getResponseArray();
+    $webhooksBulkResponse = $webhooksApi->getWebhooks();
     ....
 ```
+This method with return a `WebhooksBulkResponse` which will have the `objects` property populated with `WebhooksResponse` with all the properties populated.
+In case of error the `WebhooksBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ##### updateWebhook($webhook);
 Update a single webhook in Signifyd.
+
+For more info about the data that can be added please check the `Wehbook` model.
 ```php
     ....
-    $webhook = new \Signifyd\Model\Webhook([]);
+    $webhook = new \Signifyd\Model\Webhook([
+        // Webhook data
+    ]);
     $webhooksResponse = $webhooksApi->updateWebhook($webhook);
     ....
 ```
+This method with return a `WebhooksResponse` which will have the properties populated.
+In case of error the `WebhooksResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
 ##### deleteWebhook($webhook);
 Delete a webhook from Signifyd.
+
+For more info about the data that can be added please check the `Wehbook` model.
 ```php
     ....
-    $webhook = new \Signifyd\Model\Webhook([]);
+    $webhook = new \Signifyd\Model\Webhook([
+        // Webhook data
+    ]);
     $webhooksResponse = $webhooksApi->deleteWebhook($webhook);
     ....
 ```
+This method with return a `WebhooksResponse` which will have the properties populated.
+In case of error the `WebhooksResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 SDK API Responses
 -------------
 ### CaseResponse
 Case response is the response that is returned when the case api is called
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **guaranteeEligible** | **string** | |
@@ -351,9 +425,21 @@ Name | Type | Description | Notes
 
 You can access any value by using the getters methods in the response
 
+### FulfillmentBulkResponse
+Fulfillment bulk response onse is the response that is returned when the case api addFulfillment method is called
+##### Properties
+Name | Type | Description | Notes
+------- | ------- | ------- | -------
+**objects** | **array** | An array of `Fulfillment` objects |
+**logger** | **object** | |
+**isError** | **boolean** | |
+**errorMessage** | **string** | |
+
+You can access any value by using the getters methods in the response
+
 ### GuaranteeResponse
 Guarantee response is the returned value when the guarantee api is called
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **disposition** | **string** | |
@@ -371,8 +457,8 @@ Name | Type | Description | Notes
 You can access any value by using the getters methods in the response
 
 ### WebhooksResponse
-Webhoook response is the returned value when the webhook api is called
-##### Parameters
+Webhoook response is the returned value when the webhook api for update and delete webhook methods are called
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **id** | **integer** | |
@@ -387,11 +473,23 @@ Name | Type | Description | Notes
 
 You can access any value by using the getters methods in the response
 
+### WebhooksBulkResponse
+Webhoook bulk response is the returned value when the webhook api for get, create and update webhooks methods are called
+##### Properties
+Name | Type | Description | Notes
+------- | ------- | ------- | -------
+**objects** | **array** | An array of `WebhookResponse` objects |
+**isError** | **boolean** | |
+**errorMessage** | **string** | |
+**logger** | **object** | |
+
+You can access any value by using the getters methods in the response
+
 SDK Settings
 ------------
 ### Settings
 Contains a shipping/billing address
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **apiKey** | **string** | The api key from Signifyd |
@@ -407,7 +505,11 @@ SDK Models
 ----------
 ### Address
 Contains a shipping/billing address
-##### Parameters
+The address object is a container for the address information, for the order that was placed in your store.
+The address class can be found under namespace "Signifyd\Models", located lib/Core/Address.php.
+
+The address object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **streetAddress** | **string** | The street number and street name |
@@ -433,7 +535,11 @@ or
 
 ### Card
 Data related to the card that was used for the purchase and its cardholder
-##### Parameters
+The card object is a container for the card information, for the order that was placed in your store.
+The card class can be found under namespace "Signifyd\Models", located lib/Core/Card.php.
+
+The address object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **cardHolderName** | **string** | The full name on the credit card that was charged |
@@ -456,7 +562,10 @@ or
 ```
 ### CaseModel
 Data related to the case
-##### Parameters
+The case object is the main container for the case related information that is sent to our API on case creation as a JSON string.
+The case class can be found under namespace "Signifyd\Models", located lib/Models/CaseModel.php.
+The case object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **purchase** | **object** | Data related to purchase event represented in this Case Creation request | Purchase Object
@@ -477,7 +586,7 @@ or
 ```
 ### DiscountCode
 Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **code** | **string** | The name of the discount code entered during checkout |
@@ -485,7 +594,7 @@ Name | Type | Description | Notes
 **percentage** | **integer** | If a percentage discount is applied the percentage of the total order amount the discount applies to. e.g. 20% off purchase. This field should be NULL if amount is provided. |
 ```php
     // instantiating the discount code model class
-    $discountCodeData = [];
+    $discountCodeData = ['code' => '598218sdareqw74fds', '...'];
     $discountCode = new \Signifyd\Models\DiscountCode($discountCodeData);
 ```
 or
@@ -496,7 +605,7 @@ or
 ```
 ### Guarantee
 Guarantee data
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **caseId** | **string** | The name of the discount code entered during checkout |
@@ -513,7 +622,11 @@ or
 ```
 ### PaymentUpdate
 Payment update data
-##### Parameters
+The paymentUpdate object is a container for the payment update information, for the order that was placed in your store.
+The paymentUpdate class can be found under namespace "Signifyd\Models", located lib/Core/PaymentUpdate.php.
+
+The paymentUpdate object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **paymentGateway** | **string** | The gateway that processed the transaction |
@@ -522,7 +635,7 @@ Name | Type | Description | Notes
 **cvvResponseCode**  | **string** | The response code from the card verification value (CVV) check. Accepted codes listed on above link |
 ```php
     // instantiating the payment update model class
-    $paymentUpdateData = [];
+    $paymentUpdateData = ['paymentGateway' => 'Authorizenet', '...'];
     $paymentUpdate = new \Signifyd\Models\PaymentUpdate($paymentUpdateData);
 ```
 or
@@ -533,7 +646,10 @@ or
 ```
 ### Product
 The products purchased in the transaction
-##### Parameters
+The product object is a container for the product information, for the order that was placed in your store.
+The product class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
+The product object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **itemId** | **string** | Your unique identifier for the product. This is a string because of hexadecimal identifiers. |
@@ -548,7 +664,7 @@ Name | Type | Description | Notes
 **itemSubCategory** | **string** | The name of the sub-category of the product if applicable. e.g. T-Shirt |
 ```php
     // instantiating the product model class
-    $productData = [];
+    $productData = ['itemId' => 1251541, '...'];
     $product = new \Signifyd\Models\Product($productData);
 ```
 or
@@ -559,7 +675,10 @@ or
 ```
 ### Purchase
 Data related to purchase event represented in this Case Creation request.
-##### Parameters
+The purchase object is a container for the order information, the order that was placed in your store.
+The purchase class can be found under namespace "Signifyd\Models", located lib/Core/Purchase.php.
+The purchase object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **orderSessionId** | **string** | The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript |
@@ -580,7 +699,7 @@ Name | Type | Description | Notes
 **discountCodes** | **array** | Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage. |
 ```php
     // instantiating the purchase address model class
-    $purchaseData = [];
+    $purchaseData = ['orderSessionId' => '1121aseaa324321ahiuhfsdiuhaiufds', '...'];
     $purchase = new \Signifyd\Models\Purchase($purchaseData);
 ```
 or
@@ -591,7 +710,12 @@ or
 ```
 ### Recipient
 Data related to person or organization receiving the items purchased.
-##### Parameters
+The recipient object is a container for the recipient information, for the order that was placed in your store.
+The recipient class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
+The recipient object has the following properties that need to be filled in:
+
+The delivery address in it's self an object.
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **fullName** | **string** | The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank |
@@ -601,7 +725,7 @@ Name | Type | Description | Notes
 **deliveryAddress** | **object** | The address to which the order will be delivered |
 ```php
     // instantiating the recipient model class
-    $recipientData = [];
+    $recipientData = ['fullName' => 'John Doe', '...'];
     $recipient = new \Signifyd\Models\Recipient($recipientData);
 ```
 or
@@ -612,14 +736,18 @@ or
 ```
 ### Seller
 All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
-##### Parameters
+The seller object is a container for the seller information, for the order that was placed in your store.
+The seller class can be found under namespace "Signifyd\Models", located lib/Core/Seller.php.
+
+The seller object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **name** | **string** | The business name of the seller |
 **domain** | **string** | The domain of the seller |
 ```php
     // instantiating the seller model class
-    $sellerData = [];
+    $sellerData = ['name' => 'My company', '...'];
     $seller = new \Signifyd\Models\Seller($sellerData);
 ```
 or
@@ -630,7 +758,11 @@ or
 ```
 ### Shipment
 The shipments associated with this purchase.
-##### Parameters
+The shipment object is a container for the shipment information, for the order that was placed in your store.
+The shipment class can be found under namespace "Signifyd\Models", located lib/Core/Shipment.php.
+
+The shipment object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **shipper** | **string** | The name of the shipper |
@@ -639,7 +771,7 @@ Name | Type | Description | Notes
 **trackingNumber** | **string** | The tracking number |
 ```php
     // instantiating the shipment model class
-    $shipmentData = [];
+    $shipmentData = ['shipper' => 'Fedex', '...'];
     $shipment = new \Signifyd\Models\Shipment($shipmentData);
 ```
 or
@@ -649,14 +781,14 @@ or
     $shipment = new \Signifyd\Models\Shipment();
 ```
 ### Team
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **teamId** | **string** | The team id |
 **teamName** | **string** | The team name |
 ```php
     // instantiating the team model class
-    $teamData = [];
+    $teamData = ['teamId' => 1, '...'];
     $team = new \Signifyd\Models\Team($teamData);
 ```
 or
@@ -666,7 +798,11 @@ or
     $team = new \Signifyd\Models\Team();
 ```
 ### UserAccount
-##### Parameters
+The userAccount object is a container for the user account information, for the order that was placed in your store.
+The userAccount class can be found under namespace "Signifyd\Models", located lib/Core/UserAccount.php.
+
+The userAccount object has the following properties that need to be filled in:
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **emailAddress** | **string** | The primary email address associated with the account |
@@ -680,17 +816,16 @@ Name | Type | Description | Notes
 **lastUpdateDate** | **string** | yyyy-MM-dd'T'HH:mm:ssZ The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card. See the Dates section of these docs for more information about date formats |
 ```php
     // instantiating the user account model class
-    $userData = ['emailAddress' => '', 'username' => ''];
+    $userData = ['emailAddress' => 'john@doe.com', '...'];
     $userAccount = new \Signifyd\Models\UserAccount($userData);
 ```
 or
 ```php
     // instantiating the user account model class
-    $userData = ['emailAddress' => '', 'username' => ''];
     $userAccount = new \Signifyd\Models\UserAccount();
 ```
 ### Webhook
-##### Parameters
+##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **event** | **string** | The event type |
@@ -703,14 +838,12 @@ Name | Type | Description | Notes
 or
 ```php
     // instantiating the webhook model class
-    $webhookData = ['event' => '', 'url' => 'Your Url'];
-    $webhook = new \Signifyd\Models\Webhook($webHookData);
+    $webhook = new \Signifyd\Models\Webhook();
 ```
 Contributing
 ------------
 
-Send bug reports, feature requests, and code contributions to the [API
-specifications repository](https://github.com/signifyd/signifyd-php),
+Send bug reports, feature requests, and code contributions to the [API specifications repository](https://github.com/signifyd/signifyd-php),
 as this repository contains only the generated SDK code. If you notice something wrong about this SDK in particular, feel free to raise an issue [here](https://github.com/square/connect-php-sdk/issues).
 
 License
@@ -742,279 +875,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
-### Objects
-#### 4.	Case Object
-
-The case object is the main container for the case related information that is sent to our API on case creation as a JSON string.
-The case class can be found under namespace "Signifyd\Models", located lib/Core/CaseModel.php.
-The case object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
-
-```php
-<?php 
-    // instantiating the case model class
-    $case = new \Signifyd\Models\CaseModel();
-?>
-```
-
-The properties of the case object are as follows:
-```php
-<?php
-    /**
-     * @var \Signifyd\Models\Purchase
-     */
-    public $purchase;
-    /**
-     * @var \Signifyd\Models\Recipient
-     */
-    public $recipient;
-    /**
-     * @var \Signifyd\Models\Card
-     */
-    public $card;
-    /**
-     * @var \Signifyd\Models\UserAccount
-     */
-    public $userAccount;
-    /**
-     * @var \Signifyd\Models\Seller
-     */
-    public $seller;
-?> 
-```
-#### 5.	Purchase Object
-
-The purchase object is a container for the order information, the order that was placed in your store.
-The purchase class can be found under namespace "Signifyd\Models", located lib/Core/Purchase.php.
-
-```php
-<?php 
-    // instantiating the purchase model class
-    $purchase = new \Signifyd\Models\Purchase();
-?> 
-```
-
-The purchase object has the following properties that need to be filled in:
-
-Example:
-```php
-<?php 
-    $purchase->browserIpAddress = '192.168.1.1';
-    $purchase->orderId = '4fj58as';
-    $purchase->createdAt = '2016-07-11T17:54:31-05:00';
-    $purchase->paymentGateway = "stripe";
-    $purchase->paymentMethod = "credit_card";
-    $purchase->transactionId = "1a2sf3f44f21s1";
-    $purchase->currency = "USD";
-    $purchase->avsResponseCode = "Y";
-    $purchase->cvvResponseCode = "M";
-    $purchase->orderChannel = "PHONE";
-    $purchase->receivedBy = "John Doe";
-    $purchase->totalPrice = 74.99;
-?> 
-```
-#### 6.	Product Object
-
-The product object is a container for the product information, for the order that was placed in your store.
-The product class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
-
-```php
-<?php 
-    // instantiating the product model class
-    $product = new \Signifyd\Models\Product();
-?> 
-```
-
-The product object has the following properties that need to be filled in:
-Example:
-```php
-<?php 
-    $product->itemId = '2';
-    $product->itemName = 'Sparkly sandals';
-    $product->itemUrl = 'http://mydomain.com/sparkly-sandals';
-    $product->itemImage = 'http://mydomain.com/images/sparkly-sandals.jpeg';
-    $product->itemQuantity = 1;
-    $product->itemPrice = 49.99;
-    $product->itemWeight = 5; 
-?> 
-```
-7.	Recipient Object
-
-The recipient object is a container for the recipient information, for the order that was placed in your store.
-The recipient class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
-
-```php
-<?php 
-    // instantiating the recipient model class
-    $recipient = new \Signifyd\Models\Recipient();
-?> 
-```
-
-The recipient object has the following properties that need to be filled in:
-
-The delivery address in it's self an object.
-Example:
-```php
-<?php 
-    $recipient->fullName = "Bob Smith";
-    $recipient->confirmationEmail = "bob@gmail.com";
-    $recipient->confirmationPhone = "5047130000";
-    $recipient->organization = "SIGNIFYD";
-    $recipient->deliveryAddress =  $deliveryAddress; // check the Address object below
-?> 
-```
-
-#### 8.	Address Object
-
-The address object is a container for the address information, for the order that was placed in your store.
-The address class can be found under namespace "Signifyd\Models", located lib/Core/Address.php.
-
-```php
-<?php 
-    // instantiating the recipient model class
-    $address = new \Signifyd\Models\Address();
-?> 
-```
-
-The address object has the following properties that need to be filled in:
-Example:
-```php
-<?php 
-    $address->streetAddress = '123 State Street';
-    $address->unit = '2A';
-    $address->city = 'Chicago';
-    $address->provinceCode = 'IL';
-    $address->postalCode = '60622';
-    $address->countryCode = 'US';
-    $address->latitude = 41.92;
-    $address->longitude = -87.65;
-?> 
-```
-#### 9.	Card Object
-
-The card object is a container for the card information, for the order that was placed in your store.
-The card class can be found under namespace "Signifyd\Models", located lib/Core/Card.php.
-
-```php
-<?php 
-    // instantiating the card model class
-    $card = new \Signifyd\Models\Card();
-?> 
-```
-
-The address object has the following properties that need to be filled in:
-Example:
-```php
-<?php 
-    $card->cardHolderName = 'Robert Smith';
-    $card->bin = 407441;
-    $card->last4 = '1234';
-    $card->expiryMonth = 12;
-    $card->expiryYear = 2015;
-    $card->hash = '';
-    $card->billingAddress = $address; //an Address object as seen above
-?> 
-```
-#### 10.	UserAccount Object
-
-The userAccount object is a container for the user account information, for the order that was placed in your store.
-The userAccount class can be found under namespace "Signifyd\Models", located lib/Core/UserAccount.php.
-
-```php
-<?php 
-    // instantiating the card model class
-    $userAccount = new \Signifyd\Models\UserAccount();
-?> 
-```
-
-The userAccount object has the following properties that need to be filled in:
-Example:
-```php
-<?php 
-    $userAccount->emailAddress = 'bob@gmail.com';
-    $userAccount->username = 'bobbo';
-    $userAccount->phone = '5555551212';
-    $userAccount->createdDate = '2013-01-18T17:54:31-05:00';
-    $userAccount->accountNumber = '54321';
-    $userAccount->lastOrderId = '4321';
-    $userAccount->aggregateOrderCount = 40;
-    $userAccount->aggregateOrderDollars = 5000;
-    $userAccount->lastUpdateDate = '2013-01-18T17:54:31-05:00';
-?> 
-```
-#### 11.	Seller Object
-
-The seller object is a container for the seller information, for the order that was placed in your store.
-The seller class can be found under namespace "Signifyd\Models", located lib/Core/Seller.php.
-
-```php
-<?php 
-    // instantiating the seller model class
-    $seller = new \Signifyd\Models\Seller();
-?> 
-```
-
-The seller object has the following properties that need to be filled in:
-Example:
-```php
-<?php 
-    $seller->name = 'We sell awesome stuff, Inc.';
-    $seller->domain = 'wesellawesomestuff.com';
-    $seller->shipFromAddress = $address; //an Address object as seen above
-    $seller->corporateAddress = $address1; //an Address object as seen above
-?> 
-```
-
-#### 12.	Shipment Object
-
-The shipment object is a container for the shipment information, for the order that was placed in your store.
-The shipment class can be found under namespace "Signifyd\Models", located lib/Core/Shipment.php.
-
-```php
-<?php 
-    // instantiating the shipment model class
-    $shipment = new \Signifyd\Models\Shipment();
-?> 
-```
-
-The shipment object has the following properties that need to be filled in:
-Example:
-```php
-<?php
-    $shipment->shipper = 'UPS';
-    $shipment->shippingMethod = 'ground';
-    $shipment->shippingPrice = 10;
-    $shipment->trackingNumber = '3A4U569H1572924642';
-?> 
-```
-
-#### 13.	PaymentUpdate Object
-
-The paymentUpdate object is a container for the payment update information, for the order that was placed in your store.
-The paymentUpdate class can be found under namespace "Signifyd\Models", located lib/Core/PaymentUpdate.php.
-
-```php
-<?php 
-    // instantiating the PaymentUpdate model class
-    $paymentUpdate = new \Signifyd\Models\PaymentUpdate();
-?> 
-```
-
-The paymentUpdate object has the following properties that need to be filled in:
-Example:
-```php
-<?php
-    $paymentUpdate->paymentGateway = 'stripe';
-    $paymentUpdate->transactionId = '1a2sf3f44f21s1';
-    $paymentUpdate->avsResponseCode = 'Y';
-    $paymentUpdate->cvvResponseCode = 'M';
-?> 
-```
-
-###		SDK Methods
-
-#### 14.	Create Case Method
-
-This sends the request to our API Endpoint to create a new case. As a parameter for this method you need to send a case object that has its properties filled up.
+Create Case Method
 An example of a JSON object sent to our API:
 ```json
 {
@@ -1136,34 +997,4 @@ An example of a JSON object sent to our API:
         }
     }
 }
-```
-The usual payload for a response:
-{
-    "investigationId": 1
-}
-
-#### 15.	Get Case Method
-Example of request:
-GET https://api.signifyd.com/v2/cases/caseId
-
-Example of response:
-```json
-{
-    guaranteeEligible: false,
-    guaranteeDisposition: "APPROVED",
-    status: "DISMISSED",
-    caseId: 44,
-    score: 776,
-    adjustedScore: 776,
-    investigationId: 44,
-    uuid: "97c56c86-7984-44fa-9a3e-7d5f34d1bead",
-    headline: "Maxine Trycia",
-    orderId: "1234",
-    orderDate: "2013-01-18T22:54:29+0000",
-    orderAmount: 48,
-    associatedTeam: "1",
-    reviewDisposition: "GOOD",
-    createdAt: "2013-03-06T23:17:17+0000",
-    updatedAt: "2013-03-06T23:17:18+0000"
-} 
 ```
