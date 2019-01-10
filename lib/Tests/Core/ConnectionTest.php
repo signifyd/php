@@ -64,6 +64,8 @@ class ConnectionTest extends TestCase
     /**
      * Test the making of the url without sending a parameter
      *
+     * @covers \Signifyd\Core\Connection::makeUrl()
+     *
      * @throws ConnectionException
      * @throws \Signifyd\Core\Exceptions\LoggerException
      *
@@ -79,6 +81,8 @@ class ConnectionTest extends TestCase
 
     /**
      * Test the make url with an endpoint
+     *
+     * @covers \Signifyd\Core\Connection::makeUrl()
      *
      * @throws ConnectionException
      * @throws \Signifyd\Core\Exceptions\LoggerException

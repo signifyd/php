@@ -16,7 +16,7 @@ namespace Signifyd\Tests\Core;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ApiClientTest
+ * Class LoggingTest
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
