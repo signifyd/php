@@ -61,8 +61,25 @@ class Settings
      */
     public $retry = false;
 
+    /**
+     * SSLVerification for curl
+     *
+     * @var bool
+     */
     protected $SSLVerification = false;
+
+    /**
+     * The ability to display in the console the logs as they are written
+     *
+     * @var bool
+     */
     protected $consoleOut = false;
+
+    /**
+     * Logging enabled?
+     *
+     * @var bool
+     */
     protected $logEnabled = true;
 
     /**
@@ -74,7 +91,7 @@ class Settings
      */
     public function __construct($args = [])
     {
-        if (!empty($args)) {
+        if (!empty($args) && is_array($args)) {
             foreach (array_keys(get_object_vars($this)) as $var) {
                 if (array_key_exists($var, $args)) {
                     $this->{'set' . ucfirst($var)}($args[$var]);

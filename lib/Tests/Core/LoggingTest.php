@@ -26,14 +26,49 @@ use PHPUnit\Framework\TestCase;
  */
 class LoggingTest extends TestCase
 {
+    public $apiKey = 'your api key';
+
     /**
      * Testing settings with no argument passed
      *
+     * @expectedException \ArgumentCountError
+     *
      * @return void
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
      */
-    public function testFail()
+    public function testLoggingWithoutParam()
     {
-        $this->fail('Logging Test is working');
+        $logging = new \Signifyd\Core\Logging();
+    }
+
+    /**
+     * Testing settings with apiKey in array passed
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\LoggerException
+     * @expectedExceptionMessage Settings should be a \Signifyd\Core\Settings instance
+     *
+     * @return void
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testSettingsInitWithArray()
+    {
+        $logging = new \Signifyd\Core\Logging([]);
+    }
+
+    /**
+     * Testing settings with apiKey in array passed
+     *
+     * @return void
+     *
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testLoggingInitwithCorrectParam()
+    {
+        $settings = new \Signifyd\Core\Settings(['apiKey' => 'asjdfs9oa8u349821q9rqw']);
+        $logging = new \Signifyd\Core\Logging($settings);
+        $this->assertEquals('Signifyd\Core\Logging', get_class($logging));
     }
 
 }

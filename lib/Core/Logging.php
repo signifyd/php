@@ -61,6 +61,12 @@ class Logging
      */
     public function __construct($settings)
     {
+        if ($settings instanceOf \Signifyd\Core\Settings === false) {
+            throw new LoggerException(
+                'Settings should be a \Signifyd\Core\Settings instance'
+            );
+        }
+
         $this->settings = $settings;
         $this->logger = new Logger('Signifyd PHP Library');
         $this->initLogs();

@@ -27,6 +27,8 @@ use Signifyd\Core\Settings;
  */
 class SettingsTest extends TestCase
 {
+    public $apiKey = 'your api key';
+
     /**
      * Testing settings with no argument passed
      *
@@ -45,9 +47,8 @@ class SettingsTest extends TestCase
      */
     public function testSettingsInitWithArray()
     {
-        $key = '123879uhdfasyy43edsufa98934yfasd';
-        $settings = new Settings(['apiKey' => $key]);
-        $this->assertSame($key, $settings->getApiKey());
+        $settings = new Settings(['apiKey' => $this->apiKey]);
+        $this->assertSame($this->apiKey, $settings->getApiKey());
     }
 
     /**
@@ -57,8 +58,19 @@ class SettingsTest extends TestCase
      */
     public function testSettingsInitWithWrongArrayKey()
     {
-        $key = '123879uhdfasyy43edsufa98934yfasd';
-        $settings = new Settings(['apiKey23423' => $key]);
+        $settings = new Settings(['apiKey23423' => $this->apiKey]);
         $this->assertNull($settings->getApiKey());
     }
+
+    /**
+     * Test sending array with key that does not exist
+     *
+     * @return void
+     */
+    public function testSettingsInitWithWrongParamType()
+    {
+        $settings = new Settings('apiKey23423');
+        $this->assertEquals('Signifyd\Core\Settings', get_class($settings));
+    }
+
 }
