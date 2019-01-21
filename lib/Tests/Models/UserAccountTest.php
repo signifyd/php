@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class UserAccountTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\UserAccount';
@@ -78,17 +80,19 @@ class UserAccountTest extends TestCase
         $userAccount = new \Signifyd\Models\UserAccount($userAccountData);
         $this->assertInstanceOf($this->className, $userAccount);
         $jsonUserAccount = $userAccount->toJson();
-        $emptyJsonUserAccount = json_encode([
-            "email" => null,
-            "username" => null,
-            "phone" => null,
-            "createdDate" => null,
-            "accountNumber" => null,
-            "lastOrderId" => null,
-            "aggregateOrderCount" => null,
-            "aggregateOrderDollars" => null,
-            "lastUpdateDate" => null
-        ]);
+        $emptyJsonUserAccount = json_encode(
+            [
+                "email" => null,
+                "username" => null,
+                "phone" => null,
+                "createdDate" => null,
+                "accountNumber" => null,
+                "lastOrderId" => null,
+                "aggregateOrderCount" => null,
+                "aggregateOrderDollars" => null,
+                "lastUpdateDate" => null
+            ]
+        );
 
         $this->assertEquals($jsonUserAccount, $emptyJsonUserAccount);
     }
@@ -171,14 +175,14 @@ class UserAccountTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateUserAccountWithWrongParams()
-//    {
-//        $userAccountData = [];
-//        $userAccount = new \Signifyd\Models\UserAccount($userAccountData);
-//        $valid = $userAccount->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateUserAccountWithWrongParams()
+    //{
+        //$userAccountData = [];
+        //$userAccount = new \Signifyd\Models\UserAccount($userAccountData);
+        //$valid = $userAccount->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for UserAccount */
 
 

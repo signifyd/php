@@ -31,6 +31,8 @@ class GuaranteeApiTest extends TestCase
 
     /**
      * Setup guarantee data
+     *
+     * @return void
      */
     public function setUp()
     {

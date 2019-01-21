@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class TeamTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Team';
@@ -78,10 +80,12 @@ class TeamTest extends TestCase
         $team = new \Signifyd\Models\Team($teamData);
         $this->assertInstanceOf($this->className, $team);
         $jsonTeam = $team->toJson();
-        $emptyJsonTeam = json_encode([
-            "teamId" => null,
-            "teamName" => null
-        ]);
+        $emptyJsonTeam = json_encode(
+            [
+                "teamId" => null,
+                "teamName" => null
+            ]
+        );
 
         $this->assertEquals($jsonTeam, $emptyJsonTeam);
     }
@@ -143,14 +147,14 @@ class TeamTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateTeamWithWrongParams()
-//    {
-//        $teamData = [];
-//        $team = new \Signifyd\Models\Team($teamData);
-//        $valid = $team->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateTeamWithWrongParams()
+    //{
+        //$teamData = [];
+        //$team = new \Signifyd\Models\Team($teamData);
+        //$valid = $team->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Team */
 
 }

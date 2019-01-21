@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class AddressTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Address';
@@ -78,16 +80,18 @@ class AddressTest extends TestCase
         $address = new \Signifyd\Models\Address($addressData);
         $this->assertInstanceOf($this->className, $address);
         $jsonAddress = $address->toJson();
-        $emptyJsonAddress = json_encode([
-            'streetAddress' => null,
-            'unit' => null,
-            'city' => null,
-            'provinceCode' => null,
-            'postalCode' => null,
-            'countryCode' => null,
-            'latitude' => null,
-            'longitude' => null
-        ]);
+        $emptyJsonAddress = json_encode(
+            [
+                'streetAddress' => null,
+                'unit' => null,
+                'city' => null,
+                'provinceCode' => null,
+                'postalCode' => null,
+                'countryCode' => null,
+                'latitude' => null,
+                'longitude' => null
+            ]
+        );
 
         $this->assertEquals($jsonAddress, $emptyJsonAddress);
     }
@@ -167,13 +171,13 @@ class AddressTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateAddressWithWrongParams()
-//    {
-//        $addressData = [];
-//        $address = new \Signifyd\Models\Address($addressData);
-//        $valid = $address->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    // public function testValidateAddressWithWrongParams()
+    //{
+        //$addressData = [];
+        //$address = new \Signifyd\Models\Address($addressData);
+        //$valid = $address->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Address */
 }

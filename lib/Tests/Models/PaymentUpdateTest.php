@@ -27,11 +27,15 @@ use PHPUnit\Framework\TestCase;
 class PaymentUpdateTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\PaymentUpdate';
 
     /**
+     * The validation type
+     *
      * @var \PhpUnit\Framework\String
      */
     public $validType = 'array';
@@ -83,13 +87,15 @@ class PaymentUpdateTest extends TestCase
         $paymentUpdate = new \Signifyd\Models\PaymentUpdate($paymentUpdateData);
         $this->assertInstanceOf($this->className, $paymentUpdate);
         $jsonPaymentUpdate = $paymentUpdate->toJson();
-        $emptyJsonPaymentUpdate = json_encode([
-            "caseId" => null,
-            "paymentGateway" => null,
-            "transactionId" => null,
-            "avsResponseCode" => null,
-            "cvvResponseCode" => null
-        ]);
+        $emptyJsonPaymentUpdate = json_encode(
+            [
+                "caseId" => null,
+                "paymentGateway" => null,
+                "transactionId" => null,
+                "avsResponseCode" => null,
+                "cvvResponseCode" => null
+            ]
+        );
 
         $this->assertEquals($jsonPaymentUpdate, $emptyJsonPaymentUpdate);
     }

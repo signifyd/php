@@ -119,10 +119,11 @@ class WebhooksApi
      *
      * @param array|object $webHooks Webhook data
      *
-     * @return
+     * @return object WebhooksBulkApi
      *
      * @throws InvalidClassException
      * @throws WebhookModelException
+     * @throws LoggerException
      */
     public function createWebhooks($webHooks)
     {
@@ -204,6 +205,7 @@ class WebhooksApi
      *
      * @throws InvalidClassException
      * @throws WebhookModelException
+     * @throws LoggerException
      */
     public function updateWebhooks($webHooks)
     {
@@ -257,7 +259,7 @@ class WebhooksApi
     /**
      * Retrieve all webhooks for a team.
      *
-     * @return \Signifyd\Core\Response\WebhooksBulkResponse $response List of webhooks
+     * @return WebhooksBulkResponse $response List of webhooks
      *
      * @throws InvalidClassException
      */
@@ -278,6 +280,7 @@ class WebhooksApi
      *
      * @throws InvalidClassException
      * @throws WebhookModelException
+     * @throws LoggerException
      */
     public function updateWebhook($webHook)
     {
@@ -334,6 +337,7 @@ class WebhooksApi
      * @return WebhooksResponse
      *
      * @throws InvalidClassException
+     * @throws LoggerException
      */
     public function deleteWebhook($webHook)
     {

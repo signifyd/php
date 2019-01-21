@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class GuaranteeTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Guarantee';
@@ -78,9 +80,11 @@ class GuaranteeTest extends TestCase
         $guarantee = new \Signifyd\Models\Guarantee($guaranteeData);
         $this->assertInstanceOf($this->className, $guarantee);
         $jsonGuarantee = $guarantee->toJson();
-        $emptyJsonGuarantee = json_encode([
-            "caseId" => null
-        ]);
+        $emptyJsonGuarantee = json_encode(
+            [
+                "caseId" => null
+            ]
+        );
 
         $this->assertEquals($jsonGuarantee, $emptyJsonGuarantee);
     }
@@ -139,14 +143,14 @@ class GuaranteeTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateGuaranteeWithWrongParams()
-//    {
-//        $guaranteeData = [];
-//        $guarantee = new \Signifyd\Models\Guarantee($guaranteeData);
-//        $valid = $guarantee->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateGuaranteeWithWrongParams()
+    //{
+        //$guaranteeData = [];
+        //$guarantee = new \Signifyd\Models\Guarantee($guaranteeData);
+        //$valid = $guarantee->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Guarantee */
 
 }

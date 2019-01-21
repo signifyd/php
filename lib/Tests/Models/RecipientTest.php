@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class RecipientTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Recipient';
@@ -78,13 +80,15 @@ class RecipientTest extends TestCase
         $recipient = new \Signifyd\Models\Recipient($recipientData);
         $this->assertInstanceOf($this->className, $recipient);
         $jsonRecipient = $recipient->toJson();
-        $emptyJsonRecipient = json_encode([
-            'fullName' => null,
-            'confirmationEmail' => null,
-            'confirmationPhone' => null,
-            'organization' => null,
-            'deliveryAddress' => null
-        ]);
+        $emptyJsonRecipient = json_encode(
+            [
+                'fullName' => null,
+                'confirmationEmail' => null,
+                'confirmationPhone' => null,
+                'organization' => null,
+                'deliveryAddress' => null
+            ]
+        );
 
         $this->assertEquals($jsonRecipient, $emptyJsonRecipient);
     }
@@ -182,14 +186,14 @@ class RecipientTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateRecipientWithWrongParams()
-//    {
-//        $recipientData = [];
-//        $recipient = new \Signifyd\Models\Recipient($recipientData);
-//        $valid = $recipient->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateRecipientWithWrongParams()
+    //{
+        //$recipientData = [];
+        //$recipient = new \Signifyd\Models\Recipient($recipientData);
+        //$valid = $recipient->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Recipient */
 
 }

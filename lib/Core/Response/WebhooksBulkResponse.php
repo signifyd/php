@@ -13,8 +13,10 @@
  */
 namespace Signifyd\Core\Response;
 
+use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Logging;
 use Signifyd\Core\Response;
+use Signifyd\Core\Response\WebhooksResponse;
 
 /**
  * Class WebhooksBulkResponse
@@ -59,9 +61,15 @@ class WebhooksBulkResponse extends Response
      * WebhooksResponse constructor.
      *
      * @param Logging $logger The logging object
+     *
+     * @throws LoggerException
      */
     public function __construct($logger)
     {
+        if (!is_object($logger) || get_class($logger) !== 'Signifyd\Core\Logging') {
+            throw new LoggerException('Invalid logger parameter');
+        }
+
         $this->logger = $logger;
     }
 
@@ -136,16 +144,18 @@ class WebhooksBulkResponse extends Response
     /**
      * Set the response objects
      *
-     * @param string $response
+     * @param string $response The response string
      *
      * @return void
+     *
+     * @throws LoggerException
      */
     public function setObject($response)
     {
         $webhooks = json_decode($response, true);
         foreach ($webhooks as $webhook) {
             $webhookJson = json_encode($webhook);
-            $webhookObj = new \Signifyd\Core\Response\WebhooksResponse($this->logger);
+            $webhookObj = new WebhooksResponse($this->logger);
             $webhookObj->setObject($webhookJson);
             $this->objects[] = $webhookObj;
         }

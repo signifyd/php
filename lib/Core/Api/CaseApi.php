@@ -98,12 +98,16 @@ class CaseApi
             $case = new CaseModel($case);
             $valid = $case->validate();
             if (true !== $valid) {
-                $this->logger->error('Case not valid after array init: ' . json_encode($valid));
+                $this->logger->error(
+                    'Case not valid after array init: ' . json_encode($valid)
+                );
             }
         } elseif ($case instanceof CaseModel) {
             $valid = $case->validate();
             if (true !== $valid) {
-                $this->logger->error('Case not valid after object init: ' . json_encode($valid));
+                $this->logger->error(
+                    'Case not valid after object init: ' . json_encode($valid)
+                );
             }
         } else {
             $this->logger->error('Invalid parameter for create case');
@@ -170,12 +174,16 @@ class CaseApi
             $paymentUpdate = new PaymentUpdate($paymentUpdate);
             $valid = $paymentUpdate->validate();
             if (true !== $valid) {
-                $this->logger->error('Case not valid after array init: ' . json_encode($valid));
+                $this->logger->error(
+                    'Case not valid after array init: ' . json_encode($valid)
+                );
             }
         } elseif ($paymentUpdate instanceof PaymentUpdate) {
             $valid = $paymentUpdate->validate();
             if (true !== $valid) {
-                $this->logger->error('Case not valid after object init' . json_encode($valid));
+                $this->logger->error(
+                    'Case not valid after object init' . json_encode($valid)
+                );
             }
         } else {
             $this->logger->error('Invalid parameter for payment update');
@@ -242,7 +250,7 @@ class CaseApi
     /**
      * Add fulfillments to an order
      *
-     * @param $fulfillments
+     * @param array|object $fulfillments The fulfillments
      *
      * @return FulfillmentBulkResponse
      *
@@ -257,7 +265,10 @@ class CaseApi
                 $fulfillment = new Fulfillment($fulfillments);
                 $valid = $fulfillment->validate();
                 if (true !== $valid) {
-                    $this->logger->error('Fulfillment not valid after array init: ' . json_encode($valid));
+                    $this->logger->error(
+                        'Fulfillment not valid after array init: ' .
+                        json_encode($valid)
+                    );
                 }
             } else {
                 $fulfillmentsArr = [];
@@ -265,7 +276,10 @@ class CaseApi
                     $fulfillmentObj = new Fulfillment($fulfillment);
                     $valid = $fulfillmentObj->validate();
                     if (true !== $valid) {
-                        $this->logger->error('Fulfillment not valid after array init: ' . json_encode($valid));
+                        $this->logger->error(
+                            'Fulfillment not valid after array init: ' .
+                            json_encode($valid)
+                        );
                     }
 
                     $fulfillmentsArr[] = $fulfillmentObj;

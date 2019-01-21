@@ -13,6 +13,7 @@
  */
 namespace Signifyd\Core\Response;
 
+use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Logging;
 use Signifyd\Core\Response;
 
@@ -89,9 +90,15 @@ class WebhooksResponse extends Response
      * WebhooksResponse constructor.
      *
      * @param Logging $logger The logging object
+     *
+     * @throws LoggerException
      */
     public function __construct($logger)
     {
+        if (!is_object($logger) || get_class($logger) !== 'Signifyd\Core\Logging') {
+            throw new LoggerException('Invalid logger parameter');
+        }
+
         $this->logger = $logger;
     }
 

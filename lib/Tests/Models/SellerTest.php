@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class SellerTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Seller';
@@ -78,23 +80,25 @@ class SellerTest extends TestCase
         $seller = new \Signifyd\Models\Seller($sellerData);
         $this->assertInstanceOf($this->className, $seller);
         $jsonSeller = $seller->toJson();
-        $emptyJsonSeller = json_encode([
-            "name" => null,
-            "domain" => null,
-            "email" => null,
-            "username" => null,
-            "accountNumber" => null,
-            "phone" => null,
-            "createdDate" => null,
-            "aggregateOrderCount" => null,
-            "aggregateOrderDollars" => null,
-            "lastUpdateDate" => null,
-            "onboardingIpAddress" => null,
-            "onboardingEmail" => null,
-            "tags" => null,
-            "shipFromAddress" => null,
-            "corporateAddress" => null
-        ]);
+        $emptyJsonSeller = json_encode(
+            [
+                "name" => null,
+                "domain" => null,
+                "email" => null,
+                "username" => null,
+                "accountNumber" => null,
+                "phone" => null,
+                "createdDate" => null,
+                "aggregateOrderCount" => null,
+                "aggregateOrderDollars" => null,
+                "lastUpdateDate" => null,
+                "onboardingIpAddress" => null,
+                "onboardingEmail" => null,
+                "tags" => null,
+                "shipFromAddress" => null,
+                "corporateAddress" => null
+            ]
+        );
 
         $this->assertEquals($jsonSeller, $emptyJsonSeller);
     }
@@ -258,14 +262,14 @@ class SellerTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateSellerWithWrongParams()
-//    {
-//        $sellerData = [];
-//        $seller = new \Signifyd\Models\Seller($sellerData);
-//        $valid = $seller->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateSellerWithWrongParams()
+    //{
+        //$sellerData = [];
+        //$seller = new \Signifyd\Models\Seller($sellerData);
+        //$valid = $seller->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Seller */
 
 

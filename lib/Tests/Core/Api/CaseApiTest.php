@@ -71,7 +71,8 @@ class CaseApiTest extends TestCase
                         "itemCategory" => "apparel",
                         "itemSubCategory" => "footwear",
                         "itemUrl" => "http://mydomain.com/sparkly-sandals",
-                        "itemImage" => "http://mydomain.com/images/sparkly-sandals.jpeg",
+                        "itemImage" =>
+                            "http://mydomain.com/images/sparkly-sandals.jpeg",
                         "itemQuantity" => 1,
                         "itemPrice" => 49.99,
                         "itemWeight" => 5
@@ -192,8 +193,14 @@ class CaseApiTest extends TestCase
 
 
     /**
+     * Test add fulfillment
+     *
      * @throws \Signifyd\Core\Exceptions\ConnectionException
+     * @throws \Signifyd\Core\Exceptions\FulfillmentException
+     * @throws \Signifyd\Core\Exceptions\InvalidClassException
      * @throws \Signifyd\Core\Exceptions\LoggerException
+     *
+     * @return void
      */
     public function testAddFulfillment()
     {

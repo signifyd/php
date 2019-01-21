@@ -13,6 +13,7 @@
  */
 namespace Signifyd\Core\Response;
 
+use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Logging;
 use Signifyd\Core\Response;
 
@@ -59,9 +60,15 @@ class FulfillmentBulkResponse extends Response
      * FulfillmentBulkResponse constructor.
      *
      * @param Logging $logger The logging object
+     *
+     * @throws LoggerException
      */
     public function __construct($logger)
     {
+        if (!is_object($logger) || get_class($logger) !== 'Signifyd\Core\Logging') {
+            throw new LoggerException('Invalid logger parameter');
+        }
+
         $this->logger = $logger;
     }
 
@@ -78,7 +85,9 @@ class FulfillmentBulkResponse extends Response
     /**
      * Set the response error
      *
-     * @param bool $isError
+     * @param bool $isError If response is in error
+     *
+     * @return void
      */
     public function setIsError($isError)
     {
@@ -98,7 +107,7 @@ class FulfillmentBulkResponse extends Response
     /**
      * Set the error message
      *
-     * @param string $errorMessage
+     * @param string $errorMessage The error message
      *
      * @return void
      */
@@ -121,7 +130,7 @@ class FulfillmentBulkResponse extends Response
     /**
      * Set the objects from the response
      *
-     * @param string $response
+     * @param string $response The response string
      *
      * @return void
      */
@@ -134,4 +143,17 @@ class FulfillmentBulkResponse extends Response
         }
     }
 
+    /**
+     * Set the error
+     *
+     * @param int    $httpCode The response code
+     * @param string $error    The response
+     *
+     * @return void
+     */
+    public function setError($httpCode, $error)
+    {
+        $this->setIsError(true);
+        $this->setErrorMessage($error);
+    }
 }

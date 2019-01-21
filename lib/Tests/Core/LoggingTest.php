@@ -66,7 +66,9 @@ class LoggingTest extends TestCase
      */
     public function testLoggingInitwithCorrectParam()
     {
-        $settings = new \Signifyd\Core\Settings(['apiKey' => 'asjdfs9oa8u349821q9rqw']);
+        $settings = new \Signifyd\Core\Settings(
+            ['apiKey' => 'asjdfs9oa8u349821q9rqw']
+        );
         $logging = new \Signifyd\Core\Logging($settings);
         $this->assertEquals('Signifyd\Core\Logging', get_class($logging));
     }

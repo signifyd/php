@@ -27,11 +27,15 @@ use PHPUnit\Framework\TestCase;
 class PurchaseTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Purchase';
 
     /**
+     * The validation type
+     *
      * @var \PhpUnit\Framework\String
      */
     public $validType = 'array';
@@ -151,25 +155,27 @@ class PurchaseTest extends TestCase
         $purchase = new \Signifyd\Models\Purchase($purchaseData);
         $this->assertInstanceOf($this->className, $purchase);
         $jsonPurchase = $purchase->toJson();
-        $emptyJsonPurchase = json_encode([
-            "orderSessionId" => null,
-            "browserIpAddress" => null,
-            "orderId" => null,
-            "createdAt" => null,
-            "paymentGateway" => null,
-            "paymentMethod" => null,
-            "currency" => "USD",
-            "avsResponseCode" => null,
-            "cvvResponseCode" => null,
-            "transactionId" => null,
-            "orderChannel" => null,
-            "receivedBy" => null,
-            "totalPrice" => null,
-            "customerOrderRecommendation" => null,
-            "products" => [],
-            "shipments" => [],
-            "discountCodes" => []
-        ]);
+        $emptyJsonPurchase = json_encode(
+            [
+                "orderSessionId" => null,
+                "browserIpAddress" => null,
+                "orderId" => null,
+                "createdAt" => null,
+                "paymentGateway" => null,
+                "paymentMethod" => null,
+                "currency" => "USD",
+                "avsResponseCode" => null,
+                "cvvResponseCode" => null,
+                "transactionId" => null,
+                "orderChannel" => null,
+                "receivedBy" => null,
+                "totalPrice" => null,
+                "customerOrderRecommendation" => null,
+                "products" => [],
+                "shipments" => [],
+                "discountCodes" => []
+            ]
+        );
 
         $this->assertEquals($jsonPurchase, $emptyJsonPurchase);
     }

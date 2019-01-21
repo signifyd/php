@@ -192,7 +192,7 @@ class Fulfillment extends Model
             }
 
             if (isset($data['deliveryAddress'])
-             && !empty($data['deliveryAddress'])
+                && !empty($data['deliveryAddress'])
             ) {
                 $deliveryAddress = new Address($data['deliveryAddress']);
                 $this->setDeliveryAddress($deliveryAddress);

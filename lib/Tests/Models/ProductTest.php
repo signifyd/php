@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class ProductTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Product';
@@ -78,18 +80,20 @@ class ProductTest extends TestCase
         $product = new \Signifyd\Models\Product($productData);
         $this->assertInstanceOf($this->className, $product);
         $jsonProduct = $product->toJson();
-        $emptyJsonProduct = json_encode([
-            'itemId' => null,
-            'itemName' => null,
-            'itemUrl' => null,
-            'itemImage' => null,
-            'itemQuantity' => null,
-            'itemPrice' => null,
-            'itemWeight' => null,
-            'itemIsDigital' => null,
-            'itemCategory' => null,
-            'itemSubCategory' => null
-        ]);
+        $emptyJsonProduct = json_encode(
+            [
+                'itemId' => null,
+                'itemName' => null,
+                'itemUrl' => null,
+                'itemImage' => null,
+                'itemQuantity' => null,
+                'itemPrice' => null,
+                'itemWeight' => null,
+                'itemIsDigital' => null,
+                'itemCategory' => null,
+                'itemSubCategory' => null
+            ]
+        );
 
         $this->assertEquals($jsonProduct, $emptyJsonProduct);
     }
@@ -175,14 +179,14 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateProductWithWrongParams()
-//    {
-//        $productData = [];
-//        $product = new \Signifyd\Models\Product($productData);
-//        $valid = $product->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateProductWithWrongParams()
+    //{
+        //$productData = [];
+        //$product = new \Signifyd\Models\Product($productData);
+        //$valid = $product->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Product */
 
 }

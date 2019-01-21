@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class DiscountCodeTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\DiscountCode';
@@ -78,11 +80,13 @@ class DiscountCodeTest extends TestCase
         $discountCode = new \Signifyd\Models\DiscountCode($discountCodeData);
         $this->assertInstanceOf($this->className, $discountCode);
         $jsonDiscountCode = $discountCode->toJson();
-        $emptyJsonDiscountCode = json_encode([
-            'code' => null,
-            'amount' => null,
-            'percentage' => null
-        ]);
+        $emptyJsonDiscountCode = json_encode(
+            [
+                'code' => null,
+                'amount' => null,
+                'percentage' => null
+            ]
+        );
 
         $this->assertEquals($jsonDiscountCode, $emptyJsonDiscountCode);
     }
@@ -147,14 +151,14 @@ class DiscountCodeTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateDiscountCodeWithWrongParams()
-//    {
-//        $discountCodeData = [];
-//        $discountCode = new \Signifyd\Models\DiscountCode($discountCodeData);
-//        $valid = $discountCode->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateDiscountCodeWithWrongParams()
+    //{
+        //$discountCodeData = [];
+        //$discountCode = new \Signifyd\Models\DiscountCode($discountCodeData);
+        //$valid = $discountCode->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for DiscountCode */
 
 }

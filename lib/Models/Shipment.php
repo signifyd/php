@@ -117,7 +117,8 @@ class Shipment extends Model
         $allowedShippingMethod = [
             "express", "electronic", "first_class", "first_class_international",
             "free", "freight", "ground", "international", "overnight", "priority",
-            "priority_international", "pickup", "standard", "store_to_store", "two_day"
+            "priority_international", "pickup", "standard", "store_to_store",
+            "two_day"
         ];
         $validMethod = $this->enumValid(
             $this->getShippingMethod(),

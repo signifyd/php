@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class WebhookTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Webhook';
@@ -78,10 +80,12 @@ class WebhookTest extends TestCase
         $webhook = new \Signifyd\Models\Webhook($webhookData);
         $this->assertInstanceOf($this->className, $webhook);
         $jsonWebhook = $webhook->toJson();
-        $emptyJsonWebhook = json_encode([
-            "event" => null,
-            "url" => null
-        ]);
+        $emptyJsonWebhook = json_encode(
+            [
+                "event" => null,
+                "url" => null
+            ]
+        );
 
         $this->assertEquals($jsonWebhook, $emptyJsonWebhook);
     }
@@ -143,14 +147,14 @@ class WebhookTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateWebhookWithWrongParams()
-//    {
-//        $webhookData = [];
-//        $webhook = new \Signifyd\Models\Webhook($webhookData);
-//        $valid = $webhook->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateWebhookWithWrongParams()
+    //{
+        //$webhookData = [];
+        //$webhook = new \Signifyd\Models\Webhook($webhookData);
+        //$valid = $webhook->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Webhook */
 
 

@@ -27,11 +27,15 @@ use PHPUnit\Framework\TestCase;
 class ShipmentTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Shipment';
 
     /**
+     * The validation type
+     *
      * @var \PhpUnit\Framework\String
      */
     public $validType = 'array';
@@ -83,12 +87,14 @@ class ShipmentTest extends TestCase
         $shipment = new \Signifyd\Models\Shipment($shipmentData);
         $this->assertInstanceOf($this->className, $shipment);
         $jsonShipment = $shipment->toJson();
-        $emptyJsonShipment = json_encode([
-            "shipper" => null,
-            "shippingMethod" => null,
-            "shippingPrice" => null,
-            "trackingNumber" => null
-        ]);
+        $emptyJsonShipment = json_encode(
+            [
+                "shipper" => null,
+                "shippingMethod" => null,
+                "shippingPrice" => null,
+                "trackingNumber" => null
+            ]
+        );
 
         $this->assertEquals($jsonShipment, $emptyJsonShipment);
     }
@@ -156,14 +162,14 @@ class ShipmentTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateShipmentWithWrongParams()
-//    {
-//        $shipmentData = [];
-//        $shipment = new \Signifyd\Models\Shipment($shipmentData);
-//        $valid = $shipment->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateShipmentWithWrongParams()
+    //{
+        //$shipmentData = [];
+        //$shipment = new \Signifyd\Models\Shipment($shipmentData);
+        //$valid = $shipment->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Shipment */
 
     /**

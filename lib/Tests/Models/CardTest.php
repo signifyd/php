@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class CardTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Card';
@@ -78,15 +80,17 @@ class CardTest extends TestCase
         $card = new \Signifyd\Models\Card($cardData);
         $this->assertInstanceOf($this->className, $card);
         $jsonCard = $card->toJson();
-        $emptyJsonCard = json_encode([
-            "cardHolderName" => null,
-            "bin" => null,
-            "last4" => null,
-            "expiryMonth" => null,
-            "expiryYear" => null,
-            "hash" => null,
-            "billingAddress" => null
-        ]);
+        $emptyJsonCard = json_encode(
+            [
+                "cardHolderName" => null,
+                "bin" => null,
+                "last4" => null,
+                "expiryMonth" => null,
+                "expiryYear" => null,
+                "hash" => null,
+                "billingAddress" => null
+            ]
+        );
 
         $this->assertEquals($jsonCard, $emptyJsonCard);
     }
@@ -190,14 +194,14 @@ class CardTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateCardWithWrongParams()
-//    {
-//        $cardData = [];
-//        $card = new \Signifyd\Models\Card($cardData);
-//        $valid = $card->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateCardWithWrongParams()
+    //{
+        //$cardData = [];
+        //$card = new \Signifyd\Models\Card($cardData);
+        //$valid = $card->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Card */
 
 }

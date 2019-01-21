@@ -27,16 +27,22 @@ use PHPUnit\Framework\TestCase;
 class CaseModelTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\CaseModel';
 
     /**
+     * The validation type
+     *
      * @var \PhpUnit\Framework\String
      */
     public $validType = 'array';
 
     /**
+     * The case data
+     *
      * @var array
      */
     public $caseData = [
@@ -242,13 +248,15 @@ class CaseModelTest extends TestCase
         $caseModel = new \Signifyd\Models\CaseModel($caseModelData);
         $this->assertInstanceOf($this->className, $caseModel);
         $jsonCaseModel = $caseModel->toJson();
-        $emptyJsonCaseModel = json_encode([
-            "purchase" => null,
-            "recipient" => null,
-            "card" => null,
-            "userAccount" => null,
-            "seller" => null
-        ]);
+        $emptyJsonCaseModel = json_encode(
+            [
+                "purchase" => null,
+                "recipient" => null,
+                "card" => null,
+                "userAccount" => null,
+                "seller" => null
+            ]
+        );
 
         $this->assertEquals($jsonCaseModel, $emptyJsonCaseModel);
     }
@@ -304,7 +312,6 @@ class CaseModelTest extends TestCase
         $caseData['purchase']['avsResponseCode'] = 'j';
         $case = new \Signifyd\Models\CaseModel($caseData);
         $valid = $case->validate();
-//        var_dump($valid);
         $this->assertInternalType($this->validType, $valid);
         $this->assertEquals('Invalid AVS code', $valid[0][0]);
     }

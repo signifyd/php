@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 class FulfillmentTest extends TestCase
 {
     /**
+     * The class name tested class
+     *
      * @var \PhpUnit\Framework\String
      */
     public $className = 'Signifyd\Models\Fulfillment';
@@ -78,22 +80,24 @@ class FulfillmentTest extends TestCase
         $fulfillment = new \Signifyd\Models\Fulfillment($fulfillmentData);
         $this->assertInstanceOf($this->className, $fulfillment);
         $jsonFulfillment = $fulfillment->toJson();
-        $emptyJsonFulfillment = json_encode([
-            "id" => null,
-            "orderId" => null,
-            "createdAt" => null,
-            "products" => [],
-            "recipientName" => null,
-            "deliveryAddress" => null,
-            "fulfillmentStatus" => null,
-            "shipmentStatus" => null,
-            "shippingCarrier" => null,
-            "trackingNumbers" => [],
-            "trackingUrls" => [],
-            "deliveryEmail" => null,
-            "confirmationName" => null,
-            "confirmationPhone" => null
-        ]);
+        $emptyJsonFulfillment = json_encode(
+            [
+                "id" => null,
+                "orderId" => null,
+                "createdAt" => null,
+                "products" => [],
+                "recipientName" => null,
+                "deliveryAddress" => null,
+                "fulfillmentStatus" => null,
+                "shipmentStatus" => null,
+                "shippingCarrier" => null,
+                "trackingNumbers" => [],
+                "trackingUrls" => [],
+                "deliveryEmail" => null,
+                "confirmationName" => null,
+                "confirmationPhone" => null
+            ]
+        );
 
         $this->assertEquals($jsonFulfillment, $emptyJsonFulfillment);
     }
@@ -259,14 +263,14 @@ class FulfillmentTest extends TestCase
      *
      * @return void
      */
-//    public function testValidateFulfillmentWithWrongParams()
-//    {
-//        $fulfillmentData = [];
-//        $fulfillment = new \Signifyd\Models\Fulfillment($fulfillmentData);
-//        $valid = $fulfillment->validate();
-//
-//        $this->assertNotTrue($valid);
-//    }
+    //public function testValidateFulfillmentWithWrongParams()
+    //{
+        //$fulfillmentData = [];
+        //$fulfillment = new \Signifyd\Models\Fulfillment($fulfillmentData);
+        //$valid = $fulfillment->validate();
+
+        //$this->assertNotTrue($valid);
+    //}
     /* End disable until there is a real validation for Fulfillment */
 
 
