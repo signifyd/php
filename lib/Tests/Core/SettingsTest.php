@@ -63,7 +63,7 @@ class SettingsTest extends TestCase
     }
 
     /**
-     * Test sending array with key that does not exist
+     * Test init with wrong parameter
      *
      * @return void
      */
@@ -73,4 +73,164 @@ class SettingsTest extends TestCase
         $this->assertEquals('Signifyd\Core\Settings', get_class($settings));
     }
 
+    /**
+     * Test getting the api key
+     *
+     * @return void
+     */
+    public function testSettingsGetApiKey()
+    {
+        $settings = new Settings(['apiKey' => 'signifyd']);
+        $this->assertEquals('signifyd', $settings->getApiKey());
+    }
+
+    /**
+     * Test setting the api key
+     *
+     * @return void
+     */
+    public function testSettingsSetApiKey()
+    {
+        $settings = new Settings();
+        $settings->setApiKey('signifyd');
+        $this->assertEquals('signifyd', $settings->apiKey);
+    }
+
+    /**
+     * Test getting the api address
+     *
+     * @return void
+     */
+    public function testSettingsGetApiAddress()
+    {
+        $settings = new Settings();
+        $this->assertEquals('https://api.signifyd.com/v2/', $settings->getApiAddress());
+    }
+
+    /**
+     * Test setting array with key that does not exist
+     *
+     * @return void
+     */
+    public function testSettingsSetApiAddress()
+    {
+        $settings = new Settings();
+        $settings->setApiAddress('http://signifyd.com/');
+        $this->assertEquals('http://signifyd.com/', $settings->apiAddress);
+    }
+
+    /**
+     * Test getting the timeout
+     *
+     * @return void
+     */
+    public function testSettingsGetTimeout()
+    {
+        $settings = new Settings();
+        $this->assertEquals(30, $settings->getTimeout());
+    }
+
+    /**
+     * Test setting the timeout
+     *
+     * @return void
+     */
+    public function testSettingsSetTimeout()
+    {
+        $settings = new Settings();
+        $settings->setTimeout(60);
+        $this->assertEquals(60, $settings->timeout);
+    }
+
+    /**
+     * Test getting the retry
+     *
+     * @return void
+     */
+    public function testSettingsGetRetry()
+    {
+        $settings = new Settings();
+        $this->assertTrue($settings->getRetry());
+    }
+
+    /**
+     * Test setting the retry
+     *
+     * @return void
+     */
+    public function testSettingsSetRetry()
+    {
+        $settings = new Settings();
+        $settings->setRetry(false);
+        $this->assertFalse($settings->retry);
+    }
+
+    /**
+     * Test getting the SSL verification for curl
+     *
+     * @return void
+     */
+    public function testSettingsIsSSLVerification()
+    {
+        $settings = new Settings();
+        $this->assertFalse($settings->isSSLVerification());
+    }
+
+    /**
+     * Test setting the SSL verification for curl
+     *
+     * @return void
+     */
+    public function testSettingsSetSSLVerification()
+    {
+        $settings = new Settings();
+        $settings->setSSLVerification(true);
+        $this->assertTrue($settings->SSLVerification);
+    }
+
+    /**
+     * Test getting the console out
+     *
+     * @return void
+     */
+    public function testSettingsIsConsoleOut()
+    {
+        $settings = new Settings();
+        $this->assertFalse($settings->isConsoleOut());
+    }
+
+    /**
+     * Test setting the console out
+     *
+     * @return void
+     */
+    public function testSettingsSetConsoleOut()
+    {
+        $settings = new Settings();
+        $settings->setConsoleOut(true);
+        $this->assertTrue($settings->consoleOut);
+    }
+
+    /**
+     * Test getting log enabled
+     *
+     * @return void
+     */
+    public function testSettingsIsLogEnabled()
+    {
+        $settings = new Settings();
+        $this->assertTrue($settings->isLogEnabled());
+    }
+
+    /**
+     * Test setting log enabled
+     *
+     * @return void
+     */
+    public function testSettingsSetLogEnabled()
+    {
+        $settings = new Settings();
+        $settings->setLogEnabled(false);
+        $this->assertFalse($settings->logEnabled);
+    }
 }

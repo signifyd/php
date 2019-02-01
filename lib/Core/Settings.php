@@ -41,13 +41,6 @@ class Settings
     public $apiAddress = "https://api.signifyd.com/v2/";
 
     /**
-     * Whether or not to validate inputs before executing API calls.
-     *
-     * @var bool $validateData
-     */
-    public $validateData = true;
-
-    /**
      * CURL timeout value, in seconds.
      *
      * @var int $timeout
@@ -59,28 +52,28 @@ class Settings
      *
      * @var bool
      */
-    public $retry = false;
+    public $retry = true;
 
     /**
      * SSLVerification for curl
      *
      * @var bool
      */
-    protected $SSLVerification = false;
+    public $SSLVerification = false;
 
     /**
      * The ability to display in the console the logs as they are written
      *
      * @var bool
      */
-    protected $consoleOut = false;
+    public $consoleOut = false;
 
     /**
      * Logging enabled?
      *
      * @var bool
      */
-    protected $logEnabled = true;
+    public $logEnabled = true;
 
     /**
      * Settings constructor.

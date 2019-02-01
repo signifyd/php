@@ -201,4 +201,117 @@ class ConnectionTest extends TestCase
         $connection->initCurl('', 'delete');
     }
 
+    /**
+     * Test init curl with delete method
+     *
+     * @return void
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testHandleResponseCase()
+    {
+        $settings = new Settings(['apiKey' => $this->apiKey]);
+        $connection = new Connection($settings);
+
+        $info = ['http_code' => 200];
+        $response = '{"caseId": 1236458415841}';
+        $error = 'error';
+        $type = 'case';
+
+        $response = $connection->handleResponse($info, $response, $error, $type);
+
+        /**
+         * @var $className \PHPUnit\Framework\string
+         */
+        $className = 'Signifyd\Core\Response\CaseResponse';
+        $this->assertInstanceOf($className, $response);
+        $this->assertEquals(1236458415841, $response->getCaseId());
+    }
+
+    /**
+     * Test init curl with delete method
+     *
+     * @return void
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testHandleResponseCase500()
+    {
+        $settings = new Settings(['apiKey' => $this->apiKey]);
+        $connection = new Connection($settings);
+
+        $info = ['http_code' => 500];
+        $response = '{"caseId": 1236458415841}';
+        $error = 'error';
+        $type = 'case';
+
+        $responseObj = $connection->handleResponse($info, $response, $error, $type);
+
+        /**
+         * @var $className \PHPUnit\Framework\string
+         */
+        $className = 'Signifyd\Core\Response\CaseResponse';
+        $this->assertInstanceOf($className, $responseObj);
+        $this->assertTrue($responseObj->isError());
+    }
+
+    /**
+     * Test init curl with delete method
+     *
+     * @expectedException        \Signifyd\Core\Exceptions\InvalidClassException
+     * @expectedExceptionMessage The class \Signifyd\Core\Response\SignifydResponse was not found
+     *
+     * @return void
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testHandleResponseInvalidClass()
+    {
+        $settings = new Settings(['apiKey' => $this->apiKey]);
+        $connection = new Connection($settings);
+
+        $info = ['http_code' => 200];
+        $response = '{"caseId": 1236458415841}';
+        $error = '';
+        $type = 'signifyd';
+
+        $responseObj = $connection->handleResponse($info, $response, $error, $type);
+    }
+
+    /**
+     * Test init curl with delete method
+     *
+     * @return void
+     *
+     * @throws ConnectionException
+     * @throws \Signifyd\Core\Exceptions\InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function testHandleResponseCode0()
+    {
+        $settings = new Settings(['apiKey' => $this->apiKey]);
+        $connection = new Connection($settings);
+
+        $info = ['http_code' => 0];
+        $response = '';
+        $error = 'Curl broke the force';
+        $type = 'case';
+
+        $responseObj = $connection->handleResponse($info, $response, $error, $type);
+
+        /**
+         * @var $className \PHPUnit\Framework\string
+         */
+        $className = 'Signifyd\Core\Response\CaseResponse';
+        $this->assertInstanceOf($className, $responseObj);
+        $this->assertTrue($responseObj->isError());
+        $this->assertEquals('Curl broke the force', $responseObj->getErrorMessage());
+    }
+
 }

@@ -206,6 +206,9 @@ class Connection
             $this->logger->info("Retry in effect No: " . $retry);
             sleep($this->_retryIntervals[$retry]);
             $retry++;
+            if ($this->settings->getRetry() === false) {
+                break;
+            }
         }
 
 
@@ -245,7 +248,7 @@ class Connection
     public function handleResponse($info, $response, $error, $type)
     {
         $responseClass = '\Signifyd\Core\Response\\' . ucfirst($type) . 'Response';
-        try {
+        if (class_exists($responseClass)) {
             // The definition is for Response class because all the other response
             // classes extend the Response class
             /**
@@ -254,9 +257,9 @@ class Connection
              * @var \Signifyd\Core\Response $responseObj
              */
             $responseObj = new $responseClass($this->logger);
-        } catch (\Exception $e) {
+        } else {
             throw new InvalidClassException(
-                'The class' . $responseClass . ' was not found'
+                'The class ' . $responseClass . ' was not found'
             );
         }
 
