@@ -2,10 +2,12 @@ SIGNIFYD client plugin for PHP. Intstall with Composer (https://getcomposer.org/
 
 ### 1.	Overview
 
-This document will give an overview on the available methods in the Signifyd PHP library. Also examples for this methods will be provided.
+This document will give an overview on the available methods in the Signifyd PHP library along with examples for the methods.
+
 ### 2.	Prerequisites
 
-In order to authenticate with the API you need to provide your API key. You can find your API key on your account page.
+In order to authenticate with the API you need to provide your API key. You can find your API key by following this guide (https://developer.signifyd.com/ecommerce-integration-guide/#step-1)
+.
 ### 3.	SignifydAPI CLASS
 
 The main class that does the abstraction between your code and the API is the class SignifydAPI which can be found under namespace "Signifyd\Core", located under lib/Core/SignifydAPI.php.
@@ -150,7 +152,7 @@ Example:
 ```
 7.	Recipient Object
 
-The recipient object is a container for the recipient information, for the order that was placed in your store.
+The recipient object is a container for the recipient information for the order that was placed on your store.
 The recipient class can be found under namespace "Signifyd\Models", located lib/Core/Recipient.php.
 
 ```php
@@ -400,7 +402,7 @@ Example:
 
 #### 14.	Create Case Method
 
-This sends the request to our API Endpoint to create a new case. As a parameter for this method you need to send a case object that has its properties filled up.
+This sends the order to the Signifyd create case API for fraud review. As a parameter for this method you need to send a case object that has its properties filled up.
 
 ```php
 <?php
@@ -540,9 +542,9 @@ An example of a JSON object sent to our API:
 }
 ```
 
-Based on the HTTP response code the createCase method can return the investigationId can be a string of characters or bool false.
-If the HTTP response code is 2xx to 3xx value of the investigationId is the investigation id of the case created in our application.
-If the HTTP response code is other than 2xx to 3xx the investigationId will have the value of false, which indicates that the case creation has failed.
+Based on the HTTP response code the createCase method can return the investigationId as a string or bool false.
+If the HTTP response code is a 2xx to 3xx value the investigationId will be returned for the case and means the resource was succesfully created.
+If the HTTP response code is not 2xx to 3xx the investigationId will have the value of false, which indicates that the case creation has failed.
 
 The usual payload for a response:
 
@@ -552,7 +554,7 @@ The usual payload for a response:
 
 #### 15.	Get Case Method
 
-This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
+This sends the request to the API endpoint to get the fraud decision of the case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
 
 ```php
 <?php
@@ -569,8 +571,8 @@ This sends the request to our API Endpoint to get a case. As a parameter for thi
 ```
 
 Based on the HTTP response code the getCase method can return the $case, an array of values or bool false.
-If the HTTP response code is 2xx to 3xx value of the case is an array with the case values from our application.
-If the HTTP response code is other than 2xx to 3xx the case the value of false, which indicates that the retrieving of the case has failed.
+If the HTTP response code is 2xx to 3xx the value of the case will be an array with the fraud decision.
+If the HTTP response code is not 2xx to 3xx the value will be false, which indicates that retrieving the case has failed.
 
 Example of request:
 GET https://api.signifyd.com/v2/cases/caseId
@@ -596,27 +598,6 @@ Example of response:
     updatedAt: "2013-03-06T23:17:18+0000"
 } 
 ```
-#### 16.	Close Case Method
-
-This sends the request to our API Endpoint to close a case. As a parameter for this method you need to send a case id.
-```php
-<?php
-    // instantiating the settings class
-    $settings = new \Signifyd\Core\SignifydSettings();
-    $settings->apiKey = 'YOUR API KEY';
-
-    // instantiating the api class
-    $apiInstance = new \Signifyd\Core\SignifydAPI($settings);
-
-    // $caseId is the id of an existing case
-    $case = $apiInstance->closeCase($caseId);
-?> 
-```
-
-Based on the HTTP response code the closeCase method can return the $response, an array of values or bool false.
-If the HTTP response code is 2xx to 3xx, the value of the $case is an array with the case values from our application.
-If the HTTP response code is other than 2xx to 3xx the $case value is false, which indicates that the closing of the case has failed.
-
 
 #### 17.	Update Payment Method
 
