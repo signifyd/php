@@ -1,7 +1,7 @@
 SIGNIFYD PHP SDK [![Build Status](https://travis-ci.org/signifyd/signifyd-php.svg?branch=master)](https://travis-ci.org/signifyd/signifyd-php)
 ================
 
-*** If you have feedback good or bad about the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/).
+*** If you have feedback the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/).
 
 *** If you notice something wrong about this SDK in particular, feel free to raise an issue [here](https://github.com/square/connect-php-sdk/issues).
 
@@ -14,7 +14,8 @@ If you are looking for a sample code that was tested and works, check out the [`
 Overview
 --------
 
-This document will give an overview on the available methods in the Signifyd PHP library. Also examples for this methods will be provided.
+This document will give an overview on the available methods in the Signifyd PHP library along with examples for the methods.
+
 
 Requirements
 ------------
@@ -278,14 +279,14 @@ Retrieve details about an individual case by investigation id or case id.
     $caseResponse = $caseApi->getCase($caseId);
     ....
 ```
-???This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.???
+This sends the request to the API endpoint to get the fraud decision of the case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
 
 This method with return a `CaseResponse` which will have all the properties populated.
 In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ##### addFulfillment($fulfillments);
-This sends the request to our API Endpoint to add fulfillments for order. One way is to send an array with all the data required to the addFulfillment method.
+This sends the request to the API endpoint to add fulfillments for order. You can send an array with all the data required to the addFulfillment method.
 
 For more info about the data that can be added please check the `Fulfillment` model.
 ```php
@@ -302,7 +303,7 @@ Error message can be empty if the request can not be made, but in this case the 
 
 ##### updatePayment($paymentUpdate);
 Update payment data by sending updated information.
-This sends the request to our API Endpoint to update the payment for an existing case.
+This sends the request to the API endpoint to update the card, billing, or delivery address fields for an existing case.
 
 For more info about the data that can be added please check the `PaymentUpdate` model.
 ```php
@@ -321,7 +322,7 @@ Error message can be empty if the request can not be made, but in this case the 
 
 ##### updateInvestigationLabel($caseId, $investigationUpdate);
 Update investigation label for a case.
-This sends the request to our API Endpoint to update the investigation label for a case. As a parameter for this method you need to send a case id and new investigation label.
+This sends the request to the API endpoint to update the investigation label for a case. As a parameter for this method you need to send a case id and new investigation label.
 ```php
     ....
     $caseId = 123456789;
