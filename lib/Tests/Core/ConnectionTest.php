@@ -223,7 +223,9 @@ class ConnectionTest extends TestCase
         $response = $connection->handleResponse($info, $response, $error, $type);
 
         /**
-         * @var $className \PHPUnit\Framework\string
+         * The class name required from phpunit
+         *
+         * @var $className \PHPUnit\Framework\string The class name
          */
         $className = 'Signifyd\Core\Response\CaseResponse';
         $this->assertInstanceOf($className, $response);
@@ -252,7 +254,9 @@ class ConnectionTest extends TestCase
         $responseObj = $connection->handleResponse($info, $response, $error, $type);
 
         /**
-         * @var $className \PHPUnit\Framework\string
+         * The class name required from phpunit
+         *
+         * @var $className \PHPUnit\Framework\string The class name
          */
         $className = 'Signifyd\Core\Response\CaseResponse';
         $this->assertInstanceOf($className, $responseObj);
@@ -306,7 +310,9 @@ class ConnectionTest extends TestCase
         $responseObj = $connection->handleResponse($info, $response, $error, $type);
 
         /**
-         * @var $className \PHPUnit\Framework\string
+         * The class name required from phpunit
+         *
+         * @var $className \PHPUnit\Framework\string The class name
          */
         $className = 'Signifyd\Core\Response\CaseResponse';
         $this->assertInstanceOf($className, $responseObj);

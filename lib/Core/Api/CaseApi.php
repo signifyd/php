@@ -119,6 +119,7 @@ class CaseApi
         $this->logger->info(
             'Connection call create case api with case: ' . $case->toJson()
         );
+        $case = $this->addPlatform($case);
         $response = $this->connection->callApi(
             'cases',
             $case->toJson(),
@@ -169,7 +170,7 @@ class CaseApi
      */
     public function updatePayment($paymentUpdate)
     {
-        $this->logger->info('Get case method called');
+        $this->logger->info('Update payment method called');
         if (is_array($paymentUpdate)) {
             $paymentUpdate = new PaymentUpdate($paymentUpdate);
             $valid = $paymentUpdate->validate();
@@ -204,45 +205,6 @@ class CaseApi
             $paymentUpdate->toJson(),
             'put'
         );
-
-        return $response;
-    }
-
-    /**
-     * Update an investigation in Signifyd
-     *
-     * @param int    $caseId              The case id
-     * @param string $investigationUpdate The review disposition
-     *
-     * @return \Signifyd\Core\Response
-     *
-     * @throws InvalidClassException
-     * @throws \Signifyd\Core\Exceptions\LoggerException
-     */
-    public function updateInvestigationLabel($caseId, $investigationUpdate)
-    {
-        $this->logger->info('Update investigation label method called');
-        if (false === is_numeric($caseId)) {
-            $this->logger->error(
-                'Invalid case id for update investigation label' . $caseId
-            );
-        }
-
-        if (false === is_numeric($caseId)) {
-            $this->logger->error(
-                'Invalid case id for update investigation label' . $caseId
-            );
-        }
-
-        // TODO need to move this to a model ???
-        $caseSend = ['reviewDisposition' => $investigationUpdate];
-        $this->logger->info(
-            'Connection call update investigation api with caseId: ' . $caseId
-        );
-
-        $endpoint = 'cases/' . $caseId;
-        $payload = json_encode($caseSend);
-        $response = $this->connection->callApi($endpoint, $payload, 'put');
 
         return $response;
     }
@@ -315,5 +277,21 @@ class CaseApi
         );
 
         return $response;
+    }
+
+    /**
+     * Add platform
+     *
+     * @param \Signifyd\Models\CaseModel $case The case
+     *
+     * @return mixed
+     */
+    protected function addPlatform($case)
+    {
+        $case->platformAndClient = new \StdClass();
+        $case->platformAndClient->signifydClientApp = "PHP SDK";
+        $case->platformAndClient->signifydClientAppVersion = "2.0";
+
+        return $case;
     }
 }

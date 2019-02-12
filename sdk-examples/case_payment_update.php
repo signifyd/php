@@ -15,6 +15,26 @@ try {
     $paymentUpdate->setCvvResponseCode('M');
     $paymentUpdate->setPaymentGateway('stripe');
     $paymentUpdate->setTransactionId('1a2sf3f44e21r1');
+    $billingAddress = new \Signifyd\Models\Address([
+        "streetAddress" => "123 State Street",
+        "unit" => "10A",
+        "city" => "Chicago",
+        "provinceCode" => "IL",
+        "postalCode" => "60725",
+        "countryCode" => "US"
+    ]);
+    $paymentUpdate->setBillingAddress($billingAddress);
+
+    $deliveryAddress = new \Signifyd\Models\Address([
+        "streetAddress" => "123 State Street",
+        "unit" => "10A",
+        "city" => "Chicago",
+        "provinceCode" => "IL",
+        "postalCode" => "60725",
+        "countryCode" => "US"
+    ]);
+    $paymentUpdate->setDeliveryAddress($deliveryAddress);
+
     /**
      * @var \Signifyd\Core\Response\CaseResponse $response
      */

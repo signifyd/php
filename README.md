@@ -47,7 +47,6 @@ $ php composer.phar install
 
 Getting Started
 ---------------
-Please make sure that the SDK was installed. [Installation procedure](installing-sdk)
 There are 3 api classes that each represents the 3 main parts of the API
 
 ***CASE API*** Which works with cases which are orders submitted to Signifyd for review. A case contains payment, recipient, product, shipping, and account information.
@@ -91,8 +90,6 @@ based on the data passed to the constructor.
 The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to 
 the model.
 
-***Exception***
-updateInvestigationLabel take 2 parameters which are strings
 
 ##### createCase($case);
 Submit an order for fraud review.
@@ -319,20 +316,6 @@ This method with return a `CaseResponse` which will have the properties populate
 In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
-##### updateInvestigationLabel($caseId, $investigationUpdate);
-Update investigation label for a case.
-This sends the request to our API Endpoint to update the investigation label for a case. As a parameter for this method you need to send a case id and new investigation label.
-```php
-    ....
-    $caseId = 123456789;
-    $investigationLabel = 'Bye Bye';
-    $caseResponse = $caseApi->updateInvestigationLabel($caseId, $investigationUpdate);
-    ....
-```
-This method with return a `CaseResponse` which will have the properties populated.
-In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
-Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
-
 ### GuaranteeApi
 The GuaranteeApi is the class the maps the main guarantee functionality of the Signify API. This class has the methods 
 that work with guarantees.
@@ -523,89 +506,89 @@ SDK API Responses
 ### CaseResponse
 Case response is the response that is returned when the case api is called
 ##### Properties
-Name | Type | Description | Notes
-------- | ------- | ------- | -------
-**guaranteeEligible** | **string** | |
-**guaranteeDisposition** | **string** | |
-**status** | **string** | |
-**caseId** | **integer** | |
-**score** | **integer** | |
-**uuid** | **string** | |
-**headline** | **string** | |
-**orderId** | **string** | |
-**orderDate** | **string** | |
-**orderAmount** | **float** | |
-**associatedTeam** | **array** | |
-**reviewDisposition** | **string** | |
-**createdAt** | **string** | |
-**updatedAt** | **string** | |
-**orderOutcome** | **string** | |
-**currency** | **string** | |
-**adjustedScore** | **integer** | |
-**testInvestigation** | **boolean** | |
-**logger** | **object** | |
-**isError** | **boolean** | |
-**errorMessage** | **string** | |
+Name | Notes
+------- | -------
+**guaranteeEligible** |
+**guaranteeDisposition** |
+**status** |
+**caseId** |
+**score** |
+**uuid** |
+**headline** |
+**orderId** |
+**orderDate** |
+**orderAmount** |
+**associatedTeam** |
+**reviewDisposition** |
+**createdAt** |
+**updatedAt** |
+**orderOutcome** |
+**currency** |
+**adjustedScore** |
+**testInvestigation** |
+**logger** |
+**isError** | 
+**errorMessage** |
 
 You can access any value by using the getters methods in the response
 
 ### FulfillmentBulkResponse
 Fulfillment bulk response onse is the response that is returned when the case api addFulfillment method is called
 ##### Properties
-Name | Type | Description | Notes
-------- | ------- | ------- | -------
-**objects** | **array** | An array of `Fulfillment` objects |
-**logger** | **object** | |
-**isError** | **boolean** | |
-**errorMessage** | **string** | |
+Name | Notes
+------- | -------
+**objects** | 
+**logger** |
+**isError** | 
+**errorMessage** |
 
 You can access any value by using the getters methods in the response
 
 ### GuaranteeResponse
 Guarantee response is the returned value when the guarantee api is called
 ##### Properties
-Name | Type | Description | Notes
-------- | ------- | ------- | -------
-**disposition** | **string** | |
-**reviewedBy** | **string** | |
-**reviewedAt** | **string** | |
-**submittedBy** | **string** | |
-**submittedAt** | **string** | |
-**rereviewCount** | **string** | |
-**guaranteeId** | **string** | |
-**caseId** | **string** | |
-**isError** | **boolean** | |
-**errorMessage** | **string** | |
-**logger** | **object** | |
+Name | Notes
+------- | -------
+**disposition** | 
+**reviewedBy** | 
+**reviewedAt** | 
+**submittedBy** | 
+**submittedAt** | 
+**rereviewCount** | 
+**guaranteeId** | 
+**caseId** | 
+**isError** | 
+**errorMessage** | 
+**logger** | 
 
 You can access any value by using the getters methods in the response
 
 ### WebhooksResponse
 Webhoook response is the returned value when the webhook api for update and delete webhook methods are called
 ##### Properties
-Name | Type | Description | Notes
-------- | ------- | ------- | -------
-**id** | **integer** | |
-**eventType** | **string** | |
-**eventDisplayText** | **string** | |
-**url** | **string** | |
-**team** | **array** | |
-**isError** | **boolean** | |
-**errorMessage** | **string** | |
-**responseArray** | **array** | |
-**logger** | **object** | |
+Name | Notes
+------- | -------
+**id** | 
+**eventType** | 
+**eventDisplayText** | 
+**url** | 
+**team** | 
+**isError** | 
+**errorMessage** | 
+**responseArray** | 
+**logger** | 
 
 You can access any value by using the getters methods in the response
 
 ### WebhooksBulkResponse
 Webhoook bulk response is the returned value when the webhook api for get, create and update webhooks methods are called
 ##### Properties
-Name | Type | Description | Notes
-------- | ------- | ------- | -------
-**objects** | **array** | An array of `WebhookResponse` objects |
-**isError** | **boolean** | |
-**errorMessage** | **string** | |
-**logger** | **object** | |
+Name | Notes
+------- | -------
+**objects** | 
+**isError** | 
+**errorMessage** |
+**logger** | 
 
 You can access any value by using the getters methods in the response
 

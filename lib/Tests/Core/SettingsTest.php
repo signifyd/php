@@ -104,7 +104,10 @@ class SettingsTest extends TestCase
     public function testSettingsGetApiAddress()
     {
         $settings = new Settings();
-        $this->assertEquals('https://api.signifyd.com/v2/', $settings->getApiAddress());
+        $this->assertEquals(
+            'https://api.signifyd.com/v2/',
+            $settings->getApiAddress()
+        );
     }
 
     /**

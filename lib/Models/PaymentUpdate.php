@@ -67,6 +67,20 @@ class PaymentUpdate extends Model
     public $cvvResponseCode;
 
     /**
+     * Billing Address
+     *
+     * @var \Signifyd\Models\Address
+     */
+    public $billingAddress;
+
+    /**
+     * Delivery Address
+     *
+     * @var \Signifyd\Models\Address
+     */
+    public $deliveryAddress;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -106,6 +120,16 @@ class PaymentUpdate extends Model
                 }
 
                 $this->{'set' . ucfirst($field)}($value);
+            }
+
+            if (isset($data['billingAddress'])&& !empty($data['billingAddress'])) {
+                $billingAddress = new Address($data['billingAddress']);
+                $this->setBillingAddress($billingAddress);
+            }
+
+            if (isset($data['deliveryAddress'])&& !empty($data['deliveryAddress'])) {
+                $deliveryAddress = new Address($data['deliveryAddress']);
+                $this->setDeliveryAddress($deliveryAddress);
             }
         }
     }
@@ -240,4 +264,49 @@ class PaymentUpdate extends Model
     {
         $this->caseId = $caseId;
     }
+
+    /**
+     * Get the billing address
+     *
+     * @return Address
+     */
+    public function getBillingAddress()
+    {
+        return $this->billingAddress;
+    }
+
+    /**
+     * Set the billing address
+     *
+     * @param Address $billingAddress The address
+     *
+     * @return void
+     */
+    public function setBillingAddress($billingAddress)
+    {
+        $this->billingAddress = $billingAddress;
+    }
+
+    /**
+     * Get the delivery address
+     *
+     * @return Address
+     */
+    public function getDeliveryAddress()
+    {
+        return $this->deliveryAddress;
+    }
+
+    /**
+     * Set the delivery address
+     *
+     * @param Address $deliveryAddress The address
+     *
+     * @return void
+     */
+    public function setDeliveryAddress($deliveryAddress)
+    {
+        $this->deliveryAddress = $deliveryAddress;
+    }
+
 }
