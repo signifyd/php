@@ -123,6 +123,10 @@ class CaseModel extends Model
         $valid = [];
         foreach ($this->fields as $field) {
             $obj = $this->{'get' . ucfirst($field)}();
+            if (null === $obj) {
+                continue;
+            }
+
             $objValid = $obj->validate();
             if (true !== $objValid) {
                 $valid[] = $objValid;
