@@ -156,6 +156,14 @@ class SignifydAPI
         return ($response === false)? false : true;
     }
 
+    public function createFulfillment($caseId, \Signifyd\Models\Fulfillment $fulfillment)
+    {
+        $curl = $this->_setupPostJsonRequest($this->makeUrl("fulfillment/{$caseId}"), $fulfillment);
+        $response = $this->curlCall($curl);
+
+        return ($response === false)? false : json_decode($response)->fulfillments[0]->id;
+    }
+
     public function validWebhookRequest($request, $hash, $topic)
     {
         $check = base64_encode(hash_hmac('sha256', $request, $this->settings->apiKey, true));
