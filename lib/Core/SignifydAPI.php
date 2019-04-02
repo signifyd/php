@@ -158,7 +158,9 @@ class SignifydAPI
 
     public function createFulfillment($caseId, \Signifyd\Models\Fulfillment $fulfillment)
     {
-        $curl = $this->_setupPostJsonRequest($this->makeUrl("fulfillment/{$caseId}"), $fulfillment);
+        $fulfillments = ['fulfillments' => [$fulfillment]];
+        $postBody = json_encode($fulfillments);
+        $curl = $this->_setupPostRequest($this->makeUrl("fulfillments/{$caseId}"), $postBody, "application/json");
         $response = $this->curlCall($curl);
 
         return ($response === false)? false : json_decode($response)->fulfillments[0]->id;
