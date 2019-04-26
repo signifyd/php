@@ -1,20 +1,19 @@
-SIGNIFYD PHP SDK [![Build Status](https://travis-ci.org/signifyd/signifyd-php.svg?branch=master)](https://travis-ci.org/signifyd/signifyd-php)
+Signifyd PHP SDK
 ================
 
-*** If you have feedback good or bad about the new version of the repository please don't hesitate to [contact us](https://www.signifyd.com/contact/).
-
-*** If you notice something wrong about this SDK in particular, feel free to raise an issue [here](https://github.com/square/connect-php-sdk/issues).
-
-This repository contains the PHP SDK client for the Signifyd APIs. For more info please check the [Signifyd API documentation](https://www.signifyd.com/api/)
-
-If you are looking for a specific ecommerce integration (eq. [Magento2](https://github.com/signifyd/magento2), Shopify, etc) checkout our listing for the existing integrations.
-
-If you are looking for a sample code that was tested and works, check out the [`sdk-examples`](https://github.com/signifyd/signifyd-php/tree/development-not-for-use/sdk-examples) repository.
+This repository contains the PHP SDK client for the [Signifyd APIs](https://www.developer.signifyd.com/api/)
 
 Overview
 --------
-
 This document will give an overview on the available methods in the Signifyd PHP library. Also examples for this methods will be provided.
+
+Support
+--------
+For questions or issues please contact our [support team](https://www.signifyd.com/contact/). You can submit feedback and suggestions for improvement [here](https://github.com/signifyd/php/issues).
+
+Examples
+--------
+If you are looking for a sample code that was tested and works, check out the [`sdk-examples`](https://github.com/signifyd/signifyd-php/tree/development-not-for-use/sdk-examples) repository.
 
 Requirements
 ------------
