@@ -85,7 +85,7 @@ class CaseApi
      *
      * @param \Signifyd\Models\CaseModel $case The case data
      *
-     * @return bool|\Signifyd\Core\Response
+     * @return bool|\Signifyd\Core\Response\CaseResponse
      *
      * @throws CaseModelException
      * @throws InvalidClassException
@@ -232,6 +232,8 @@ class CaseApi
                         json_encode($valid)
                     );
                 }
+
+                $fulfillmentsArr = [$fulfillment];
             } else {
                 $fulfillmentsArr = [];
                 foreach ($fulfillments as $fulfillment) {
