@@ -169,9 +169,9 @@ class DefaultResponse implements ResponseInterface
         ];
         
         if (in_array($avs, $validAvsResponseCodes)) {
-            $this->cvv = $avs;
+            $this->avs = $avs;
         } else {
-            $this->cvv = null;
+            $this->avs = null;
         }
         
         return $this;
