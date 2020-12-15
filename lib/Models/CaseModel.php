@@ -14,9 +14,9 @@
 namespace Signifyd\Models;
 
 use Signifyd\Core\Model;
-use Signifyd\Models\Card;
 use Signifyd\Models\Purchase;
 use Signifyd\Models\Recipient;
+use Signifyd\Models\Transaction;
 use Signifyd\Models\UserAccount;
 use Signifyd\Models\Seller;
 
@@ -43,17 +43,17 @@ class CaseModel extends Model
      * Data related to person or organization receiving
      * the items purchased.
      *
-     * @var Recipient
+     * @var array $recipients Array of Recipient objects
      */
-    public $recipient;
+    public $recipients;
 
     /**
-     * Data related to the card that was used for the
-     * purchase and its cardholder.
+     * A list of payment instruments and associated payment
+     * details used to pay for the order.
      *
-     * @var Card
+     * @var array $transactions Array of Transaction objects
      */
-    public $card;
+    public $transactions;
 
     /**
      * If you allow customers to create an account before
@@ -78,10 +78,15 @@ class CaseModel extends Model
      */
     protected $fields = [
         'purchase',
-        'recipient',
-        'card',
+        'recipients',
+        'transactions',
         'userAccount',
         'seller'
+    ];
+
+    protected $objectFields = [
+        'recipients',
+        'transactions'
     ];
 
     /**
@@ -102,12 +107,30 @@ class CaseModel extends Model
                     continue;
                 }
 
+                if (in_array($field, $this->objectFields)) {
+                    continue;
+                }
+
                 if (is_array($case[$field]) && !empty($case[$field])) {
                     // instantiate the class
                     $object = new $class($case[$field]);
                     $this->{'set' . $field}($object);
                 } elseif ($case[$field] instanceof $class) {
                     $this->{'set' . $field}($case[$field]);
+                }
+            }
+
+            if (isset($case['transactions']) && is_array($case['transactions'])) {
+                foreach ($case['transactions'] as $item) {
+                    $transaction = new Transaction($item);
+                    $this->addTransaction($transaction);
+                }
+            }
+
+            if (isset($case['recipients']) && is_array($case['recipients'])) {
+                foreach ($case['recipients'] as $sItem) {
+                    $recipient = new Recipient($sItem);
+                    $this->addRecipient($recipient);
                 }
             }
         }
@@ -127,9 +150,18 @@ class CaseModel extends Model
                 continue;
             }
 
-            $objValid = $obj->validate();
-            if (true !== $objValid) {
-                $valid[] = $objValid;
+            if (is_array($obj)) {
+                foreach ($obj as $data) {
+                    $dataValid = $data->validate();
+                    if (true !== $dataValid) {
+                        $valid[] = $dataValid;
+                    }
+                }
+            } else {
+                $objValid = $obj->validate();
+                if (true !== $objValid) {
+                    $valid[] = $objValid;
+                }
             }
         }
 
@@ -159,47 +191,47 @@ class CaseModel extends Model
     }
 
     /**
-     * Get the recipient
+     * Get the recipients
      *
-     * @return Recipient
+     * @return array
      */
-    public function getRecipient()
+    public function getRecipients()
     {
-        return $this->recipient;
+        return $this->recipients;
     }
 
     /**
-     * Set the recipient
+     * Set the recipients
      *
-     * @param Recipient $recipient Recipient data
+     * @param array $recipients Array of Recipient
      *
      * @return void
      */
-    public function setRecipient($recipient)
+    public function setRecipients($recipients)
     {
-        $this->recipient = $recipient;
+        $this->recipients = $recipients;
     }
 
     /**
-     * Get the card data
+     * Get the transactions
      *
-     * @return Card
+     * @return array
      */
-    public function getCard()
+    public function getTransactions()
     {
-        return $this->card;
+        return $this->transactions;
     }
 
     /**
-     * Set the card data
+     * set the transactions
      *
-     * @param Card $card Card data
+     * @param array $transactions Array of Transactions
      *
      * @return void
      */
-    public function setCard($card)
+    public function setTransactions($transactions)
     {
-        $this->card = $card;
+        $this->transactions = $transactions;
     }
 
     /**
@@ -244,5 +276,29 @@ class CaseModel extends Model
     public function setSeller($seller)
     {
         $this->seller = $seller;
+    }
+
+    /**
+     * Add transaction item to the transactions array
+     *
+     * @param Transaction $transaction
+     *
+     * @return void
+     */
+    public function addTransaction($transaction)
+    {
+        $this->transactions[] = $transaction;
+    }
+
+    /**
+     * Add recipient item to the recipients array
+     *
+     * @param Recipient $recipient
+     *
+     * @return void
+     */
+    public function addRecipient($recipient)
+    {
+        $this->recipients[] = $recipient;
     }
 }

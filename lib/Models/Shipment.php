@@ -49,13 +49,6 @@ class Shipment extends Model
     public $shippingPrice;
 
     /**
-     * Tracking number
-     *
-     * @var string
-     */
-    public $trackingNumber;
-
-    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -63,8 +56,7 @@ class Shipment extends Model
     protected $fields = [
         'shipper',
         'shippingMethod',
-        'shippingPrice',
-        'trackingNumber'
+        'shippingPrice'
     ];
 
     /**
@@ -75,8 +67,7 @@ class Shipment extends Model
     protected $fieldsValidation = [
         'shipper' => [],
         'shippingMethod' => [],
-        'shippingPrice' => [],
-        'trackingNumber' => []
+        'shippingPrice' => []
     ];
 
     /**
@@ -196,27 +187,5 @@ class Shipment extends Model
     public function setShippingPrice($shippingPrice)
     {
         $this->shippingPrice = $shippingPrice;
-    }
-
-    /**
-     * Get the tracking number
-     *
-     * @return mixed
-     */
-    public function getTrackingNumber()
-    {
-        return $this->trackingNumber;
-    }
-
-    /**
-     * Set the tracking number
-     *
-     * @param mixed $trackingNumber The number received from the shipper
-     *
-     * @return void
-     */
-    public function setTrackingNumber($trackingNumber)
-    {
-        $this->trackingNumber = $trackingNumber;
     }
 }

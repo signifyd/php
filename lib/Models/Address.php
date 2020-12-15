@@ -70,20 +70,6 @@ class Address extends Model
     public $countryCode;
 
     /**
-     * The geographical latitude of the address
-     *
-     * @var string Actual latitude
-     */
-    public $latitude;
-
-    /**
-     * The geographical longitude of the address
-     *
-     * @var string actual longitude
-     */
-    public $longitude;
-
-    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -94,9 +80,7 @@ class Address extends Model
         'city',
         'provinceCode',
         'postalCode',
-        'countryCode',
-        'latitude',
-        'longitude'
+        'countryCode'
     ];
 
     /**
@@ -110,9 +94,7 @@ class Address extends Model
         'city' => [],
         'provinceCode' => [],
         'postalCode' => [],
-        'countryCode' => [],
-        'latitude' => [],
-        'longitude' => []
+        'countryCode' => []
     ];
 
     /**
@@ -276,49 +258,5 @@ class Address extends Model
     public function setCountryCode($countryCode)
     {
         $this->countryCode = $countryCode;
-    }
-
-    /**
-     * Get the geographical latitude
-     *
-     * @return string
-     */
-    public function getLatitude()
-    {
-        return $this->latitude;
-    }
-
-    /**
-     * Set the geographical latitude
-     *
-     * @param string $latitude The numeric value
-     *
-     * @return void
-     */
-    public function setLatitude($latitude)
-    {
-        $this->latitude = $latitude;
-    }
-
-    /**
-     * Get the geographical longitude
-     *
-     * @return string
-     */
-    public function getLongitude()
-    {
-        return $this->longitude;
-    }
-
-    /**
-     * Get the geographical longitude
-     *
-     * @param string $longitude The numeric value
-     *
-     * @return void
-     */
-    public function setLongitude($longitude)
-    {
-        $this->longitude = $longitude;
     }
 }
