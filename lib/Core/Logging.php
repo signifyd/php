@@ -31,12 +31,12 @@ class Logging
     /*
      * The name of the log file
      */
-    protected $logFileName = 'signifyd_connect.log';
+    protected $logFileName = 'signifyd_core.log';
 
     /*
      * The location of the log file
      */
-    protected $logLocation = '.';
+    protected $logLocation = 'var/log';
 
     /*
      * The main logger implementation

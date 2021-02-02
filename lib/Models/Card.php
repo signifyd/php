@@ -33,7 +33,7 @@ class Card extends Model
      *
      * @var string
      */
-    public $cardHolderName;
+    public $holderName;
 
     /**
      * The first six digits of the credit card, the bank
@@ -41,35 +41,28 @@ class Card extends Model
      *
      * @var string
      */
-    public $bin;
+    public $cardBin;
 
     /**
      * The last four digits of the card number.
      *
      * @var int
      */
-    public $last4;
+    public $cardLast4;
 
     /**
      * MM representation of the expiration month of the card.
      *
      * @var int
      */
-    public $expiryMonth;
+    public $cardExpiryMonth;
 
     /**
      * The yyyy representation of the expiration year of the card.
      *
      * @var int
      */
-    public $expiryYear;
-
-    /**
-     * The hash
-     *
-     * @var string The hash for the card
-     */
-    public $hash;
+    public $cardExpiryYear;
 
     /**
      * The billing address for the card
@@ -84,12 +77,11 @@ class Card extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'cardHolderName',
-        'bin',
-        'last4',
-        'expiryMonth',
-        'expiryYear',
-        'hash'
+        'holderName',
+        'cardBin',
+        'cardLast4',
+        'cardExpiryMonth',
+        'cardExpiryYear'
     ];
 
     /**
@@ -98,12 +90,11 @@ class Card extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'cardHolderName' => [],
-        'bin' => [],
-        'last4' => [],
-        'expiryMonth' => [],
-        'expiryYear' => [],
-        'hash' => []
+        'holderName' => [],
+        'cardBin' => [],
+        'cardLast4' => [],
+        'cardExpiryMonth' => [],
+        'cardExpiryYear' => []
     ];
 
     /**
@@ -137,7 +128,7 @@ class Card extends Model
     public function validate()
     {
         $valid = [];
-        //if (strlen($this->getLast4()) !== 4) {
+        //if (strlen($this->getcardLast4()) !== 4) {
         //    $valid[] = false;
         //}
 
@@ -150,43 +141,43 @@ class Card extends Model
      *
      * @return mixed
      */
-    public function getCardHolderName()
+    public function getHolderName()
     {
-        return $this->cardHolderName;
+        return $this->holderName;
     }
 
     /**
      * Set the name
      *
-     * @param mixed $cardHolderName The card holder name
+     * @param mixed $holderName The card holder name
      *
      * @return void
      */
-    public function setCardHolderName($cardHolderName)
+    public function setHolderName($holderName)
     {
-        $this->cardHolderName = $cardHolderName;
+        $this->holderName = $holderName;
     }
 
     /**
-     * Get the bin (first 6 digits of the card)
+     * Get the cardBin (first 6 digits of the card)
      *
      * @return mixed
      */
-    public function getBin()
+    public function getCardBin()
     {
-        return $this->bin;
+        return $this->cardBin;
     }
 
     /**
-     * Set the bin (first 6 digits of the card)
+     * Set the cardBin (first 6 digits of the card)
      *
-     * @param mixed $bin The bin value
+     * @param mixed $cardBin The cardBin value
      *
      * @return void
      */
-    public function setBin($bin)
+    public function setCardBin($cardBin)
     {
-        $this->bin = $bin;
+        $this->cardBin = $cardBin;
     }
 
     /**
@@ -194,21 +185,21 @@ class Card extends Model
      *
      * @return mixed
      */
-    public function getLast4()
+    public function getCardLast4()
     {
-        return $this->last4;
+        return $this->cardLast4;
     }
 
     /**
      * Set the last 4 digits
      *
-     * @param mixed $last4 The 4 digits
+     * @param mixed $cardLast4 The 4 digits
      *
      * @return void
      */
-    public function setLast4($last4)
+    public function setCardLast4($cardLast4)
     {
-        $this->last4 = $last4;
+        $this->cardLast4 = $cardLast4;
     }
 
     /**
@@ -216,43 +207,21 @@ class Card extends Model
      *
      * @return mixed
      */
-    public function getExpiryYear()
+    public function getCardExpiryYear()
     {
-        return $this->expiryYear;
+        return $this->cardExpiryYear;
     }
 
     /**
      * Set the expiration year of the card
      *
-     * @param mixed $expiryYear The expiration year
+     * @param mixed $cardExpiryYear The expiration year
      *
      * @return void
      */
-    public function setExpiryYear($expiryYear)
+    public function setCardExpiryYear($cardExpiryYear)
     {
-        $this->expiryYear = $expiryYear;
-    }
-
-    /**
-     * Get the hash
-     *
-     * @return mixed
-     */
-    public function getHash()
-    {
-        return $this->hash;
-    }
-
-    /**
-     * Set the hash
-     *
-     * @param mixed $hash The expiration month
-     *
-     * @return void
-     */
-    public function setHash($hash)
-    {
-        $this->hash = $hash;
+        $this->cardExpiryYear = $cardExpiryYear;
     }
 
     /**
@@ -282,20 +251,20 @@ class Card extends Model
      *
      * @return int
      */
-    public function getExpiryMonth()
+    public function getCardExpiryMonth()
     {
-        return $this->expiryMonth;
+        return $this->cardExpiryMonth;
     }
 
     /**
      * Get the expiration month of the card
      *
-     * @param int $expiryMonth The expiration month of the card
+     * @param int $cardExpiryMonth The expiration month of the card
      *
      * @return void
      */
-    public function setExpiryMonth($expiryMonth)
+    public function setCardExpiryMonth($cardExpiryMonth)
     {
-        $this->expiryMonth = $expiryMonth;
+        $this->cardExpiryMonth = $cardExpiryMonth;
     }
 }

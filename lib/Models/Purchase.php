@@ -65,47 +65,11 @@ class Purchase extends Model
     public $createdAt;
 
     /**
-     * The gateway that processed the transaction.
-     *
-     * @var string
-     */
-    public $paymentGateway;
-
-    /**
-     * The method the user used to complete the purchase.
-     *
-     * @var string
-     */
-    public $paymentMethod;
-
-    /**
      * The currency type of the order, in 3 letter ISO 4217 format.
      *
      * @var string
      */
     public $currency = 'USD';
-
-    /**
-     * The response code from the address verification system (AVS).
-     *
-     * @var string
-     */
-    public $avsResponseCode;
-
-    /**
-     * The response code from the card verification value (CVV) check.
-     *
-     * @var string
-     */
-    public $cvvResponseCode;
-
-    /**
-     * The unique identifier provided by the payment gateway
-     * for this order.
-     *
-     * @var string
-     */
-    public $transactionId;
 
     /**
      * The method used by the buyer to place the order.
@@ -115,26 +79,11 @@ class Purchase extends Model
     public $orderChannel;
 
     /**
-     * If the order was was taken by a customer service or sales
-     * agent, his or her name
-     *
-     * @var string
-     */
-    public $receivedBy;
-
-    /**
      * The total price of the order, including shipping price and taxes.
      *
      * @var float
      */
     public $totalPrice;
-
-    /**
-     * The decision on the order
-     *
-     * @var string
-     */
-    public $customerOrderRecommendation;
 
     /**
      * The products purchased in the transaction.
@@ -170,15 +119,8 @@ class Purchase extends Model
         'browserIpAddress',
         'orderId',
         'createdAt',
-        'paymentGateway',
-        'paymentMethod',
         'currency',
-        'avsResponseCode',
-        'cvvResponseCode',
-        'customerOrderRecommendation',
-        'transactionId',
         'orderChannel',
-        'receivedBy',
         'totalPrice',
         'products',
         'shipments',
@@ -194,15 +136,8 @@ class Purchase extends Model
         'browserIpAddress' => [],
         'orderId' => [],
         'createdAt' => [],
-        'paymentGateway' => [],
-        'paymentMethod' => [],
         'currency' => [],
-        'avsResponseCode' => [],
-        'cvvResponseCode' => [],
-        'customerOrderRecommendation' => [],
-        'transactionId' => [],
         'orderChannel' => [],
-        'receivedBy' => [],
         'totalPrice' => [],
     ];
 
@@ -264,44 +199,12 @@ class Purchase extends Model
     {
         $valid = [];
 
-        $allowedMethods = [
-            "ach", "ali_pay", "apple_pay", "amazon_payments", "android_pay",
-            "bitcoin", "cash", "check", "credit_card", "free", "google_pay",
-            "loan", "paypal_account", "reward_points", "store_credit",
-            "samsung_pay", "visa_checkout"
-        ];
-        $validMethod = $this->enumValid($this->getPaymentMethod(), $allowedMethods);
-        if (false === $validMethod) {
-            $valid[] = 'Invalid payment method';
-        }
-
         $allowedChannels = [
             "web", "phone", "mobile_app", "social", "marketplace", "in_store_kiosk"
         ];
         $validChannel = $this->enumValid($this->getOrderChannel(), $allowedChannels);
         if (false === $validChannel) {
             $valid[] = 'Invalid order channel';
-        }
-
-        $allowedCustomerRecommendation = [
-            "decline_policy", "decline_fraud", "approve", "review", "reject"
-        ];
-        $validRecommend = $this->enumValid(
-            $this->getCustomerOrderRecommendation(),
-            $allowedCustomerRecommendation
-        );
-        if (false === $validRecommend) {
-            $valid[] = 'Invalid customer order recommendation';
-        }
-
-        // validate avs response code
-        if (!$this->avsCvvValidate($this->getAvsResponseCode())) {
-            $valid[] = 'Invalid AVS code';
-        }
-
-        // validate cvv response code
-        if (!$this->avsCvvValidate($this->getCvvResponseCode())) {
-            $valid[] = 'Invalid CVV code';
         }
 
         return (isset($valid[0]))? $valid : true;
@@ -432,50 +335,6 @@ class Purchase extends Model
     }
 
     /**
-     * Get the payment gateway
-     *
-     * @return mixed
-     */
-    public function getPaymentGateway()
-    {
-        return $this->paymentGateway;
-    }
-
-    /**
-     * Set the payment gateway
-     *
-     * @param mixed $paymentGateway The name of payment gateway
-     *
-     * @return void
-     */
-    public function setPaymentGateway($paymentGateway)
-    {
-        $this->paymentGateway = $paymentGateway;
-    }
-
-    /**
-     * Get the payment method
-     *
-     * @return mixed
-     */
-    public function getPaymentMethod()
-    {
-        return $this->paymentMethod;
-    }
-
-    /**
-     * Set the payment method
-     *
-     * @param mixed $paymentMethod The payment method name
-     *
-     * @return void
-     */
-    public function setPaymentMethod($paymentMethod)
-    {
-        $this->paymentMethod = $paymentMethod;
-    }
-
-    /**
      * Get the currency
      *
      * @return mixed
@@ -498,72 +357,6 @@ class Purchase extends Model
     }
 
     /**
-     * Get the AVS code
-     *
-     * @return mixed
-     */
-    public function getAvsResponseCode()
-    {
-        return $this->avsResponseCode;
-    }
-
-    /**
-     * Set the AVS code
-     *
-     * @param mixed $avsResponseCode Code received from gateway
-     *
-     * @return void
-     */
-    public function setAvsResponseCode($avsResponseCode)
-    {
-        $this->avsResponseCode = $avsResponseCode;
-    }
-
-    /**
-     * Get the CVV code
-     *
-     * @return mixed
-     */
-    public function getCvvResponseCode()
-    {
-        return $this->cvvResponseCode;
-    }
-
-    /**
-     * Set the CVV code
-     *
-     * @param mixed $cvvResponseCode Code received from gateway
-     *
-     * @return void
-     */
-    public function setCvvResponseCode($cvvResponseCode)
-    {
-        $this->cvvResponseCode = $cvvResponseCode;
-    }
-
-    /**
-     * Get the transaction id
-     *
-     * @return mixed
-     */
-    public function getTransactionId()
-    {
-        return $this->transactionId;
-    }
-
-    /**
-     * Set the transaction id
-     *
-     * @param mixed $transactionId Id received from gateway
-     *
-     * @return void
-     */
-    public function setTransactionId($transactionId)
-    {
-        $this->transactionId = $transactionId;
-    }
-
-    /**
      * Get the order channel
      *
      * @return mixed
@@ -583,28 +376,6 @@ class Purchase extends Model
     public function setOrderChannel($orderChannel)
     {
         $this->orderChannel = $orderChannel;
-    }
-
-    /**
-     * Get received by
-     *
-     * @return mixed
-     */
-    public function getReceivedBy()
-    {
-        return $this->receivedBy;
-    }
-
-    /**
-     * Set received by
-     *
-     * @param mixed $receivedBy Who took the order
-     *
-     * @return void
-     */
-    public function setReceivedBy($receivedBy)
-    {
-        $this->receivedBy = $receivedBy;
     }
 
     /**
@@ -693,27 +464,5 @@ class Purchase extends Model
     public function setDiscountCodes($discountCodes)
     {
         $this->discountCodes = $discountCodes;
-    }
-
-    /**
-     * Get the customer order recommendation
-     *
-     * @return string
-     */
-    public function getCustomerOrderRecommendation()
-    {
-        return $this->customerOrderRecommendation;
-    }
-
-    /**
-     * Set the customer order recommendation
-     *
-     * @param string $customerOrderRecommendation The recommendation
-     *
-     * @return void
-     */
-    public function setCustomerOrderRecommendation($customerOrderRecommendation)
-    {
-        $this->customerOrderRecommendation = $customerOrderRecommendation;
     }
 }
