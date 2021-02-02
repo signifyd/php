@@ -187,23 +187,6 @@ class ConnectionTest extends TestCase
     /**
      * Test init curl with delete method
      *
-     * @expectedException        \Signifyd\Core\Exceptions\ConnectionException
-     * @expectedExceptionMessage Method delete is not supported.
-     *
-     * @throws \Signifyd\Core\Exceptions\LoggerException
-     *
-     * @return void
-     */
-    public function testInitCurlWithDeleteMethod()
-    {
-        $settings = new Settings(['apiKey' => $this->apiKey]);
-        $connection = new Connection($settings);
-        $connection->initCurl('', 'delete');
-    }
-
-    /**
-     * Test init curl with delete method
-     *
      * @return void
      *
      * @throws ConnectionException

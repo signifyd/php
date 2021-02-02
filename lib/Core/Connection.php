@@ -124,6 +124,8 @@ class Connection
             $options[CURLOPT_CUSTOMREQUEST] = "PUT";
         } elseif ($method == 'get') {
             $options[CURLOPT_CUSTOMREQUEST] = "GET";
+        } elseif ($method == 'delete') {
+            $options[CURLOPT_CUSTOMREQUEST] = "DELETE";
         } else {
             throw new ConnectionException(
                 'Method ' . $method . ' is not supported.'
