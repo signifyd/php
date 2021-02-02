@@ -18,7 +18,7 @@ class Authorizenet extends AbstractGateway
      * @param $transactionId
      * @return DefaultResponse|Response\ResponseInterface
      */
-    public function fetchData($transactionId)
+    public function fetchData($transactionId, $orderId)
     {
         $request = [
             "getTransactionDetailsRequest" => [

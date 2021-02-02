@@ -18,5 +18,5 @@ interface GatewayInterface
      * @param $transactionId
      * @return ResponseInterface
      */
-    public function fetchData($transactionId);
+    public function fetchData($transactionId, $orderId);
 }
