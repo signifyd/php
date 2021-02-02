@@ -190,6 +190,21 @@ class CaseResponse extends Response
     public $errorMessage;
 
     /**
+     * The suggested action that should be taken for the order.
+     *
+     * @var string
+     */
+    public $checkpointAction;
+
+    /**
+     * the name of the customer policy that is triggered.
+     * It is omitted when no customer policy is triggered.
+     *
+     * @var string
+     */
+    public $checkpointActionReason;
+
+    /**
      * CaseResponse constructor.
      *
      * @param Logging $logger The logger
@@ -289,6 +304,52 @@ class CaseResponse extends Response
     public function setGuaranteeDisposition($guaranteeDisposition)
     {
         $this->guaranteeDisposition = $guaranteeDisposition;
+    }
+
+    /**
+     * Get the The suggested action
+     * that should be taken for the order.
+     *
+     * @return string
+     */
+    public function getCheckpointAction()
+    {
+        return $this->checkpointAction;
+    }
+
+    /**
+     * Set the The suggested action
+     * that should be taken for the order.
+     *
+     * @param string $checkpointAction
+     *
+     * @return void
+     */
+    public function setCheckpointAction($checkpointAction)
+    {
+        $this->checkpointAction = $checkpointAction;
+    }
+
+    /**
+     * Get the name of the customer policy that is triggered.
+     *
+     * @return string
+     */
+    public function getCheckpointActionReason()
+    {
+        return $this->checkpointActionReason;
+    }
+
+    /**
+     * Set the name of the customer policy that is triggered.
+     *
+     * @param string $checkpointActionReason
+     *
+     * @return void
+     */
+    public function setCheckpointActionReason($checkpointActionReason)
+    {
+        $this->checkpointActionReason = $checkpointActionReason;
     }
 
     /**
