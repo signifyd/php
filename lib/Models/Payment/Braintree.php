@@ -6,6 +6,14 @@ use Signifyd\Models\Payment\Response\BraintreeResponse;
 
 class Braintree extends \Signifyd\Models\Payment\AbstractGateway
 {
+    /**
+     * @var string[]
+     */
+    protected $urls = [
+        'production' => 'https://payments.braintree-api.com/graphql',
+        'sandbox' => 'https://payments.sandbox.braintree-api.com/graphql'
+    ];
+
     public function fetchData($transactionId, $orderId)
     {
         $requestArr = [
@@ -46,9 +54,11 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
         ];
 
         $request = json_encode($requestArr);
-        $environment = $this->params['environment'];
 
-        if ($environment == 'sandbox' && isset($this->params['publicKeySandbox']) && isset($this->params['privateKeySandbox'])) {
+        if ($this->params['environment'] == 'sandbox' &&
+            isset($this->params['publicKeySandbox']) &&
+            isset($this->params['privateKeySandbox'])
+        ) {
             $publicKey = $this->params['publicKeySandbox'];
             $privateKey = $this->params['privateKeySandbox'];
         } else {
@@ -61,7 +71,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL,"https://payments.sandbox.braintree-api.com/graphql");
+        curl_setopt($ch, CURLOPT_URL,$this->params['url']);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
@@ -75,25 +85,108 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
         curl_close ($ch);
 
         $info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $serverOutput), true );
-
-        $last4 = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['last4'];
-        $bin = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['bin'];
-        $expirationMonth = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationMonth'];
-        $expirationYear = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationYear'];
-        $cardholderName = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['cardholderName'];
-        $cvvResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['cvvResponse'];
-        $avsPostalCodeResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsPostalCodeResponse'];
-        $avsStreetAddressResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsStreetAddressResponse'];
-
         $response = new BraintreeResponse();
 
-        $response->setLast4($last4);
-        $response->setBin($bin);
-        $response->setExpiryMonth($expirationMonth);
-        $response->setExpiryYear($expirationYear);
-        $response->setCardholder($cardholderName);
-        $response->setCvv($cvvResponse);
-        $response->setAvsResponse($avsPostalCodeResponse, $avsStreetAddressResponse);
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['last4'])
+        ){
+            $last4 = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['last4'];
+            $response->setLast4($last4);
+        }
+
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['bin'])
+
+        ){
+            $bin = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['bin'];
+            $response->setBin($bin);
+        }
+
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationMonth'])
+
+        ){
+            $expirationMonth = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationMonth'];
+            $response->setExpiryMonth($expirationMonth);
+        }
+
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationYear'])
+
+        ){
+            $expirationYear = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationYear'];
+            $response->setExpiryYear($expirationYear);
+        }
+
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['cardholderName'])
+        ){
+            $cardholderName = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['cardholderName'];
+            $response->setCardholder($cardholderName);
+        }
+
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['cvvResponse'])
+        ){
+            $cvvResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['cvvResponse'];
+            $response->setCvv($cvvResponse);
+        }
+
+        if (isset($info['data']) &&
+            isset($info['data']['search']) &&
+            isset($info['data']['search']['payments']) &&
+            isset($info['data']['search']['payments']['edges']) &&
+            isset($info['data']['search']['payments']['edges'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsPostalCodeResponse']) &&
+            isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsStreetAddressResponse'])
+        ){
+            $avsPostalCodeResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsPostalCodeResponse'];
+            $avsStreetAddressResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsStreetAddressResponse'];
+
+            $response->setAvsResponse($avsPostalCodeResponse, $avsStreetAddressResponse);
+        }
 
         return $response;
     }

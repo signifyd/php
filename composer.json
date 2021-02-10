@@ -2,6 +2,7 @@
   "name": "signifyd/signifyd-php",
   "description": "Signifyd client API plugin for PHP",
   "type": "library",
+  "version": "3.0.0",
   "license": [
     "MIT"
   ],

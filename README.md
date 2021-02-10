@@ -24,10 +24,16 @@ Installing the SDK
 ------------------
 ##### With composer
 
-The Signifyd PHP SDK is available on Packagist. To add it to your project, simply run:
+The Signifyd PHP SDK is available on Packagist. To add it to your project, simply run command below to get the latest version:
 
 ```
-$ php composer.phar require signifyd/signifyd-php 2.x
+$ php composer.phar require signifyd/signifyd-php
+```
+
+If you want you can specify a version by adding it to the command:
+
+```
+$ php composer.phar require signifyd/signifyd-php:DESIRED_VERSION_HERE
 ```
 
 Or add the this line under the `"require"` key in your `composer.json`:
@@ -35,10 +41,14 @@ Or add the this line under the `"require"` key in your `composer.json`:
 {
     "require" : {
         ...
-        "signifyd/signifyd-php": "2.*"
+        "signifyd/signifyd-php": "DESIRED_VERSION_HERE"
     }
 }
 ```
+Change DESIRED_VERSION_HERE by the version description which most fits to your business. To learn more about version numbers check Composer documentation.
+
+https://getcomposer.org/doc/articles/versions.md#writing-version-constraints
+
 After adding the line you must install the Signifyd PHP SDK dependency by running:
 ```
 $ php composer.phar install

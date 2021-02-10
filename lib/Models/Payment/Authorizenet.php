@@ -49,14 +49,39 @@ class Authorizenet extends AbstractGateway
         $response = curl_exec($curl);
 
         $info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true );
-        $holderName = $info['transaction']['billTo']['firstName'] . " " . $info['transaction']['billTo']['lastName'];
-        $last4 = substr($info['transaction']['payment']['creditCard']['cardNumber'], -4);
-
         $response = new \Signifyd\Models\Payment\Response\Authorizenet();
-        $response->setCardholder($holderName);
-        $response->setLast4($last4);
-        $response->setAvs($info['transaction']['AVSResponse']);
-        $response->setCvv($info['transaction']['cardCodeResponse']);
+
+        if (isset($info['transaction']) &&
+            isset($info['transaction']['billTo']) &&
+            isset($info['transaction']['billTo']['firstName']) &&
+            isset($info['transaction']['billTo']['lastName'])
+        ){
+            $holderName = $info['transaction']['billTo']['firstName'] . " " . $info['transaction']['billTo']['lastName'];
+            $response->setCardholder($holderName);
+        }
+
+        if (isset($info['transaction']) &&
+            isset($info['transaction']['payment']) &&
+            isset($info['transaction']['payment']['creditCard']) &&
+            isset($info['transaction']['payment']['creditCard']['cardNumber'])
+        ){
+            $last4 = substr($info['transaction']['payment']['creditCard']['cardNumber'], -4);
+            $response->setLast4($last4);
+        }
+
+        if (isset($info['transaction']) &&
+            isset($info['transaction']['AVSResponse'])
+        ){
+            $avs = $info['transaction']['AVSResponse'];
+            $response->setAvs($avs);
+        }
+
+        if (isset($info['transaction']) &&
+            isset($info['transaction']['cardCodeResponse'])
+        ){
+            $cvv = $info['transaction']['cardCodeResponse'];
+            $response->setCvv($cvv);
+        }
 
         return $response;
     }
