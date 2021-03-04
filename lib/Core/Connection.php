@@ -151,7 +151,6 @@ class Connection
     public function callApi($endpoint,$payload = '',$method = 'get',$type = 'case')
     {
         $url = $this->makeUrl($endpoint);
-        $this->headers[] = "Content-length: " . strlen($payload);
         try {
             $this->initCurl($url, $method);
         } catch (ConnectionException $e) {
