@@ -19,6 +19,7 @@ use Signifyd\Models\Recipient;
 use Signifyd\Models\Transaction;
 use Signifyd\Models\UserAccount;
 use Signifyd\Models\Seller;
+use Signifyd\Models\ClientVersion;
 
 /**
  * Class CaseModel
@@ -72,6 +73,11 @@ class CaseModel extends Model
     public $seller;
 
     /**
+     * @var ClientVersion
+     */
+    public $clientVersion;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -81,7 +87,8 @@ class CaseModel extends Model
         'recipients',
         'transactions',
         'userAccount',
-        'seller'
+        'seller',
+        'clientVersion'
     ];
 
     protected $objectFields = [
@@ -300,5 +307,15 @@ class CaseModel extends Model
     public function addRecipient($recipient)
     {
         $this->recipients[] = $recipient;
+    }
+
+    public function getClientVersion()
+    {
+        return $this->clientVersion;
+    }
+
+    public function setClientVersion($clientVersion)
+    {
+        $this->clientVersion = $clientVersion;
     }
 }

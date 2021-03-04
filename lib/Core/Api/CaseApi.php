@@ -290,9 +290,15 @@ class CaseApi
      */
     protected function addPlatform($case)
     {
-        $case->platformAndClient = new \StdClass();
-        $case->platformAndClient->signifydClientApp = "PHP SDK";
-        $case->platformAndClient->signifydClientAppVersion = "2.0";
+        if (!isset($case->clientVersion)) {
+            $case->clientVersion = new \Signifyd\Models\ClientVersion();
+            $composer = file_get_contents(__DIR__ . '/../../../composer.json');
+            $composerArray = json_decode($composer);
+            $sdkVersion = $composerArray->version;
+
+            $case->clientVersion->signifydClientApp = 'PHP SDK';
+            $case->clientVersion->signifydClientAppVersion = $sdkVersion;
+        }
 
         return $case;
     }
