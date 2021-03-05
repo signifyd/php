@@ -75,6 +75,16 @@ class Settings
      */
     public $logEnabled = true;
 
+    /*
+     * The name of the log file
+     */
+    protected $logFileName = 'signifyd_core.log';
+
+    /*
+     * The location of the log file
+     */
+    protected $logLocation = '.';
+
     /**
      * Settings constructor.
      *
@@ -247,4 +257,23 @@ class Settings
         $this->logEnabled = $logEnabled;
     }
 
+    public function getLogFileName()
+    {
+        return $this->logFileName;
+    }
+
+    public function setLogFileName($logFileName)
+    {
+        $this->logFileName = $logFileName;
+    }
+
+    public function getLogLocation()
+    {
+        return $this->logLocation;
+    }
+
+    public function setLogLocation($logLocation)
+    {
+        $this->logLocation = $logLocation;
+    }
 }

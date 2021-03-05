@@ -13,12 +13,14 @@
  */
 namespace Signifyd\Models;
 
+use Laminas\Filter\Boolean;
 use Signifyd\Core\Model;
 use Signifyd\Models\Purchase;
 use Signifyd\Models\Recipient;
 use Signifyd\Models\Transaction;
 use Signifyd\Models\UserAccount;
 use Signifyd\Models\Seller;
+use Signifyd\Models\ClientVersion;
 
 /**
  * Class CaseModel
@@ -72,6 +74,19 @@ class CaseModel extends Model
     public $seller;
 
     /**
+     * @var ClientVersion
+     */
+    public $clientVersion;
+
+    /**
+     * Determines whether the case should be scored or submitted for guarantee.
+     * Set to true for a guarantee decision and set to false for a score.
+     *
+     * @var Boolean
+     */
+    public $customerSubmitForGuaranteeIndicator;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -81,12 +96,18 @@ class CaseModel extends Model
         'recipients',
         'transactions',
         'userAccount',
-        'seller'
+        'seller',
+        'clientVersion',
+        'customerSubmitForGuaranteeIndicator'
     ];
 
     protected $objectFields = [
         'recipients',
         'transactions'
+    ];
+
+    protected $nonObjectFields = [
+        'customerSubmitForGuaranteeIndicator'
     ];
 
     /**
@@ -108,6 +129,10 @@ class CaseModel extends Model
                 }
 
                 if (in_array($field, $this->objectFields)) {
+                    continue;
+                }
+
+                if (in_array($field, $this->nonObjectFields)) {
                     continue;
                 }
 
@@ -133,6 +158,12 @@ class CaseModel extends Model
                     $this->addRecipient($recipient);
                 }
             }
+
+            if (isset($case['customerSubmitForGuaranteeIndicator']) &&
+                is_bool($case['customerSubmitForGuaranteeIndicator'])
+            ) {
+                $this->setCustomerSubmitForGuaranteeIndicator($case['customerSubmitForGuaranteeIndicator']);
+            }
         }
     }
 
@@ -147,6 +178,12 @@ class CaseModel extends Model
         foreach ($this->fields as $field) {
             $obj = $this->{'get' . ucfirst($field)}();
             if (null === $obj) {
+                continue;
+            }
+
+            if ($field == 'customerSubmitForGuaranteeIndicator') {
+                $dataValid = is_bool($obj) ? true : false;
+                $valid[] = $dataValid;
                 continue;
             }
 
@@ -300,5 +337,25 @@ class CaseModel extends Model
     public function addRecipient($recipient)
     {
         $this->recipients[] = $recipient;
+    }
+
+    public function getClientVersion()
+    {
+        return $this->clientVersion;
+    }
+
+    public function setClientVersion($clientVersion)
+    {
+        $this->clientVersion = $clientVersion;
+    }
+
+    public function getCustomerSubmitForGuaranteeIndicator()
+    {
+        return $this->customerSubmitForGuaranteeIndicator;
+    }
+
+    public function setCustomerSubmitForGuaranteeIndicator($customerSubmitForGuaranteeIndicator)
+    {
+        $this->customerSubmitForGuaranteeIndicator = $customerSubmitForGuaranteeIndicator;
     }
 }

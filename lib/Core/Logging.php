@@ -29,16 +29,6 @@ use Signifyd\Core\Exceptions\LoggerException;
 class Logging
 {
     /*
-     * The name of the log file
-     */
-    protected $logFileName = 'signifyd_core.log';
-
-    /*
-     * The location of the log file
-     */
-    protected $logLocation = 'var/log';
-
-    /*
      * The main logger implementation
      *
      * @var \Monolog\Logger
@@ -83,7 +73,7 @@ class Logging
     {
         try {
             $fileHandler = new StreamHandler(
-                $this->logLocation . '/' . $this->logFileName
+                $this->settings->getLogLocation() . '/' . $this->settings->getLogFileName()
             );
             $this->logger->pushHandler($fileHandler);
             if (true === $this->settings->isConsoleOut()) {
