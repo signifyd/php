@@ -181,7 +181,7 @@ class CaseModel extends Model
                 continue;
             }
 
-            if ($field = 'customerSubmitForGuaranteeIndicator') {
+            if ($field == 'customerSubmitForGuaranteeIndicator') {
                 $dataValid = is_bool($obj) ? true : false;
                 $valid[] = $dataValid;
                 continue;
