@@ -116,10 +116,11 @@ class CaseApi
             );
         }
 
+        $case = $this->addPlatform($case);
+
         $this->logger->info(
             'Connection call create case api with case: ' . $case->toJson()
         );
-        $case = $this->addPlatform($case);
         $response = $this->connection->callApi(
             'cases',
             $case->toJson(),
