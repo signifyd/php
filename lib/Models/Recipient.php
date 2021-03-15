@@ -14,6 +14,7 @@
 namespace Signifyd\Models;
 
 use Signifyd\Core\Model;
+use Signifyd\Models\RecipientAddress;
 
 /**
  * Class Recipient
@@ -66,7 +67,7 @@ class Recipient extends Model
     /**
      * The address to which the order will be delivered.
      *
-     * @var \Signifyd\Models\Address
+     * @var \Signifyd\Models\RecipientAddress
      */
     public $deliveryAddress;
 
@@ -112,7 +113,7 @@ class Recipient extends Model
             }
 
             if (isset($data['deliveryAddress'])&& !empty($data['deliveryAddress'])) {
-                $deliveryAddress = new Address($data['deliveryAddress']);
+                $deliveryAddress = new RecipientAddress($data['deliveryAddress']);
                 $this->setDeliveryAddress($deliveryAddress);
             }
         }

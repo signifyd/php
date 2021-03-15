@@ -98,6 +98,13 @@ class UserAccount extends Model
     public $lastUpdateDate;
 
     /**
+     * For Marketplaces, the rating of the buyer.
+     *
+     * @var string
+     */
+    public $rating;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -111,7 +118,8 @@ class UserAccount extends Model
         'lastOrderId',
         'aggregateOrderCount',
         'aggregateOrderDollars',
-        'lastUpdateDate'
+        'lastUpdateDate',
+        'rating'
     ];
 
     /**
@@ -128,7 +136,8 @@ class UserAccount extends Model
         'lastOrderId' => [],
         'aggregateOrderCount' => [],
         'aggregateOrderDollars' => [],
-        'lastUpdateDate' => []
+        'lastUpdateDate' => [],
+        'rating' => []
     ];
 
     /**
@@ -358,5 +367,25 @@ class UserAccount extends Model
     public function setLastUpdateDate($lastUpdateDate)
     {
         $this->lastUpdateDate = $lastUpdateDate;
+    }
+
+    /**
+     * Get the rating of the buyer
+     *
+     * @return string
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Set the rating of the buyer
+     *
+     * @param $rating
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
     }
 }

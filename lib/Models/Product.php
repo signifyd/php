@@ -36,6 +36,7 @@ class Product extends Model
     public $itemIsDigital;
     public $itemCategory;
     public $itemSubCategory;
+    public $sellerAccountNumber;
 
     protected $fields = [
         'itemId',
@@ -47,7 +48,8 @@ class Product extends Model
         'itemWeight',
         'itemIsDigital',
         'itemCategory',
-        'itemSubCategory'
+        'itemSubCategory',
+        'sellerAccountNumber'
     ];
 
     protected $fieldsValidation = [
@@ -60,7 +62,8 @@ class Product extends Model
         'itemWeight' => [],
         'itemIsDigital' => [],
         'itemCategory' => [],
-        'itemSubCategory' => []
+        'itemSubCategory' => [],
+        'sellerAccountNumber' => []
     ];
 
     /**
@@ -312,5 +315,25 @@ class Product extends Model
     public function setItemUrl($itemUrl)
     {
         $this->itemUrl = $itemUrl;
+    }
+
+    /**
+     * Get the account number of the seller that sold the product.
+     *
+     * @return mixed
+     */
+    public function getSellerAccountNumber()
+    {
+        return $this->sellerAccountNumber;
+    }
+
+    /**
+     * Set the account number of the seller that sold the product.
+     *
+     * @param $sellerAccountNumber
+     */
+    public function setSellerAccountNumber($sellerAccountNumber)
+    {
+        $this->sellerAccountNumber = $sellerAccountNumber;
     }
 }

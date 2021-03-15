@@ -21,6 +21,7 @@ use Signifyd\Models\Transaction;
 use Signifyd\Models\UserAccount;
 use Signifyd\Models\Seller;
 use Signifyd\Models\ClientVersion;
+use Signifyd\Models\DeviceFingerprints;
 
 /**
  * Class CaseModel
@@ -87,6 +88,21 @@ class CaseModel extends Model
     public $customerSubmitForGuaranteeIndicator;
 
     /**
+     * If the order has already been reviewed for fraud this should
+     * indicate the outcome of the review.
+     *
+     * @var string
+     */
+    public $customerOrderRecommendation;
+
+    /**
+     * A list of device fingerprint payloads.
+     *
+     * @var array $deviceFingerprints Array of DeviceFingerprints objects
+     */
+    public $deviceFingerprints;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -98,16 +114,20 @@ class CaseModel extends Model
         'userAccount',
         'seller',
         'clientVersion',
-        'customerSubmitForGuaranteeIndicator'
+        'customerSubmitForGuaranteeIndicator',
+        'customerOrderRecommendation',
+        'deviceFingerprints'
     ];
 
     protected $objectFields = [
         'recipients',
-        'transactions'
+        'transactions',
+        'deviceFingerprints'
     ];
 
     protected $nonObjectFields = [
-        'customerSubmitForGuaranteeIndicator'
+        'customerSubmitForGuaranteeIndicator',
+        'customerOrderRecommendation'
     ];
 
     /**
@@ -133,7 +153,7 @@ class CaseModel extends Model
                 }
 
                 if (in_array($field, $this->nonObjectFields)) {
-                    continue;
+                    $this->{'set' . ucfirst($field)}($case[$field]);
                 }
 
                 if (is_array($case[$field]) && !empty($case[$field])) {
@@ -159,6 +179,13 @@ class CaseModel extends Model
                 }
             }
 
+            if (isset($case['deviceFingerprints']) && is_array($case['deviceFingerprints'])) {
+                foreach ($case['deviceFingerprints'] as $sItem) {
+                    $deviceFingerprints = new DeviceFingerprints($sItem);
+                    $this->addDeviceFingerprints($deviceFingerprints);
+                }
+            }
+
             if (isset($case['customerSubmitForGuaranteeIndicator']) &&
                 is_bool($case['customerSubmitForGuaranteeIndicator'])
             ) {
@@ -175,6 +202,13 @@ class CaseModel extends Model
     public function validate()
     {
         $valid = [];
+        $customerOrderRecommendationValues = [
+            'DECLINE_POLICY',
+            'DECLINE_FRAUD',
+            'APPROVE',
+            'REVIEW'
+        ];
+
         foreach ($this->fields as $field) {
             $obj = $this->{'get' . ucfirst($field)}();
             if (null === $obj) {
@@ -183,6 +217,12 @@ class CaseModel extends Model
 
             if ($field == 'customerSubmitForGuaranteeIndicator') {
                 $dataValid = is_bool($obj) ? true : false;
+                $valid[] = $dataValid;
+                continue;
+            }
+
+            if ($field == 'customerOrderRecommendation') {
+                $dataValid = in_array($obj, $customerOrderRecommendationValues);
                 $valid[] = $dataValid;
                 continue;
             }
@@ -339,6 +379,11 @@ class CaseModel extends Model
         $this->recipients[] = $recipient;
     }
 
+    public function addDeviceFingerprints($deviceFingerprints)
+    {
+        $this->deviceFingerprints[] = $deviceFingerprints;
+    }
+
     public function getClientVersion()
     {
         return $this->clientVersion;
@@ -357,5 +402,25 @@ class CaseModel extends Model
     public function setCustomerSubmitForGuaranteeIndicator($customerSubmitForGuaranteeIndicator)
     {
         $this->customerSubmitForGuaranteeIndicator = $customerSubmitForGuaranteeIndicator;
+    }
+
+    public function getCustomerOrderRecommendation()
+    {
+        return $this->customerOrderRecommendation;
+    }
+
+    public function setCustomerOrderRecommendation($customerOrderRecommendation)
+    {
+        $this->customerOrderRecommendation = $customerOrderRecommendation;
+    }
+
+    public function getDeviceFingerprints()
+    {
+        return $this->deviceFingerprints;
+    }
+
+    public function setDeviceFingerprints($deviceFingerprints)
+    {
+        $this->deviceFingerprints = $deviceFingerprints;
     }
 }
