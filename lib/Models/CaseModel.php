@@ -21,6 +21,8 @@ use Signifyd\Models\Transaction;
 use Signifyd\Models\UserAccount;
 use Signifyd\Models\Seller;
 use Signifyd\Models\ClientVersion;
+use Signifyd\Models\DecisionRequest;
+use Signifyd\Models\Policy;
 
 /**
  * Class CaseModel
@@ -87,6 +89,16 @@ class CaseModel extends Model
     public $customerSubmitForGuaranteeIndicator;
 
     /**
+     * @var DecisionRequest
+     */
+    public $decisionRequest;
+
+    /**
+     * Policy
+     */
+    public $policy;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -98,7 +110,9 @@ class CaseModel extends Model
         'userAccount',
         'seller',
         'clientVersion',
-        'customerSubmitForGuaranteeIndicator'
+        'customerSubmitForGuaranteeIndicator',
+        'decisionRequest',
+        'policy'
     ];
 
     protected $objectFields = [
@@ -357,5 +371,25 @@ class CaseModel extends Model
     public function setCustomerSubmitForGuaranteeIndicator($customerSubmitForGuaranteeIndicator)
     {
         $this->customerSubmitForGuaranteeIndicator = $customerSubmitForGuaranteeIndicator;
+    }
+
+    public function getDecisionRequest()
+    {
+        return $this->decisionRequest;
+    }
+
+    public function setDecisionRequest($decisionRequest)
+    {
+        $this->decisionRequest = $decisionRequest;
+    }
+
+    public function getPolicy()
+    {
+        return $this->policy;
+    }
+
+    public function setPolicy($policy)
+    {
+        $this->policy = $policy;
     }
 }

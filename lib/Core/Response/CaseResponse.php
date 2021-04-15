@@ -204,6 +204,14 @@ class CaseResponse extends Response
      */
     public $checkpointActionReason;
 
+    public $test;
+
+    public $guaranteeIneligibleReason;
+
+    public $guaranteed;
+
+    public $recommendedAction;
+
     /**
      * CaseResponse constructor.
      *
@@ -237,15 +245,32 @@ class CaseResponse extends Response
         }
 
         foreach ($responseArr as $itemKey => $item) {
-            $method = 'set' . ucfirst($itemKey);
-            if (method_exists($this, $method)) {
-                $this->{$method}($item);
-            } else {
-                $this->logger->error('Method does not exist: ' . $method);
+            if ($itemKey == 'decisions' && is_array($item)) {
+                foreach ($item as $decisions => $decisionFiel) {
+                    if ($decisions == 'paymentFraud' && is_array($decisionFiel)) {
+                        foreach ($decisionFiel as $paymentFraud => $item) {
+                            $method = 'set' . ucfirst($paymentFraud);
+                            $this->setMethod($method, $item);
+                        }
+                    }
+                }
             }
+
+            $method = 'set' . ucfirst($itemKey);
+
+            $this->setMethod($method, $item);
         }
 
         return true;
+    }
+
+    public function setMethod($method, $item)
+    {
+        if (method_exists($this, $method)) {
+            $this->{$method}($item);
+        } else {
+            $this->logger->error('Method does not exist: ' . $method);
+        }
     }
 
     /**
@@ -761,4 +786,43 @@ class CaseResponse extends Response
         $this->currency = $currency;
     }
 
+    public function getTest()
+    {
+        return $this->test;
+    }
+
+    public function setTest($test)
+    {
+        $this->test = $test;
+    }
+
+    public function getRecommendedAction()
+    {
+        return $this->recommendedAction;
+    }
+
+    public function setRecommendedAction($recommendedAction)
+    {
+        $this->recommendedAction = $recommendedAction;
+    }
+
+    public function getGuaranteed()
+    {
+        return $this->guaranteed;
+    }
+
+    public function setGuaranteed($guaranteed)
+    {
+        $this->guaranteed = $guaranteed;
+    }
+
+    public function getGuaranteeIneligibleReason()
+    {
+        return $this->guaranteeIneligibleReason;
+    }
+
+    public function setGuaranteeIneligibleReason($guaranteeIneligibleReason)
+    {
+        $this->guaranteeIneligibleReason = $guaranteeIneligibleReason;
+    }
 }
