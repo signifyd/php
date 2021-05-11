@@ -110,6 +110,13 @@ class Purchase extends Model
     public $discountCodes = [];
 
     /**
+     * A unique id for a particular checkout.
+     *
+     * @var string
+     */
+    public $checkoutToken;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -124,7 +131,8 @@ class Purchase extends Model
         'totalPrice',
         'products',
         'shipments',
-        'discountCodes'
+        'discountCodes',
+        'checkoutToken'
     ];
     /**
      * The validation rules
@@ -139,6 +147,7 @@ class Purchase extends Model
         'currency' => [],
         'orderChannel' => [],
         'totalPrice' => [],
+        'checkoutToken' => []
     ];
 
     protected $objectFields = [
@@ -398,6 +407,28 @@ class Purchase extends Model
     public function setTotalPrice($totalPrice)
     {
         $this->totalPrice = $totalPrice;
+    }
+
+    /**
+     * Get a unique id for a particular checkout.
+     *
+     * @return string
+     */
+    public function getCheckoutToken()
+    {
+        return $this->checkoutToken;
+    }
+
+    /**
+     * Set a unique id for a particular checkout.
+     *
+     * @param string $checkoutToken
+     *
+     * @return void
+     */
+    public function setCheckoutToken($checkoutToken)
+    {
+        $this->checkoutToken = $checkoutToken;
     }
 
     /**

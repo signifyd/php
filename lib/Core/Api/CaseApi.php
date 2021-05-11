@@ -22,6 +22,7 @@ use Signifyd\Core\Response\CaseResponse;
 use Signifyd\Core\Response\FulfillmentBulkResponse;
 use Signifyd\Core\Settings;
 use Signifyd\Models\CaseModel;
+use Signifyd\Models\SendTransaction;
 use Signifyd\Models\Fulfillment;
 use Signifyd\Models\PaymentUpdate;
 
@@ -302,5 +303,43 @@ class CaseApi
         }
 
         return $case;
+    }
+
+    public function createTransaction($transaction)
+    {
+        $this->logger->info('CreateTransaction method called');
+        if (is_array($transaction)) {
+            $transaction = new SendTransaction($transaction);
+            $valid = $transaction->validate();
+            if (true !== $valid) {
+                $this->logger->error(
+                    'Transaction not valid after array init: ' . json_encode($valid)
+                );
+            }
+        } elseif ($transaction instanceof SendTransaction) {
+            $valid = $transaction->validate();
+            if (true !== $valid) {
+                $this->logger->error(
+                    'Transaction not valid after object init: ' . json_encode($valid)
+                );
+            }
+        } else {
+            $this->logger->error('Invalid parameter for create case');
+            throw new CaseModelException(
+                'Invalid parameter for create transaction'
+            );
+        }
+
+        $this->logger->info(
+            'Connection call create case api with transaction: ' . $transaction->toJson()
+        );
+        $response = $this->connection->callApi(
+            'transactions',
+            $transaction->toJson(),
+            'post',
+            'transactions'
+        );
+
+        return $response;
     }
 }
