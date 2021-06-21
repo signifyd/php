@@ -141,11 +141,11 @@ class Transaction extends Model
                 }
 
                 $this->{'set' . ucfirst($field)}($value);
+            }
 
-                if (isset($data['checkoutPaymentDetails']) && !empty($data['checkoutPaymentDetails'])) {
-                    $checkoutPaymentDetails = new Card($data['checkoutPaymentDetails']);
-                    $this->setCheckoutPaymentDetails($checkoutPaymentDetails);
-                }
+            if (isset($data['checkoutPaymentDetails']) && !empty($data['checkoutPaymentDetails'])) {
+                $checkoutPaymentDetails = new Card($data['checkoutPaymentDetails']);
+                $this->setCheckoutPaymentDetails($checkoutPaymentDetails);
             }
         }
     }
