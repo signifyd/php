@@ -70,6 +70,14 @@ class Transaction extends Model
     public $gatewayStatusCode;
 
     /**
+     * If the transaction resulted in an error or failure the enumerated reason the
+     * transcaction failed as provided by the payment provider.
+     *
+     * @var string
+     */
+    public $gatewayErrorCode;
+
+    /**
      * The gateway that processed the transaction.
      *
      * @var string
@@ -104,6 +112,7 @@ class Transaction extends Model
         'amount',
         'type',
         'gatewayStatusCode',
+        'gatewayErrorCode',
         'gateway',
         'paymentMethod',
         'createdAt'
@@ -122,6 +131,7 @@ class Transaction extends Model
         'amount' => [],
         'type' => [],
         'gatewayStatusCode' => [],
+        'gatewayErrorCode' => [],
         'gateway' => [],
         'paymentMethod' => [],
         'createdAt' => []
@@ -192,8 +202,21 @@ class Transaction extends Model
             "success", "pending", "failure", "error"
         ];
         $validGatewayStatusCode = $this->enumValid($this->getGatewayStatusCode(), $allowedGatewayStatusCode);
+
         if (false === $validGatewayStatusCode) {
             $valid[] = 'Invalid Gateway Status Code';
+        }
+
+        $allowedGatewayErrorCode = [
+            "CARD_DECLINED", "CALL_ISSUER", "EXPIRED_CARD", "FRAUD_DECLINE", "INCORRECT_NUMBER", "INVALID_NUMBER",
+            "INVALID_EXPIRY_DATE", "INVALID_CVC", "INCORRECT_CVC", "INCORRECT_ZIP", "INCORRECT_ADDRESS",
+            "INSUFFICIENT_FUNDS", "PROCESSING_ERROR", "PICK_UP_CARD", "RESTRICTED_CARD", "STOLEN_CARD",
+            "TEST_CARD_DECLINE"
+        ];
+        $validGatewayErrorCode = $this->enumValid($this->getGatewayErrorCode(), $allowedGatewayErrorCode);
+
+        if (false === $validGatewayErrorCode) {
+            $valid[] = 'Invalid Gateway Error Code';
         }
 
         return (isset($valid[0]))? $valid : true;
@@ -374,6 +397,29 @@ class Transaction extends Model
     public function setGatewayStatusCode($gatewayStatusCode)
     {
         $this->gatewayStatusCode = $gatewayStatusCode;
+    }
+
+    /**
+     * Get the error as returned
+     * by the payment provider
+     *
+     * @return string
+     */
+    public function getGatewayErrorCode()
+    {
+        return $this->gatewayErrorCode;
+    }
+
+    /**
+     * Set the gateway error code
+     *
+     * @param $gatewayErrorCode
+     *
+     * @return void
+     */
+    public function setGatewayErrorCode($gatewayErrorCode)
+    {
+        $this->gatewayErrorCode = $gatewayErrorCode;
     }
 
     /**
