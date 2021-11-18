@@ -4,9 +4,10 @@ namespace Signifyd\Core\Response;
 
 use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Model;
+use Signifyd\Core\Response;
 use Signifyd\Models\Transaction;
 
-class TransactionsResponse extends Model
+class TransactionsResponse extends Response
 {
     /**
      * A unique id for a particular checkout.

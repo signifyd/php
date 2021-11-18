@@ -149,63 +149,6 @@ class GuaranteeResponse extends Response
         return true;
     }
 
-    /**
-     * Set the error
-     *
-     * @param int    $httpCode The response code
-     * @param string $error    The response
-     *
-     * @return void
-     */
-    public function setError($httpCode, $error)
-    {
-        $this->setIsError(true);
-        $this->setErrorMessage($error);
-    }
-
-    /**
-     * Is the response in error
-     *
-     * @return bool
-     */
-    public function isError()
-    {
-        return $this->isError;
-    }
-
-    /**
-     * Set the error for the response object
-     *
-     * @param bool $isError The error state
-     *
-     * @return void
-     */
-    public function setIsError($isError)
-    {
-        $this->isError = $isError;
-    }
-
-    /**
-     * Get the error message
-     *
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->errorMessage;
-    }
-
-    /**
-     * Set the error message
-     *
-     * @param string $errorMessage The error message
-     *
-     * @return void
-     */
-    public function setErrorMessage($errorMessage)
-    {
-        $this->errorMessage = $errorMessage;
-    }
 
     /**
      * Get the case id
