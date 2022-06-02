@@ -1,6 +1,6 @@
 <?php
 /**
- * Fulfillment model for the Signifyd SDK
+ * UserAccount model for the Signifyd SDK
  *
  * PHP version 5.6
  *
@@ -16,8 +16,7 @@ namespace Signifyd\Models;
 use Signifyd\Core\Model;
 
 /**
- * Class Fulfillment
- * Fulfillment data
+ * Class Device
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -28,104 +27,76 @@ use Signifyd\Core\Model;
 class Fulfillment extends Model
 {
     /**
-     * The id that uniquely identifies the fulfillment
-     *
-     * @var int
-     */
-    public $id;
-
-    /**
-     * The id that uniquely identifies this order
+     * Unique identifier for the Fulfillment.
      *
      * @var string
      */
-    public $orderId;
+    public $shipmentId;
 
     /**
-     * The date and time when the items were fulfilled
+     * The date and time items are ready to be shipped.
+     * Formatted as yyyy-MM-dd'T'HH:mm:ssZ per ISO 8601.
      *
      * @var string
      */
-    public $createdAt;
+    public $shippedAt;
 
     /**
-     * The list of products that were fulfilled
+     * The list of products that were included in the shipment.
      *
-     * @var array
+     * @var array $products Array of Product objects
      */
     public $products = [];
 
     /**
-     * The full name of the person receiving the goods
-     *
-     * @var string
-     */
-    public $recipientName;
-
-    /**
-     * The location where the item was delivered to
-     *
-     * @var object \Signifyd\Model\Address
-     */
-    public $deliveryAddress;
-
-    /**
-     * Status of an order in terms of the line_items being fulfilled
-     *
-     * @var string
-     */
-    public $fulfillmentStatus;
-
-    /**
-     * The status of the shipment
+     * Statuses to indicate shipment state.
      *
      * @var string
      */
     public $shipmentStatus;
 
     /**
-     * The shipping company name
+     * The tracking URLs for the shipment as provided by the shipping carrier.
+     *
+     * @var array of string
+     */
+    public $trackingUrls;
+
+    /**
+     * The tracking number(s) for the shipment as provided by the shipping carrier.
+     *
+     * @var array of string
+     */
+    public $trackingNumbers;
+
+    /**
+     * Information about the person and location where the goods are being shipped.
+     *
+     * @var Destination
+     */
+    public $destination;
+
+    /**
+     * Information about the location from which the shipment originated.
+     *
+     * @var Origin
+     */
+    public $origin;
+
+    /**
+     * The name of the Shipper. Any name will be accepted,
+     * but we strongly recommend mapping to one of the following keys if possible.
      *
      * @var string
      */
-    public $shippingCarrier;
+    public $carrier;
 
     /**
-     * Tracking number provided by the shipping carrier
-     *
-     * @var array
-     */
-    public $trackingNumbers = [];
-
-    /**
-     * Tracking URLs provided by the shipping carrier
-     *
-     * @var array
-     */
-    public $trackingUrls = [];
-
-    /**
-     * For digital goods - the email address the item was sent to
+     * Fulfillment method for the shipment. This should not be used in conjunction with EmailDestination.
      *
      * @var string
      */
-    public $deliveryEmail;
-
-    /**
-     * For in-store pickups - the name of the store or business
-     * the item was picked up from
-     *
-     * @var string
-     */
-    public $confirmationName;
-
-    /**
-     * For in-store pickups - the phone number of the store or business
-     * the item was picked up from
-     *
-     * @var string
-     */
-    public $confirmationPhone;
+    public $fulfillmentMethod;
 
     /**
      * The class attributes
@@ -133,20 +104,16 @@ class Fulfillment extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'id',
-        'orderId',
-        'createdAt',
+        'shipmentId',
+        'shippedAt',
         'products',
-        'recipientName',
-        'deliveryAddress',
-        'fulfillmentStatus',
         'shipmentStatus',
-        'shippingCarrier',
-        'trackingNumbers',
         'trackingUrls',
-        'deliveryEmail',
-        'confirmationName',
-        'confirmationPhone'
+        'trackingNumbers',
+        'destination',
+        'origin',
+        'carrier',
+        'fulfillmentMethod',
     ];
 
     /**
@@ -155,26 +122,22 @@ class Fulfillment extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'id' => [],
-        'orderId' => [],
-        'createdAt' => [],
+        'shipmentId' => [],
+        'shippedAt' => [],
         'products' => [],
-        'recipientName' => [],
-        'deliveryAddress' => [],
-        'fulfillmentStatus' => [],
         'shipmentStatus' => [],
-        'shippingCarrier' => [],
-        'trackingNumbers' => [],
         'trackingUrls' => [],
-        'deliveryEmail' => [],
-        'confirmationName' => [],
-        'confirmationPhone' => []
+        'trackingNumbers' => [],
+        'destination' => [],
+        'origin' => [],
+        'carrier' => [],
+        'fulfillmentMethod' => [],
     ];
 
     /**
-     * Fulfillment constructor.
+     * UserAccount constructor.
      *
-     * @param array $data Fulfillment data
+     * @param array $data The user account data
      */
     public function __construct($data = [])
     {
@@ -184,24 +147,49 @@ class Fulfillment extends Model
                     continue;
                 }
 
-                if ('deliveryAddress' === $field) {
+                if ($field == 'products' && is_array($data['products'])) {
+                    foreach ($data['products'] as $productsData) {
+                        if ($productsData instanceof ProductFulfillment) {
+                            $this->addProduct($productsData);
+                        } else {
+                            $product = new ProductFulfillment($productsData);
+                            $this->addProduct($product);
+                        }
+                    }
+                    continue;
+                }
+
+                if ($field == 'destination') {
+                    if (isset($data['destination'])) {
+                        if ($data['destination'] instanceof Destination) {
+                            $this->setDestination($data['destination']);
+                        } else {
+                            $destination = new Destination($data['destination']);
+                            $this->setDestination($destination);
+                        }
+                    }
+                    continue;
+                }
+
+                if ($field == 'origin') {
+                    if (isset($data['origin'])) {
+                        if ($data['origin'] instanceof Origin) {
+                            $this->setOrigin($data['origin']);
+                        } else {
+                            $origin = new Origin($data['origin']);
+                            $this->setOrigin($origin);
+                        }
+                    }
                     continue;
                 }
 
                 $this->{'set' . ucfirst($field)}($value);
             }
-
-            if (isset($data['deliveryAddress'])
-                && !empty($data['deliveryAddress'])
-            ) {
-                $deliveryAddress = new Address($data['deliveryAddress']);
-                $this->setDeliveryAddress($deliveryAddress);
-            }
         }
     }
 
     /**
-     * Validate the Fulfillment
+     * Validate the user account
      *
      * @return bool
      */
@@ -209,315 +197,112 @@ class Fulfillment extends Model
     {
         $valid = [];
 
-        //TODO add code to validate the fulfillment
+        //TODO add code to validate the user account
         return (!isset($valid[0]))? true : false;
     }
 
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
+    public function getShipmentId()
     {
-        return $this->id;
+        return $this->shipmentId;
     }
 
-    /**
-     * Set the id
-     *
-     * @param int $id The fulfilment id
-     *
-     * @return void
-     */
-    public function setId($id)
+    public function setShipmentId($shipmentId)
     {
-        $this->id = $id;
+        $this->shipmentId = $shipmentId;
     }
 
-    /**
-     * Get the order id
-     *
-     * @return string
-     */
-    public function getOrderId()
+    public function getShippedAt()
     {
-        return $this->orderId;
+        return $this->shippedAt;
     }
 
-    /**
-     * Set the order id
-     *
-     * @param string $orderId Order id
-     *
-     * @return void
-     */
-    public function setOrderId($orderId)
+    public function setShippedAt($shippedAt)
     {
-        $this->orderId = $orderId;
+        $this->shippedAt = $shippedAt;
     }
 
-    /**
-     * Get the created at
-     *
-     * @return string
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set the created at
-     *
-     * @param string $createdAt Create date
-     *
-     * @return void
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * Get the products
-     *
-     * @return array
-     */
     public function getProducts()
     {
         return $this->products;
     }
 
-    /**
-     * Set the products
-     *
-     * @param array $products List of products
-     *
-     * @return void
-     */
     public function setProducts($products)
     {
         $this->products = $products;
     }
 
-    /**
-     * Get the recipient name
-     *
-     * @return string
-     */
-    public function getRecipientName()
+    public function addProduct($product)
     {
-        return $this->recipientName;
+        $this->products[] = $product;
     }
 
-    /**
-     * Set the recipient name
-     *
-     * @param string $recipientName The recipient name
-     *
-     * @return void
-     */
-    public function setRecipientName($recipientName)
-    {
-        $this->recipientName = $recipientName;
-    }
-
-    /**
-     * Get the delivery address
-     *
-     * @return object
-     */
-    public function getDeliveryAddress()
-    {
-        return $this->deliveryAddress;
-    }
-
-    /**
-     * Set the delivery address
-     *
-     * @param object $deliveryAddress The delivery address
-     *
-     * @return void
-     */
-    public function setDeliveryAddress($deliveryAddress)
-    {
-        $this->deliveryAddress = $deliveryAddress;
-    }
-
-    /**
-     * Get the fulfillment status
-     *
-     * @return string
-     */
-    public function getFulfillmentStatus()
-    {
-        return $this->fulfillmentStatus;
-    }
-
-    /**
-     * Set the fulfillment status
-     *
-     * @param string $fulfillmentStatus Fulfillment status
-     *
-     * @return void
-     */
-    public function setFulfillmentStatus($fulfillmentStatus)
-    {
-        $this->fulfillmentStatus = $fulfillmentStatus;
-    }
-
-    /**
-     * Get the shipment status
-     *
-     * @return string
-     */
     public function getShipmentStatus()
     {
         return $this->shipmentStatus;
     }
 
-    /**
-     * Set the shipment status
-     *
-     * @param string $shipmentStatus Shipment status
-     *
-     * @return void
-     */
     public function setShipmentStatus($shipmentStatus)
     {
         $this->shipmentStatus = $shipmentStatus;
     }
 
-    /**
-     * Get the shipping carrier
-     *
-     * @return string
-     */
-    public function getShippingCarrier()
-    {
-        return $this->shippingCarrier;
-    }
-
-    /**
-     * Set the shipping carrier
-     *
-     * @param string $shippingCarrier Shipping carrier
-     *
-     * @return void
-     */
-    public function setShippingCarrier($shippingCarrier)
-    {
-        $this->shippingCarrier = $shippingCarrier;
-    }
-
-    /**
-     * Get the tracking numbers
-     *
-     * @return array
-     */
-    public function getTrackingNumbers()
-    {
-        return $this->trackingNumbers;
-    }
-
-    /**
-     * Set the tracking numbers
-     *
-     * @param array $trackingNumbers The list of tracking numbers
-     *
-     * @return void
-     */
-    public function setTrackingNumbers($trackingNumbers)
-    {
-        $this->trackingNumbers = $trackingNumbers;
-    }
-
-    /**
-     * Get tracking urls
-     *
-     * @return array
-     */
     public function getTrackingUrls()
     {
         return $this->trackingUrls;
     }
 
-    /**
-     * Set tracking urls
-     *
-     * @param array $trackingUrls The list of tracking urls
-     *
-     * @return void
-     */
     public function setTrackingUrls($trackingUrls)
     {
         $this->trackingUrls = $trackingUrls;
     }
 
-    /**
-     * Get the delivery email
-     *
-     * @return string
-     */
-    public function getDeliveryEmail()
+    public function getTrackingNumbers()
     {
-        return $this->deliveryEmail;
+        return $this->trackingNumbers;
     }
 
-    /**
-     * Set the delivery email
-     *
-     * @param string $deliveryEmail The delivery email
-     *
-     * @return void
-     */
-    public function setDeliveryEmail($deliveryEmail)
+    public function setTrackingNumbers($trackingNumbers)
     {
-        $this->deliveryEmail = $deliveryEmail;
+        $this->trackingNumbers = $trackingNumbers;
     }
 
-    /**
-     * Get the confirmation name
-     *
-     * @return string
-     */
-    public function getConfirmationName()
+    public function getDestination()
     {
-        return $this->confirmationName;
+        return $this->destination;
     }
 
-    /**
-     * Set the confirmation name
-     *
-     * @param string $confirmationName The confirmation name
-     *
-     * @return void
-     */
-    public function setConfirmationName($confirmationName)
+    public function setDestination($destination)
     {
-        $this->confirmationName = $confirmationName;
+        $this->destination = $destination;
     }
 
-    /**
-     * Get the confirmation Phone
-     *
-     * @return string
-     */
-    public function getConfirmationPhone()
+    public function getOrigin()
     {
-        return $this->confirmationPhone;
+        return $this->origin;
     }
 
-    /**
-     * Set the confirmation phone
-     *
-     * @param string $confirmationPhone The confirmation phone
-     *
-     * @return void
-     */
-    public function setConfirmationPhone($confirmationPhone)
+    public function setOrigin($origin)
     {
-        $this->confirmationPhone = $confirmationPhone;
+        $this->origin = $origin;
+    }
+
+    public function getCarrier()
+    {
+        return $this->carrier;
+    }
+
+    public function setCarrier($carrier)
+    {
+        $this->carrier = $carrier;
+    }
+
+    public function getFulfillmentMethod()
+    {
+        return $this->fulfillmentMethod;
+    }
+
+    public function setFulfillmentMethod($fulfillmentMethod)
+    {
+        $this->fulfillmentMethod = $fulfillmentMethod;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Recipient model for the Signifyd SDK
+ * UserAccount model for the Signifyd SDK
  *
  * PHP version 5.6
  *
@@ -14,11 +14,10 @@
 namespace Signifyd\Models;
 
 use Signifyd\Core\Model;
+use Signifyd\Models\Address;
 
 /**
- * Class Recipient
- * Info on the person who will receive the order.
- * May not be that same as the person who placed it.
+ * Class Origin
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -26,36 +25,18 @@ use Signifyd\Core\Model;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class Recipient extends Model
+class Origin extends Model
 {
     /**
-     * The full name of the person receiving the goods.
-     * If this item is being shipped, then this field
-     * is the person it is being shipping to
+     * Merchant's internal unique identifier for the location,
+     * such as a store or a fulfillment center.
      *
      * @var string
      */
-    public $fullName;
+    public $locationId;
 
     /**
-     * If provided by the buyer, the name of the recipient's
-     * company or organization.
-     *
-     * @var string
-     */
-    public $organization;
-
-    /**
-     * Email address where the goods are being delivered. Only use for digital goods.
-     *
-     * @var string
-     */
-    public $email;
-
-    /**
-     * The address to which the order will be delivered.
-     *
-     * @var \Signifyd\Models\Address
+     * @var Address
      */
     public $address;
 
@@ -65,10 +46,8 @@ class Recipient extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'fullName',
-        'organization',
-        'email',
-        'address'
+        'locationId',
+        'address',
     ];
 
     /**
@@ -77,17 +56,14 @@ class Recipient extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'fullName' => [],
-        'organization' => [],
-        'email' => [],
-        'address' => []
+        'locationId' => [],
+        'address' => [],
     ];
 
-
     /**
-     * Recipient constructor.
+     * UserAccount constructor.
      *
-     * @param array $data The recipient data
+     * @param array $data The user account data
      */
     public function __construct($data = [])
     {
@@ -123,69 +99,20 @@ class Recipient extends Model
     {
         $valid = [];
 
-        //TODO add code to validate the recipient
+        //TODO add code to validate the user account
         return (!isset($valid[0]))? true : false;
     }
 
-    /**
-     * Get the full name
-     *
-     * @return mixed
-     */
-    public function getFullName()
+    public function getLocationId()
     {
-        return $this->fullName;
+        return $this->locationId;
     }
 
-    /**
-     * Set the full name
-     *
-     * @param mixed $fullName The full name
-     *
-     * @return void
-     */
-    public function setFullName($fullName)
+    public function setLocationId($locationId)
     {
-        $this->fullName = $fullName;
+        $this->locationId = $locationId;
     }
 
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * Get the organization
-     *
-     * @return mixed
-     */
-    public function getOrganization()
-    {
-        return $this->organization;
-    }
-
-    /**
-     * Set the organization
-     *
-     * @param mixed $organization The organization name
-     *
-     * @return void
-     */
-    public function setOrganization($organization)
-    {
-        $this->organization = $organization;
-    }
-
-    /**
-     * Get the delivery address
-     *
-     * @return mixed
-     */
     public function getAddress()
     {
         return $this->address;

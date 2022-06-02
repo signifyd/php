@@ -38,7 +38,7 @@ class Settings
      *
      * @var string $apiAddress
      */
-    public $apiAddress = "https://api.signifyd.com/v2/";
+    public $apiAddress = "https://api.signifyd.com/";
 
     /**
      * CURL timeout value, in seconds.
@@ -130,9 +130,13 @@ class Settings
      *
      * @return string
      */
-    public function getApiAddress()
+    public function getApiAddress($endpoint = null)
     {
-        return $this->apiAddress;
+        if (strpos($endpoint, 'orders') !== false) {
+            return $this->apiAddress . 'v3/';
+        }
+
+        return $this->apiAddress . 'v2/';
     }
 
     /**
