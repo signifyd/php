@@ -79,6 +79,8 @@ class WebhooksResponse extends Response
 
     public $responseArray = [];
 
+    public $message = [];
+
     /**
      * The logging object
      *
@@ -299,4 +301,8 @@ class WebhooksResponse extends Response
         $this->team = $team;
     }
 
+    public function addMessage($message)
+    {
+        $this->message[] = $message;
+    }
 }

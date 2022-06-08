@@ -23,6 +23,8 @@ class TransactionsResponse extends Model
      */
     public $transactions;
 
+    public $message = [];
+
     public function __construct($logger)
     {
         if (!is_object($logger) || get_class($logger) !== 'Signifyd\Core\Logging') {
@@ -118,5 +120,10 @@ class TransactionsResponse extends Model
     public function addTransaction($transaction)
     {
         $this->transactions[] = $transaction;
+    }
+
+    public function addMessage($message)
+    {
+        $this->message[] = $message;
     }
 }

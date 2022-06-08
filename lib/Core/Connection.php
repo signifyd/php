@@ -264,14 +264,14 @@ class Connection
         }
 
         if ($info['http_code'] == 0) {
-            $responseObj->addMessage($info['http_code'], $error);
+            $responseObj->addMessage($error);
             return $responseObj;
         }
 
         if ($info['http_code'] >= 200 && $info['http_code'] < 300) {
             $responseObj->setObject($response);
         } else {
-            $responseObj->addMessage($info['http_code'], $response);
+            $responseObj->addMessage($response);
         }
 
         return $responseObj;

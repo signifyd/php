@@ -212,6 +212,8 @@ class CaseResponse extends Response
 
     public $recommendedAction;
 
+    public $message = [];
+
     /**
      * CaseResponse constructor.
      *
@@ -824,5 +826,10 @@ class CaseResponse extends Response
     public function setGuaranteeIneligibleReason($guaranteeIneligibleReason)
     {
         $this->guaranteeIneligibleReason = $guaranteeIneligibleReason;
+    }
+
+    public function addMessage($message)
+    {
+        $this->message[] = $message;
     }
 }

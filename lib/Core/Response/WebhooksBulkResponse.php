@@ -50,6 +50,8 @@ class WebhooksBulkResponse extends Response
      */
     public $errorMessage;
 
+    public $message = [];
+
     /**
      * The logger object
      *
@@ -129,6 +131,11 @@ class WebhooksBulkResponse extends Response
     public function setErrorMessage($errorMessage)
     {
         $this->errorMessage = $errorMessage;
+    }
+
+    public function addMessage($message)
+    {
+        $this->message[] = $message;
     }
 
     /**
