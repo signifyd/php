@@ -43,19 +43,13 @@ class Verifications extends Model
     public $avsResponseCode;
 
     /**
-     * @var \Signifyd\Models\ThreeDsResult
-     */
-    public $threeDsResult;
-
-    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
      */
     protected $fields = [
         'cvvResponseCode',
-        'avsResponseCode',
-        'threeDsResult'
+        'avsResponseCode'
     ];
 
     /**
@@ -65,8 +59,7 @@ class Verifications extends Model
      */
     protected $fieldsValidation = [
         'cvvResponseCode' => [],
-        'avsResponseCode' => [],
-        'threeDsResult' => []
+        'avsResponseCode' => []
     ];
 
     /**
@@ -81,19 +74,6 @@ class Verifications extends Model
                 if (!in_array($field, $this->fields)) {
                     continue;
                 }
-
-                if ($field == 'threeDsResult') {
-                    if (isset($data['threeDsResult'])) {
-                        if ($data['threeDsResult'] instanceof \Signifyd\Models\ThreeDsResult) {
-                            $this->setThreeDsResult($data['threeDsResult']);
-                        } else {
-                            $threeDsResult = new \Signifyd\Models\ThreeDsResult($data['threeDsResult']);
-                            $this->setThreeDsResult($threeDsResult);
-                        }
-                    }
-                    continue;
-                }
-
 
                 $this->{'set' . ucfirst($field)}($value);
             }
@@ -131,15 +111,5 @@ class Verifications extends Model
     public function setAvsResponseCode($avsResponseCode)
     {
         $this->avsResponseCode = $avsResponseCode;
-    }
-
-    public function getThreeDsResult()
-    {
-        return $this->threeDsResult;
-    }
-
-    public function setThreeDsResult($threeDsResult)
-    {
-        $this->threeDsResult = $threeDsResult;
     }
 }
