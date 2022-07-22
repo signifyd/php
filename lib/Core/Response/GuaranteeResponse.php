@@ -98,6 +98,8 @@ class GuaranteeResponse extends Response
      */
     public $errorMessage;
 
+    public $message = [];
+
     /**
      * The logging class
      *
@@ -381,6 +383,11 @@ class GuaranteeResponse extends Response
     public function setGuaranteeId($guaranteeId)
     {
         $this->guaranteeId = $guaranteeId;
+    }
+    
+    public function addMessage($message)
+    {
+        $this->message[] = $message;
     }
 
 }
