@@ -14,6 +14,8 @@
 namespace Signifyd\Models;
 
 use Signifyd\Core\Model;
+use Signifyd\Models\Recipient;
+use Signifyd\Models\Origin;
 
 /**
  * Class Shipment
@@ -28,25 +30,50 @@ use Signifyd\Core\Model;
 class Shipment extends Model
 {
     /**
+     * Information about the person and location where the goods are being shipped.
+     *
+     * @var Recipient
+     */
+    public $destination;
+
+    /**
+     * Information about the location from which the shipment originated.
+     *
+     * @var Origin
+     */
+    public $origin;
+
+    /**
      * The name of the shipper
      *
      * @var string
      */
-    public $shipper;
+    public $carrier;
 
     /**
-     * The type of the shipment method used
+     * @var string
+     */
+    public $minDeliveryDate;
+
+    /**
+     * @var string
+     */
+    public $maxDeliveryDate;
+
+    /**
+     * Id for the shipment.
      *
      * @var string
      */
-    public $shippingMethod;
+    public $shipmentId;
 
     /**
-     * The amount charged to the customer for shipping the product
+     * Fulfillment method for the shipment.
+     * This should not be used in conjunction with EmailDestination.
      *
-     * @var float
+     * @var string
      */
-    public $shippingPrice;
+    public $fulfillmentMethod;
 
     /**
      * The class attributes
@@ -54,9 +81,13 @@ class Shipment extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'shipper',
-        'shippingMethod',
-        'shippingPrice'
+        'destination',
+        'origin',
+        'carrier',
+        'minDeliveryDate',
+        'maxDeliveryDate',
+        'shipmentId',
+        'fulfillmentMethod',
     ];
 
     /**
@@ -65,9 +96,13 @@ class Shipment extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'shipper' => [],
-        'shippingMethod' => [],
-        'shippingPrice' => []
+        'destination' => [],
+        'origin' => [],
+        'carrier' => [],
+        'minDeliveryDate' => [],
+        'maxDeliveryDate' => [],
+        'shipmentId' => [],
+        'fulfillmentMethod' => [],
     ];
 
     /**
@@ -80,6 +115,30 @@ class Shipment extends Model
         if (!empty($item) && is_array($item)) {
             foreach ($item as $field => $value) {
                 if (!in_array($field, $this->fields)) {
+                    continue;
+                }
+
+                if ($field == 'destination') {
+                    if (isset($item['destination'])) {
+                        if ($item['destination'] instanceof Recipient) {
+                            $this->setDestination($item['destination']);
+                        } else {
+                            $destination = new Recipient($item['destination']);
+                            $this->setDestination($destination);
+                        }
+                    }
+                    continue;
+                }
+
+                if ($field == 'origin') {
+                    if (isset($item['origin'])) {
+                        if ($item['origin'] instanceof Origin) {
+                            $this->setOrigin($item['origin']);
+                        } else {
+                            $origin = new Origin($item['origin']);
+                            $this->setOrigin($origin);
+                        }
+                    }
                     continue;
                 }
 
@@ -97,95 +156,97 @@ class Shipment extends Model
     {
         $valid = [];
         $allowedShipper = [
-            "fedex", "dhl", "shipwire", "usps", "ups"
+            "fedex", "dhl", "shipwire", "usps", "ups", "seller"
         ];
 
-        $validShipper = $this->enumValid($this->getShipper(), $allowedShipper);
+        $validShipper = $this->enumValid($this->getCarrier(), $allowedShipper);
         if (false === $validShipper) {
             $valid[] = 'Invalid Shipper';
-        }
-
-        $allowedShippingMethod = [
-            "express", "electronic", "first_class", "first_class_international",
-            "free", "freight", "ground", "international", "overnight", "priority",
-            "priority_international", "pickup", "standard", "store_to_store",
-            "two_day"
-        ];
-        $validMethod = $this->enumValid(
-            $this->getShippingMethod(),
-            $allowedShippingMethod
-        );
-        if (false === $validMethod) {
-            $valid[] = 'Invalid Shipping Method';
         }
 
         //TODO add code to validate the shipment
         return (isset($valid[0]))? $valid : true;
     }
 
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    public function setDestination($destination)
+    {
+        $this->destination = $destination;
+    }
+
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
     /**
-     * Get the shipper
+     * Get the carrier
      *
      * @return mixed
      */
-    public function getShipper()
+    public function getCarrier()
     {
-        return $this->shipper;
+        return $this->carrier;
     }
 
     /**
-     * Set the shipper
+     * Set the carrier
      *
-     * @param mixed $shipper The shipper name
+     * @param mixed $carrier The carrier name
      *
      * @return void
      */
-    public function setShipper($shipper)
+    public function setCarrier($carrier)
     {
-        $this->shipper = $shipper;
+        $this->carrier = $carrier;
     }
 
-    /**
-     * Get the shipping method
-     *
-     * @return mixed
-     */
-    public function getShippingMethod()
+    public function getMinDeliveryDate()
     {
-        return $this->shippingMethod;
+        return $this->minDeliveryDate;
     }
 
-    /**
-     * Set the shipping method
-     *
-     * @param mixed $shippingMethod The shipping method
-     *
-     * @return void
-     */
-    public function setShippingMethod($shippingMethod)
+    public function setMinDeliveryDate($minDeliveryDate)
     {
-        $this->shippingMethod = $shippingMethod;
+        $this->minDeliveryDate = $minDeliveryDate;
     }
 
-    /**
-     * Get the shipping price
-     *
-     * @return mixed
-     */
-    public function getShippingPrice()
+    public function getMaxDeliveryDate()
     {
-        return $this->shippingPrice;
+        return $this->maxDeliveryDate;
     }
 
-    /**
-     * Set the shipping price
-     *
-     * @param mixed $shippingPrice The shipping price
-     *
-     * @return void
-     */
-    public function setShippingPrice($shippingPrice)
+    public function setMaxDeliveryDate($maxDeliveryDate)
     {
-        $this->shippingPrice = $shippingPrice;
+        $this->maxDeliveryDate = $maxDeliveryDate;
+    }
+
+    public function getShipmentId()
+    {
+        return $this->shipmentId;
+    }
+
+    public function setShipmentId($shipmentId)
+    {
+        $this->shipmentId = $shipmentId;
+    }
+
+    public function getFulfillmentMethod()
+    {
+        return $this->fulfillmentMethod;
+    }
+
+    public function setFulfillmentMethod($fulfillmentMethod)
+    {
+        $this->fulfillmentMethod = $fulfillmentMethod;
     }
 }

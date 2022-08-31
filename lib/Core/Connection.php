@@ -148,7 +148,7 @@ class Connection
      * @return bool|mixed
      * @throws InvalidClassException
      */
-    public function callApi($endpoint,$payload = '',$method = 'get',$type = 'case')
+    public function callApi($endpoint = null,$payload = '',$method = 'get',$type = 'case')
     {
         $url = $this->makeUrl($endpoint);
         try {
@@ -212,8 +212,6 @@ class Connection
             }
         }
 
-
-
         $responseObj = $this->handleResponse($info, $response, $error, $type);
 
         return $responseObj;
@@ -228,10 +226,10 @@ class Connection
      */
     public function makeUrl($endpoint)
     {
-        if (substr($this->settings->getApiAddress(), -1) != '/') {
-            return $this->settings->getApiAddress() . '/' . $endpoint;
+        if (substr($this->settings->getApiAddress($endpoint), -1) != '/') {
+            return $this->settings->getApiAddress($endpoint) . '/' . $endpoint;
         }
-        return $this->settings->getApiAddress() . $endpoint;
+        return $this->settings->getApiAddress($endpoint) . $endpoint;
     }
 
     /**
@@ -248,6 +246,7 @@ class Connection
      */
     public function handleResponse($info, $response, $error, $type)
     {
+        $type = $type === 'transactions' ? 'checkouts' : $type;
         $responseClass = '\Signifyd\Core\Response\\' . ucfirst($type) . 'Response';
         if (class_exists($responseClass)) {
             // The definition is for Response class because all the other response
@@ -265,14 +264,14 @@ class Connection
         }
 
         if ($info['http_code'] == 0) {
-            $responseObj->setError($info['http_code'], $error);
+            $responseObj->addMessage($error);
             return $responseObj;
         }
 
         if ($info['http_code'] >= 200 && $info['http_code'] < 300) {
             $responseObj->setObject($response);
         } else {
-            $responseObj->setError($info['http_code'], $response);
+            $responseObj->addMessage($response);
         }
 
         return $responseObj;

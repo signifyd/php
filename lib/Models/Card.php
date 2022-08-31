@@ -14,7 +14,6 @@
 namespace Signifyd\Models;
 
 use Signifyd\Core\Model;
-use Signifyd\Models\Address;
 
 /**
  * Class Card
@@ -28,12 +27,66 @@ use Signifyd\Models\Address;
  */
 class Card extends Model
 {
+
     /**
-     * The full name on the credit card that was charged
+     * The billing address for the card
+     *
+     * @var Address
+     */
+    public $billingAddress;
+
+    /**
+     * The full name of the account holder as provided during checkout.
      *
      * @var string
      */
-    public $holderName;
+    public $accountHolderName;
+
+    /**
+     * The unique taxpayer identifier for the account holder.
+     * Due to legal restrictions, the only values currently accepted here are Brazilian CPF numbers.
+     * All other values provided will be removed.
+     *
+     * @var string
+     */
+    public $accountHolderTaxId;
+
+    /**
+     * The country that issued the accountHolderTaxId.
+     * Due to legal restrictions, the only value currently accepted here is BR.
+     *
+     * @var string
+     */
+    public $accountHolderTaxIdCountry;
+
+    /**
+     * The last 4 digits of the bank account number as provided during checkout.
+     *
+     * @var string
+     */
+    public $accountLast4;
+
+    /**
+     * The routing number (ABA) of the bank account that was used as provided during checkout.
+     *
+     * @var string
+     */
+    public $abaRoutingNumber;
+
+    /**
+     * A unique string value as provided by the cardTokenProvider
+     * which replaces the card Primary Account Number (PAN).
+     *
+     * @var string
+     */
+    public $cardToken;
+
+    /**
+     * The issuer of the cardToken, that is, whomever generated the cardToken originally.
+     *
+     * @var string
+     */
+    public $cardTokenProvider;
 
     /**
      * The first six digits of the credit card, the bank
@@ -42,13 +95,6 @@ class Card extends Model
      * @var string
      */
     public $cardBin;
-
-    /**
-     * The last four digits of the card number.
-     *
-     * @var int
-     */
-    public $cardLast4;
 
     /**
      * MM representation of the expiration month of the card.
@@ -65,11 +111,34 @@ class Card extends Model
     public $cardExpiryYear;
 
     /**
-     * The billing address for the card
+     * The last four digits of the card number.
      *
-     * @var Address
+     * @var string
      */
-    public $billingAddress;
+    public $cardLast4;
+
+    /**
+     * The name of the card brand, e.g. Visa or Mastercard.
+     * Note, it is preferred that you provide a cardBin rather than providing this field directly.
+     *
+     * @var string
+     */
+    public $cardBrand;
+
+    /**
+     * The funding methodology of the card.
+     * Note, it is preferred that you provide a cardBin rather than providing this field directly.
+     *
+     * @var string
+     */
+    public $cardFunding;
+
+    /**
+     * Details about the installment plan used to make the purchase.
+     *
+     * @var CardInstallments
+     */
+    public $cardInstallments;
 
     /**
      * The class attributes
@@ -77,11 +146,21 @@ class Card extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'holderName',
+        'billingAddress',
+        'accountHolderName',
+        'accountHolderTaxId',
+        'accountHolderTaxIdCountry',
+        'accountLast4',
+        'abaRoutingNumber',
+        'cardToken',
+        'cardTokenProvider',
         'cardBin',
-        'cardLast4',
         'cardExpiryMonth',
-        'cardExpiryYear'
+        'cardExpiryYear',
+        'cardLast4',
+        'cardBrand',
+        'cardFunding',
+        'cardInstallments',
     ];
 
     /**
@@ -90,32 +169,59 @@ class Card extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'holderName' => [],
+        'billingAddress' => [],
+        'accountHolderName' => [],
+        'accountHolderTaxId' => [],
+        'accountHolderTaxIdCountry' => [],
+        'accountLast4' => [],
+        'abaRoutingNumber' => [],
+        'cardToken' => [],
+        'cardTokenProvider' => [],
         'cardBin' => [],
-        'cardLast4' => [],
         'cardExpiryMonth' => [],
-        'cardExpiryYear' => []
+        'cardExpiryYear' => [],
+        'cardLast4' => [],
+        'cardBrand' => [],
+        'cardFunding' => [],
+        'cardInstallments' => [],
     ];
 
     /**
      * Card constructor.
-     *
-     * @param array $item The card data
      */
-    public function __construct($item = [])
+    public function __construct($data = [])
     {
-        if (!empty($item) && is_array($item)) {
-            foreach ($item as $field => $value) {
+        if (!empty($data) && is_array($data)) {
+            foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
                     continue;
                 }
 
-                $this->{'set' . ucfirst($field)}($value);
-            }
+                if ($field == 'billingAddress') {
+                    if (isset($data['billingAddress'])) {
+                        if ($data['billingAddress'] instanceof Address) {
+                            $this->setBillingAddress($data['billingAddress']);
+                        } else {
+                            $billingAddress = new Address($data['billingAddress']);
+                            $this->setBillingAddress($billingAddress);
+                        }
+                    }
+                    continue;
+                }
 
-            if (isset($item['billingAddress']) && !empty($item['billingAddress'])) {
-                $billingAddress = new Address($item['billingAddress']);
-                $this->setBillingAddress($billingAddress);
+                if ($field == 'cardInstallments') {
+                    if (isset($data['cardInstallments'])) {
+                        if ($data['cardInstallments'] instanceof CardInstallments) {
+                            $this->setCardInstallments($data['cardInstallments']);
+                        } else {
+                            $cardInstallments = new CardInstallments($data['cardInstallments']);
+                            $this->setCardInstallments($cardInstallments);
+                        }
+                    }
+                    continue;
+                }
+
+                $this->{'set' . ucfirst($field)}($value);
             }
         }
     }
@@ -128,34 +234,101 @@ class Card extends Model
     public function validate()
     {
         $valid = [];
-        //if (strlen($this->getcardLast4()) !== 4) {
-        //    $valid[] = false;
-        //}
 
         //TODO add code to validate the card
         return (!isset($valid[0]))? true : false;
     }
 
     /**
-     * Get the name
+     * Get the billing address
      *
-     * @return mixed
+     * @return Address
      */
-    public function getHolderName()
+    public function getBillingAddress()
     {
-        return $this->holderName;
+        return $this->billingAddress;
     }
 
     /**
-     * Set the name
+     * Set the billing address
      *
-     * @param mixed $holderName The card holder name
+     * @param Address $billingAddress The address object
      *
      * @return void
      */
-    public function setHolderName($holderName)
+    public function setBillingAddress($billingAddress)
     {
-        $this->holderName = $holderName;
+        $this->billingAddress = $billingAddress;
+    }
+
+    public function getAccountHolderName()
+    {
+        return $this->accountHolderName;
+    }
+
+    public function setAccountHolderName($accountHolderName)
+    {
+        $this->accountHolderName = $accountHolderName;
+    }
+
+    public function getAccountHolderTaxId()
+    {
+        return $this->accountHolderTaxId;
+    }
+
+    public function setAccountHolderTaxId($accountHolderTaxId)
+    {
+        $this->accountHolderTaxId = $accountHolderTaxId;
+    }
+
+    public function getAccountHolderTaxIdCountry()
+    {
+        return $this->accountHolderTaxIdCountry;
+    }
+
+    public function setAccountHolderTaxIdCountry($accountHolderTaxIdCountry)
+    {
+        $this->accountHolderTaxIdCountry = $accountHolderTaxIdCountry;
+    }
+
+    public function getAccountLast4()
+    {
+        return $this->accountLast4;
+    }
+
+    public function setAccountLast4($accountLast4)
+    {
+        $this->accountLast4 = $accountLast4;
+    }
+
+    public function getAbaRoutingNumber()
+    {
+        return $this->abaRoutingNumber;
+    }
+
+    public function setAbaRoutingNumber($abaRoutingNumber)
+    {
+        $this->abaRoutingNumber = $abaRoutingNumber;
+    }
+
+    public function getCardToken()
+    {
+        return $this->cardToken;
+    }
+
+    public function setCardToken($cardToken)
+    {
+        $this->cardToken = $cardToken;
+    }
+
+    public function getCardTokenProvider()
+    {
+        return $this->cardTokenProvider;
+    }
+
+    public function setCardTokenProvider($cardTokenProvider)
+    {
+        $this->cardTokenProvider = $cardTokenProvider;
     }
 
     /**
@@ -202,6 +375,36 @@ class Card extends Model
         $this->cardLast4 = $cardLast4;
     }
 
+    public function getCardBrand()
+    {
+        return $this->cardBrand;
+    }
+
+    public function setCardBrand($cardBrand)
+    {
+        $this->cardBrand = $cardBrand;
+    }
+
+    public function getCardFunding()
+    {
+        return $this->cardFunding;
+    }
+
+    public function setCardFunding($cardFunding)
+    {
+        $this->cardFunding = $cardFunding;
+    }
+
+    public function getCardInstallments()
+    {
+        return $this->cardInstallments;
+    }
+
+    public function setCardInstallments($cardInstallments)
+    {
+        $this->cardInstallments = $cardInstallments;
+    }
+
     /**
      * Get the expiration year of the card
      *
@@ -222,28 +425,6 @@ class Card extends Model
     public function setCardExpiryYear($cardExpiryYear)
     {
         $this->cardExpiryYear = $cardExpiryYear;
-    }
-
-    /**
-     * Get the billing address
-     *
-     * @return Address
-     */
-    public function getBillingAddress()
-    {
-        return $this->billingAddress;
-    }
-
-    /**
-     * Set the billing address
-     *
-     * @param Address $billingAddress The address object
-     *
-     * @return void
-     */
-    public function setBillingAddress($billingAddress)
-    {
-        $this->billingAddress = $billingAddress;
     }
 
     /**

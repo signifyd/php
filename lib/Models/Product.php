@@ -26,16 +26,18 @@ use Signifyd\Core\Model;
  */
 class Product extends Model
 {
-    public $itemId;
     public $itemName;
-    public $itemUrl;
-    public $itemImage;
-    public $itemQuantity;
     public $itemPrice;
-    public $itemWeight;
+    public $itemQuantity;
     public $itemIsDigital;
     public $itemCategory;
     public $itemSubCategory;
+    public $itemId;
+    public $itemImage;
+    public $itemUrl;
+    public $itemWeight;
+    public $shipmentId;
+    public $subscription;
 
     protected $fields = [
         'itemId',
@@ -47,7 +49,9 @@ class Product extends Model
         'itemWeight',
         'itemIsDigital',
         'itemCategory',
-        'itemSubCategory'
+        'itemSubCategory',
+        'shipmentId',
+        'subscription',
     ];
 
     protected $fieldsValidation = [
@@ -60,7 +64,9 @@ class Product extends Model
         'itemWeight' => [],
         'itemIsDigital' => [],
         'itemCategory' => [],
-        'itemSubCategory' => []
+        'itemSubCategory' => [],
+        'shipmentId' => [],
+        'subscription' => [],
     ];
 
     /**
@@ -73,6 +79,18 @@ class Product extends Model
         if (!empty($item) && is_array($item)) {
             foreach ($item as $field => $value) {
                 if (!in_array($field, $this->fields)) {
+                    continue;
+                }
+
+                if ($field == 'subscription') {
+                    if (isset($data['subscription'])) {
+                        if ($data['subscription'] instanceof \Signifyd\Models\Subscription) {
+                            $this->setSubscription($data['subscription']);
+                        } else {
+                            $subscription = new \Signifyd\Models\Subscription($data['subscription']);
+                            $this->setSubscription($subscription);
+                        }
+                    }
                     continue;
                 }
 
@@ -312,5 +330,25 @@ class Product extends Model
     public function setItemUrl($itemUrl)
     {
         $this->itemUrl = $itemUrl;
+    }
+
+    public function getShipmentId()
+    {
+        return $this->shipmentId;
+    }
+
+    public function setShipmentId($shipmentId)
+    {
+        $this->shipmentId = $shipmentId;
+    }
+
+    public function getSubscription()
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription($subscription)
+    {
+        $this->subscription = $subscription;
     }
 }

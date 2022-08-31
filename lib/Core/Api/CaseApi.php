@@ -22,6 +22,7 @@ use Signifyd\Core\Response\CaseResponse;
 use Signifyd\Core\Response\FulfillmentBulkResponse;
 use Signifyd\Core\Settings;
 use Signifyd\Models\CaseModel;
+use Signifyd\Models\UpdateCaseModel;
 use Signifyd\Models\SendTransaction;
 use Signifyd\Models\Fulfillment;
 use Signifyd\Models\PaymentUpdate;
@@ -126,6 +127,55 @@ class CaseApi
             'cases',
             $case->toJson(),
             'post',
+            'case'
+        );
+
+        return $response;
+    }
+
+    /**
+     * Create a case in Signifyd
+     *
+     * @param \Signifyd\Models\CaseModel $case The case data
+     *
+     * @return bool|\Signifyd\Core\Response\CaseResponse
+     *
+     * @throws CaseModelException
+     * @throws InvalidClassException
+     * @throws \Signifyd\Core\Exceptions\LoggerException
+     */
+    public function updateCase($case, $caseId)
+    {
+        $this->logger->info('Update method called');
+        if (is_array($case)) {
+            $case = new UpdateCaseModel($case);
+            $valid = $case->validate();
+            if (true !== $valid) {
+                $this->logger->error(
+                    'Case not valid after array init: ' . json_encode($valid)
+                );
+            }
+        } elseif ($case instanceof UpdateCaseModel) {
+            $valid = $case->validate();
+            if (true !== $valid) {
+                $this->logger->error(
+                    'Case not valid after object init: ' . json_encode($valid)
+                );
+            }
+        } else {
+            $this->logger->error('Invalid parameter for create case');
+            throw new CaseModelException(
+                'Invalid parameter for create case'
+            );
+        }
+
+        $this->logger->info(
+            'Connection call update case api with case: ' . $case->toJson()
+        );
+        $response = $this->connection->callApi(
+            'cases/' . $caseId,
+            $case->toJson(),
+            'put',
             'case'
         );
 

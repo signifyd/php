@@ -32,44 +32,12 @@ use Signifyd\Models\DiscountCode;
 class Purchase extends Model
 {
     /**
-     * The unique ID for the user's browsing session. This is
-     * to be used in conjunction with the Signifyd Fingerprinting
-     * Javascript.
-     *
-     * @var string
-     */
-    public $orderSessionId;
-
-    /**
-     * The IP Address of the browser that was used to make the
-     * purchase. This is the IP Address that was used to connect
-     * to your site and make the purchase.
-     *
-     * @var string
-     */
-    public $browserIpAddress;
-
-    /**
-     * A string uniquely identifying this order.
-     *
-     * @var string
-     */
-    public $orderId;
-
-    /**
      * The date and time when the order was placed, shown on the
      * signifyd console. Format yyyy-MM-dd'T'HH:mm:ssZ
      *
      * @var string
      */
     public $createdAt;
-
-    /**
-     * The currency type of the order, in 3 letter ISO 4217 format.
-     *
-     * @var string
-     */
-    public $currency = 'USD';
 
     /**
      * The method used by the buyer to place the order.
@@ -86,6 +54,20 @@ class Purchase extends Model
     public $totalPrice;
 
     /**
+     * The currency type of the order, in 3 letter ISO 4217 format.
+     *
+     * @var string
+     */
+    public $currency = 'USD';
+
+    /**
+     * valid email syntax.
+     *
+     * @var string
+     */
+    public $confirmationEmail;
+
+    /**
      * The products purchased in the transaction.
      *
      * @var array $products Array of Product objects
@@ -100,6 +82,22 @@ class Purchase extends Model
     public $shipments = [];
 
     /**
+     * The phone number at which the buyer would be contacted
+     * if there was something wrong with this order or the phone number
+     * that was supplied with the shipping information.
+     *
+     * @var string
+     */
+    public $confirmationPhone;
+
+    /**
+     * The total amount the customer is paying for shipping the products.
+     *
+     * @var float
+     */
+    public $totalShippingCost;
+
+    /**
      * Any discount codes, coupons, or promotional codes used
      * during checkout to receive a discount on the order.
      * You can only provide the discount code and the discount
@@ -110,11 +108,11 @@ class Purchase extends Model
     public $discountCodes = [];
 
     /**
-     * A unique id for a particular checkout.
+     * If the order was placed on-behalf of a customer service or sales agent, his or her name.
      *
      * @var string
      */
-    public $checkoutToken;
+    public $receivedBy;
 
     /**
      * The class attributes
@@ -122,17 +120,17 @@ class Purchase extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'orderSessionId',
-        'browserIpAddress',
-        'orderId',
         'createdAt',
-        'currency',
         'orderChannel',
         'totalPrice',
+        'currency',
+        'confirmationEmail',
         'products',
         'shipments',
+        'confirmationPhone',
+        'totalShippingCost',
         'discountCodes',
-        'checkoutToken'
+        'receivedBy'
     ];
     /**
      * The validation rules
@@ -140,14 +138,10 @@ class Purchase extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'orderSessionId' => [],
-        'browserIpAddress' => [],
-        'orderId' => [],
         'createdAt' => [],
         'currency' => [],
         'orderChannel' => [],
         'totalPrice' => [],
-        'checkoutToken' => []
     ];
 
     protected $objectFields = [
@@ -177,23 +171,35 @@ class Purchase extends Model
             }
 
             if (isset($data['products']) && is_array($data['products'])) {
-                foreach ($data['products'] as $item) {
-                    $product = new Product($item);
-                    $this->addProduct($product);
+                foreach ($data['products'] as $productsData) {
+                    if ($productsData instanceof Product) {
+                        $this->addProduct($productsData);
+                    } else {
+                        $product = new Product($productsData);
+                        $this->addProduct($product);
+                    }
                 }
             }
 
             if (isset($data['shipments']) && is_array($data['shipments'])) {
-                foreach ($data['shipments'] as $sItem) {
-                    $shipment = new Shipment($sItem);
-                    $this->addShipment($shipment);
+                foreach ($data['shipments'] as $shipmentsData) {
+                    if ($shipmentsData instanceof Shipment) {
+                        $this->addShipment($shipmentsData);
+                    } else {
+                        $shipment = new Shipment($shipmentsData);
+                        $this->addShipment($shipment);
+                    }
                 }
             }
 
             if (isset($data['discountCodes']) && is_array($data['discountCodes'])) {
-                foreach ($data['discountCodes'] as $dItem) {
-                    $discountCode = new DiscountCode($dItem);
-                    $this->addDiscountCode($discountCode);
+                foreach ($data['discountCodes'] as $discountCodeData) {
+                    if ($discountCodeData instanceof DiscountCode) {
+                        $this->addDiscountCode($discountCodeData);
+                    } else {
+                        $discountCode = new DiscountCode($discountCodeData);
+                        $this->addDiscountCode($discountCode);
+                    }
                 }
             }
         }
@@ -209,94 +215,15 @@ class Purchase extends Model
         $valid = [];
 
         $allowedChannels = [
-            "web", "phone", "mobile_app", "social", "marketplace", "in_store_kiosk"
+            "WEB", "PHONE", "MOBILE_APP", "SOCIAL", "MARKETPLACE", "IN_STORE_KIOSK", "SCAN_AND_GO", "SMART_TV", "MIT"
         ];
+
         $validChannel = $this->enumValid($this->getOrderChannel(), $allowedChannels);
         if (false === $validChannel) {
             $valid[] = 'Invalid order channel';
         }
 
         return (isset($valid[0]))? $valid : true;
-    }
-
-    /**
-     * Add product item to the products array
-     *
-     * @param \Signifyd\Models\Product $product Product Item
-     *
-     * @return void
-     */
-    public function addProduct($product)
-    {
-        $this->products[] = $product;
-    }
-
-    /**
-     * Add shipment item to the shipments array
-     *
-     * @param \Signifyd\Models\Shipment $shipment Shipment Item
-     *
-     * @return void
-     */
-    public function addShipment($shipment)
-    {
-        $this->shipments[] = $shipment;
-    }
-
-    /**
-     * Add the discount code item to the discount code array
-     *
-     * @param \Signifyd\Models\DiscountCode $discountCode Discount Item
-     *
-     * @return void
-     */
-    public function addDiscountCode($discountCode)
-    {
-        $this->discountCodes[] = $discountCode;
-    }
-
-    /**
-     * Get the order session id
-     *
-     * @return mixed
-     */
-    public function getOrderSessionId()
-    {
-        return $this->orderSessionId;
-    }
-
-    /**
-     * Set the order session id
-     *
-     * @param mixed $orderSessionId The session id
-     *
-     * @return void
-     */
-    public function setOrderSessionId($orderSessionId)
-    {
-        $this->orderSessionId = $orderSessionId;
-    }
-
-    /**
-     * Get the browser ip address
-     *
-     * @return mixed
-     */
-    public function getBrowserIpAddress()
-    {
-        return $this->browserIpAddress;
-    }
-
-    /**
-     * Set the browser ip address
-     *
-     * @param mixed $browserIpAddress The ip address
-     *
-     * @return void
-     */
-    public function setBrowserIpAddress($browserIpAddress)
-    {
-        $this->browserIpAddress = $browserIpAddress;
     }
 
     /**
@@ -319,50 +246,6 @@ class Purchase extends Model
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
-    }
-
-    /**
-     * Get the order id
-     *
-     * @return mixed
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * Set the order id
-     *
-     * @param mixed $orderId The order id
-     *
-     * @return void
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $orderId;
-    }
-
-    /**
-     * Get the currency
-     *
-     * @return mixed
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    /**
-     * Set the order currency
-     *
-     * @param mixed $currency Currency code
-     *
-     * @return void
-     */
-    public function setCurrency($currency)
-    {
-        $this->currency = $currency;
     }
 
     /**
@@ -410,25 +293,101 @@ class Purchase extends Model
     }
 
     /**
-     * Get a unique id for a particular checkout.
+     * Get the currency
      *
-     * @return string
+     * @return mixed
      */
-    public function getCheckoutToken()
+    public function getCurrency()
     {
-        return $this->checkoutToken;
+        return $this->currency;
     }
 
     /**
-     * Set a unique id for a particular checkout.
+     * Set the order currency
      *
-     * @param string $checkoutToken
+     * @param mixed $currency Currency code
      *
      * @return void
      */
-    public function setCheckoutToken($checkoutToken)
+    public function setCurrency($currency)
     {
-        $this->checkoutToken = $checkoutToken;
+        $this->currency = $currency;
+    }
+
+    public function getConfirmationEmail()
+    {
+        return $this->confirmationEmail;
+    }
+
+    public function setConfirmationEmail($confirmationEmail)
+    {
+        $this->confirmationEmail = $confirmationEmail;
+    }
+
+    /**
+     * Add product item to the products array
+     *
+     * @param \Signifyd\Models\Product $product Product Item
+     *
+     * @return void
+     */
+    public function addProduct($product)
+    {
+        $this->products[] = $product;
+    }
+
+    /**
+     * Add shipment item to the shipments array
+     *
+     * @param \Signifyd\Models\Shipment $shipment Shipment Item
+     *
+     * @return void
+     */
+    public function addShipment($shipment)
+    {
+        $this->shipments[] = $shipment;
+    }
+
+    public function getConfirmationPhone()
+    {
+        return $this->confirmationPhone;
+    }
+
+    public function setConfirmationPhone($confirmationPhone)
+    {
+        $this->confirmationPhone = $confirmationPhone;
+    }
+
+    public function getTotalShippingCost()
+    {
+        return $this->totalShippingCost;
+    }
+
+    public function setTotalShippingCost($totalShippingCost)
+    {
+        $this->totalShippingCost = $totalShippingCost;
+    }
+
+    /**
+     * Add the discount code item to the discount code array
+     *
+     * @param \Signifyd\Models\DiscountCode $discountCode Discount Item
+     *
+     * @return void
+     */
+    public function addDiscountCode($discountCode)
+    {
+        $this->discountCodes[] = $discountCode;
+    }
+
+    public function getReceivedBy()
+    {
+        return $this->receivedBy;
+    }
+
+    public function setReceivedBy($receivedBy)
+    {
+        $this->receivedBy = $receivedBy;
     }
 
     /**

@@ -212,6 +212,12 @@ class CaseResponse extends Response
 
     public $recommendedAction;
 
+    public $message = [];
+
+    public $isTest;
+
+    public $customerCaseId;
+
     /**
      * CaseResponse constructor.
      *
@@ -735,6 +741,26 @@ class CaseResponse extends Response
     public function setTest($test)
     {
         $this->test = $test;
+    }
+
+    public function getIsTest()
+    {
+        return $this->getTestInvestigation();
+    }
+
+    public function setIsTest($test)
+    {
+        $this->setTestInvestigation($test);
+    }
+
+    public function getCustomerCaseId()
+    {
+        return $this->customerCaseId;
+    }
+
+    public function setCustomerCaseId($customerCaseId)
+    {
+        $this->customerCaseId = $customerCaseId;
     }
 
     public function getRecommendedAction()

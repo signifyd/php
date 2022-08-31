@@ -1,6 +1,6 @@
 <?php
 /**
- * Recipient model for the Signifyd SDK
+ * UserAccount model for the Signifyd SDK
  *
  * PHP version 5.6
  *
@@ -16,9 +16,7 @@ namespace Signifyd\Models;
 use Signifyd\Core\Model;
 
 /**
- * Class Recipient
- * Info on the person who will receive the order.
- * May not be that same as the person who placed it.
+ * Class Device
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -26,24 +24,43 @@ use Signifyd\Core\Model;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class Recipient extends Model
+class Destination extends Model
 {
     /**
      * The full name of the person receiving the goods.
-     * If this item is being shipped, then this field
-     * is the person it is being shipping to
+     * If this item is being shipped, then this field is the person it is being shipping to.
      *
      * @var string
      */
     public $fullName;
 
     /**
-     * If provided by the buyer, the name of the recipient's
-     * company or organization.
+     * If provided by the buyer, the name of the recipient's company or organization.
      *
      * @var string
      */
     public $organization;
+
+    /**
+     * The location where the goods are being shipped.
+     * Required if these are not digital goods.
+     *
+     * @var Address
+     */
+    public $address;
+
+    /**
+     * If the item was picked up at a physical location,
+     * the phone number of the store or business the item was picked up from.
+     *
+     * @var string
+     */
+    public $confirmationPhone;
+
+    /**
+     * @var Driver
+     */
+    public $driver;
 
     /**
      * Email address where the goods are being delivered. Only use for digital goods.
@@ -53,13 +70,6 @@ class Recipient extends Model
     public $email;
 
     /**
-     * The address to which the order will be delivered.
-     *
-     * @var \Signifyd\Models\Address
-     */
-    public $address;
-
-    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -67,8 +77,10 @@ class Recipient extends Model
     protected $fields = [
         'fullName',
         'organization',
-        'email',
-        'address'
+        'address',
+        'confirmationPhone',
+        'driver',
+        'email'
     ];
 
     /**
@@ -79,15 +91,16 @@ class Recipient extends Model
     protected $fieldsValidation = [
         'fullName' => [],
         'organization' => [],
-        'email' => [],
-        'address' => []
+        'address' => [],
+        'confirmationPhone' => [],
+        'driver' => [],
+        'email' => []
     ];
 
-
     /**
-     * Recipient constructor.
+     * UserAccount constructor.
      *
-     * @param array $data The recipient data
+     * @param array $data The user account data
      */
     public function __construct($data = [])
     {
@@ -109,6 +122,18 @@ class Recipient extends Model
                     continue;
                 }
 
+                if ($field == 'driver') {
+                    if (isset($data['driver'])) {
+                        if ($data['driver'] instanceof Driver) {
+                            $this->setDriver($data['driver']);
+                        } else {
+                            $driver = new Driver($data['driver']);
+                            $this->setDriver($driver);
+                        }
+                    }
+                    continue;
+                }
+
                 $this->{'set' . ucfirst($field)}($value);
             }
         }
@@ -123,30 +148,58 @@ class Recipient extends Model
     {
         $valid = [];
 
-        //TODO add code to validate the recipient
+        //TODO add code to validate the user account
         return (!isset($valid[0]))? true : false;
     }
 
-    /**
-     * Get the full name
-     *
-     * @return mixed
-     */
     public function getFullName()
     {
         return $this->fullName;
     }
 
-    /**
-     * Set the full name
-     *
-     * @param mixed $fullName The full name
-     *
-     * @return void
-     */
     public function setFullName($fullName)
     {
         $this->fullName = $fullName;
+    }
+
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    public function getConfirmationPhone()
+    {
+        return $this->confirmationPhone;
+    }
+
+    public function setConfirmationPhone($confirmationPhone)
+    {
+        $this->confirmationPhone = $confirmationPhone;
+    }
+
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    public function setDriver($driver)
+    {
+        $this->driver = $driver;
     }
 
     public function getEmail()
@@ -157,42 +210,5 @@ class Recipient extends Model
     public function setEmail($email)
     {
         $this->email = $email;
-    }
-
-    /**
-     * Get the organization
-     *
-     * @return mixed
-     */
-    public function getOrganization()
-    {
-        return $this->organization;
-    }
-
-    /**
-     * Set the organization
-     *
-     * @param mixed $organization The organization name
-     *
-     * @return void
-     */
-    public function setOrganization($organization)
-    {
-        $this->organization = $organization;
-    }
-
-    /**
-     * Get the delivery address
-     *
-     * @return mixed
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    public function setAddress($address)
-    {
-        $this->address = $address;
     }
 }

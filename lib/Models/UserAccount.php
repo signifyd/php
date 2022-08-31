@@ -85,7 +85,7 @@ class UserAccount extends Model
      * The total amount spent by this account since it
      * was created, including the current order.
      *
-     * @var int
+     * @var float
      */
     public $aggregateOrderDollars;
 
@@ -96,6 +96,27 @@ class UserAccount extends Model
      * @var string
      */
     public $lastUpdateDate;
+
+    /**
+     * yyyy-MM-dd'T'HH:mm:ssZ
+     *
+     * @var string
+     */
+    public $emailLastUpdateDate;
+
+    /**
+     * yyyy-MM-dd'T'HH:mm:ssZ
+     *
+     * @var string
+     */
+    public $phoneLastUpdateDate;
+
+    /**
+     * yyyy-MM-dd'T'HH:mm:ssZ
+     *
+     * @var string
+     */
+    public $passwordLastUpdateDate;
 
     /**
      * The class attributes
@@ -111,7 +132,10 @@ class UserAccount extends Model
         'lastOrderId',
         'aggregateOrderCount',
         'aggregateOrderDollars',
-        'lastUpdateDate'
+        'lastUpdateDate',
+        'emailLastUpdateDate',
+        'phoneLastUpdateDate',
+        'passwordLastUpdateDate'
     ];
 
     /**
@@ -358,5 +382,35 @@ class UserAccount extends Model
     public function setLastUpdateDate($lastUpdateDate)
     {
         $this->lastUpdateDate = $lastUpdateDate;
+    }
+
+    public function getEmailLastUpdateDate()
+    {
+        return $this->emailLastUpdateDate;
+    }
+
+    public function setEmailLastUpdateDate($emailLastUpdateDate)
+    {
+        $this->emailLastUpdateDate = $emailLastUpdateDate;
+    }
+
+    public function getPhoneLastUpdateDate()
+    {
+        return $this->phoneLastUpdateDate;
+    }
+
+    public function setPhoneLastUpdateDate($phoneLastUpdateDate)
+    {
+        $this->phoneLastUpdateDate = $phoneLastUpdateDate;
+    }
+
+    public function getPasswordLastUpdateDate()
+    {
+        return $this->passwordLastUpdateDate;
+    }
+
+    public function setPasswordLastUpdateDate($passwordLastUpdateDate)
+    {
+        $this->passwordLastUpdateDate = $passwordLastUpdateDate;
     }
 }
