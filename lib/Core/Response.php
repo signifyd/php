@@ -34,17 +34,72 @@ abstract class Response
 
     }
 
-    /**
-     * Setting the error for the object
+   /**
+     * Set the error
      *
-     * @param int|string $httpCode The http status code
-     * @param string     $error    The error message
+     * @param int    $httpCode The response code
+     * @param string $error    The response
      *
      * @return void
      */
     public function setError($httpCode, $error)
     {
+      $this->setIsError(true);
+      $this->setErrorMessage($error);
+    }
 
+    /**
+     * Set the error for the response object
+     *
+     * @param bool $isError The error state
+     *
+     * @return void
+     */
+    public function setIsError($isError)
+    {
+      $this->isError = $isError;
+    }
+
+    /**
+     * Is the response in error
+     *
+     * @return bool
+     */
+    public function isError()
+    {
+      return $this->isError;
+    }
+
+    /**
+     * Get the error message
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+      return $this->errorMessage;
+    }
+
+    /**
+     * Set the error message
+     *
+     * @param string $errorMessage The error message
+     *
+     * @return void
+     */
+    public function setErrorMessage($errorMessage)
+    {
+      $this->errorMessage = $errorMessage;
+    }
+
+    /**
+     * Get if there is an error
+     *
+     * @return bool
+     */
+    public function isError()
+    {
+      return $this->isError;
     }
 
     /**

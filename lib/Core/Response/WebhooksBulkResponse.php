@@ -76,69 +76,6 @@ class WebhooksBulkResponse extends Response
     }
 
     /**
-     * Set the error
-     *
-     * @param int    $httpCode The response code
-     * @param string $error    The response
-     *
-     * @return void
-     */
-    public function setError($httpCode, $error)
-    {
-        $this->setIsError(true);
-        $this->setErrorMessage($error);
-    }
-
-    /**
-     * Get if there is an error
-     *
-     * @return bool
-     */
-    public function isError()
-    {
-        return $this->isError;
-    }
-
-    /**
-     * Set the flag error
-     *
-     * @param bool $isError The flag
-     *
-     * @return void
-     */
-    public function setIsError($isError)
-    {
-        $this->isError = $isError;
-    }
-
-    /**
-     * Get the error message
-     *
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->errorMessage;
-    }
-
-    /**
-     * Set the error message
-     *
-     * @param string $errorMessage The error message
-     *
-     * @return void
-     */
-    public function setErrorMessage($errorMessage)
-    {
-        $this->errorMessage = $errorMessage;
-    }
-
-    public function addMessage($message)
-    {
-        $this->message[] = $message;
-    }
-
-    /**
      * Get the webhook array
      *
      * @return array
