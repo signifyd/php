@@ -77,9 +77,10 @@ class WebhooksResponse extends Response
      */
     public $errorMessage;
 
+    /**
+     * @var array
+     */
     public $responseArray = [];
-
-    public $message = [];
 
     /**
      * The logging object

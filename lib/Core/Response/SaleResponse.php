@@ -50,13 +50,6 @@ class SaleResponse extends Response
     public $coverage;
 
     /**
-     * Messages describing the error.
-     *
-     * @var array of string
-     */
-    public $messages = [];
-
-    /**
      * If there is an error and you would like to contact Signifyd,
      * please include this id in your support request.
      *
@@ -222,21 +215,6 @@ class SaleResponse extends Response
     public function setCoverage($coverage)
     {
         $this->coverage = $coverage;
-    }
-
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    public function setMessages($messages)
-    {
-        $this->messages = $messages;
-    }
-
-    public function addMessage($message)
-    {
-        $this->messages[] = $message;
     }
 
     public function getTraceId()

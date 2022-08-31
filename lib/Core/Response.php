@@ -25,6 +25,13 @@ namespace Signifyd\Core;
 abstract class Response
 {
     /**
+     * Messages describing the error.
+     *
+     * @var array
+     */
+    public $messages = [];
+
+    /**
      * Response constructor.
      *
      * @param array $response The response received from Signifyd
@@ -93,16 +100,6 @@ abstract class Response
     }
 
     /**
-     * Get if there is an error
-     *
-     * @return bool
-     */
-    public function isError()
-    {
-      return $this->isError;
-    }
-
-    /**
      * Setting the response data
      *
      * @param string $response The response from Signifyd
@@ -112,5 +109,39 @@ abstract class Response
     public function setObject($response)
     {
 
+    }
+
+    /**
+     * Setting the message
+     *
+     * @param string $message
+     *
+     * @return void
+     */
+    public function addMessage($message)
+    {
+        $this->messages[] = $message;
+    }
+
+    /**
+     * Retrieve all messages
+     *
+     * @return array
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * Set messages
+     *
+     * @param array $messages
+     *
+     * @return void
+     */
+    public function setMessages($messages)
+    {
+        $this->messages = $messages;
     }
 }

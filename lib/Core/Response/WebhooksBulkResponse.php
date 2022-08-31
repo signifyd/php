@@ -50,8 +50,6 @@ class WebhooksBulkResponse extends Response
      */
     public $errorMessage;
 
-    public $message = [];
-
     /**
      * The logger object
      *

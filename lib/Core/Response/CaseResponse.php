@@ -212,8 +212,6 @@ class CaseResponse extends Response
 
     public $recommendedAction;
 
-    public $message = [];
-
     public $isTest;
 
     public $customerCaseId;
