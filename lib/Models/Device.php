@@ -117,31 +117,52 @@ class Device extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getClientIpAddress()
     {
         return $this->clientIpAddress;
     }
 
+    /**
+     * @param $clientIpAddress
+     * @return void
+     */
     public function setClientIpAddress($clientIpAddress)
     {
         $this->clientIpAddress = $clientIpAddress;
     }
 
+    /**
+     * @return string
+     */
     public function getSessionId()
     {
         return $this->sessionId;
     }
 
+    /**
+     * @param $sessionId
+     * @return void
+     */
     public function setSessionId($sessionId)
     {
         $this->sessionId = $sessionId;
     }
 
+    /**
+     * @return \Signifyd\Models\Fingerprint
+     */
     public function getFingerprint()
     {
         return $this->fingerprint;
     }
 
+    /**
+     * @param $fingerprint
+     * @return void
+     */
     public function setFingerprint($fingerprint)
     {
         $this->fingerprint = $fingerprint;

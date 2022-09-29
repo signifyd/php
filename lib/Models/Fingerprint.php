@@ -110,41 +110,69 @@ class Fingerprint extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getProvider()
     {
         return $this->provider;
     }
 
+    /**
+     * @param $provider
+     * @return void
+     */
     public function setProvider($provider)
     {
         $this->provider = $provider;
     }
 
+    /**
+     * @return string
+     */
     public function getPayload()
     {
         return $this->payload;
     }
 
+    /**
+     * @param $payload
+     * @return void
+     */
     public function setPayload($payload)
     {
         $this->payload = $payload;
     }
 
+    /**
+     * @return string
+     */
     public function getPayloadEncoding()
     {
         return $this->payloadEncoding;
     }
 
+    /**
+     * @param $payloadEncoding
+     * @return void
+     */
     public function setPayloadEncoding($payloadEncoding)
     {
         $this->payloadEncoding = $payloadEncoding;
     }
 
+    /**
+     * @return string
+     */
     public function getPayloadVersion()
     {
         return $this->payloadVersion;
     }
 
+    /**
+     * @param $payloadVersion
+     * @return void
+     */
     public function setPayloadVersion($payloadVersion)
     {
         $this->payloadVersion = $payloadVersion;

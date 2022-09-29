@@ -126,36 +126,61 @@ class Reroute extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
+    /**
+     * @return Device
+     */
     public function getDevice()
     {
         return $this->device;
     }
 
+    /**
+     * @param $device
+     * @return void
+     */
     public function setDevice($device)
     {
         $this->device = $device;
     }
 
+    /**
+     * @return array
+     */
     public function getShipments()
     {
         return $this->shipments;
     }
 
+    /**
+     * @param $shipments
+     * @return void
+     */
     public function setShipments($shipments)
     {
         $this->shipments = $shipments;
     }
 
+    /**
+     * @param $shipment
+     * @return void
+     */
     public function addShipment($shipment)
     {
         $this->shipments[] = $shipment;

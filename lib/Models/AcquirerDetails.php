@@ -91,21 +91,35 @@ class AcquirerDetails extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getCountryCode()
     {
         return $this->countryCode;
     }
 
+    /**
+     * @param $countryCode
+     * @return void
+     */
     public function setCountryCode($countryCode)
     {
         $this->countryCode = $countryCode;
     }
 
+    /**
+     * @return string
+     */
     public function getBin()
     {
         return $this->bin;
     }
 
+    /**
+     * @param $bin
+     * @return void
+     */
     public function setBin($bin)
     {
         $this->bin = $bin;

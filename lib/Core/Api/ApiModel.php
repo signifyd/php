@@ -97,6 +97,13 @@ class ApiModel
         //TODO: implements getCase for v3
     }
 
+    /**
+     * Record a change to the price of an order where the buyer did not initiate the change.
+     *
+     * @param $repriceData
+     * @return bool|mixed|object|\Signifyd\Core\Response
+     * @throws InvalidClassException
+     */
     public function reprice($repriceData)
     {
         $reprice = new \Signifyd\Models\Reprice($repriceData);
@@ -115,6 +122,14 @@ class ApiModel
         return $response;
     }
 
+    /**
+     * Call this endpoint anytime Delivery Address on an Order needs to be changed.
+     *
+     * @param $reroute
+     * @return bool|mixed|object|\Signifyd\Core\Response
+     * @throws ApiException
+     * @throws InvalidClassException
+     */
     public function reroute($reroute)
     {
         $this->logger->info('SaleApi: reroute method called');
@@ -154,6 +169,13 @@ class ApiModel
         return $response;
     }
 
+    /**
+     * Use this endpoint to record a list of fulfillments associated with an Order.
+     *
+     * @param $fulfillmentsData
+     * @return bool|mixed|object|\Signifyd\Core\Response
+     * @throws InvalidClassException
+     */
     public function addFulfillment($fulfillmentsData)
     {
         $fulfillments = new \Signifyd\Models\Fulfillments($fulfillmentsData);

@@ -80,6 +80,11 @@ class BraintreeResponse extends DefaultResponse
         return parent::setCvv($cvvStatus);
     }
 
+    /**
+     * @param $avsPostalCodeResponse
+     * @param $avsStreetAddressResponse
+     * @return BraintreeResponse
+     */
     public function setAvsResponse($avsPostalCodeResponse, $avsStreetAddressResponse)
     {
         $avsStatus = null;

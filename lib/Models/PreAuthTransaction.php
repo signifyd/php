@@ -177,71 +177,120 @@ class PreAuthTransaction extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getPaymentMethod()
     {
         return $this->paymentMethod;
     }
 
+    /**
+     * @param $paymentMethod
+     * @return void
+     */
     public function setPaymentMethod($paymentMethod)
     {
         $this->paymentMethod = $paymentMethod;
     }
 
+    /**
+     * @return Card
+     */
     public function getCheckoutPaymentDetails()
     {
         return $this->checkoutPaymentDetails;
     }
 
+    /**
+     * @param $checkoutPaymentDetails
+     * @return void
+     */
     public function setCheckoutPaymentDetails($checkoutPaymentDetails)
     {
         $this->checkoutPaymentDetails = $checkoutPaymentDetails;
     }
 
+    /**
+     * @return float
+     */
     public function getAmount()
     {
         return $this->amount;
     }
 
+    /**
+     * @param $amount
+     * @return void
+     */
     public function setAmount($amount)
     {
         $this->amount = $amount;
     }
 
+    /**
+     * @return string
+     */
     public function getCurrency()
     {
         return $this->currency;
     }
 
+    /**
+     * @param $currency
+     * @return void
+     */
     public function setCurrency($currency)
     {
         $this->currency = $currency;
     }
 
+    /**
+     * @return string
+     */
     public function getGateway()
     {
         return $this->gateway;
     }
 
+    /**
+     * @param $gateway
+     * @return void
+     */
     public function setGateway($gateway)
     {
         $this->gateway = $gateway;
     }
 
+    /**
+     * @return SourceAccountDetails
+     */
     public function getSourceAccountDetails()
     {
         return $this->sourceAccountDetails;
     }
 
+    /**
+     * @param $sourceAccountDetails
+     * @return void
+     */
     public function setSourceAccountDetails($sourceAccountDetails)
     {
         $this->sourceAccountDetails = $sourceAccountDetails;
     }
 
+    /**
+     * @return AcquirerDetails
+     */
     public function getAcquirerDetails()
     {
         return $this->acquirerDetails;
     }
 
+    /**
+     * @param $acquirerDetails
+     * @return void
+     */
     public function setAcquirerDetails($acquirerDetails)
     {
         $this->acquirerDetails = $acquirerDetails;

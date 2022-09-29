@@ -355,6 +355,12 @@ class CaseApi
         return $case;
     }
 
+    /**
+     * @param $transaction
+     * @return bool|mixed|object|\Signifyd\Core\Response
+     * @throws CaseModelException
+     * @throws InvalidClassException
+     */
     public function createTransaction($transaction)
     {
         $this->logger->info('CreateTransaction method called');

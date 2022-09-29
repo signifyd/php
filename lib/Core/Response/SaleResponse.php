@@ -114,6 +114,10 @@ class SaleResponse extends Response
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @param $response
+     * @return $this|bool|void
+     */
     public function setObject($response)
     {
         $responseArr = json_decode($response, true);
@@ -165,63 +169,85 @@ class SaleResponse extends Response
     }
 
     /**
-     * Set the error
-     *
-     * @param int    $httpCode The response code
-     * @param string $error    The response
-     *
-     * @return void
+     * @return int
      */
-    public function setError($httpCode, $error)
-    {
-        $this->addMessage($error);
-    }
-
     public function getSignifydId()
     {
         return $this->signifydId;
     }
 
+    /**
+     * @param $signifydId
+     * @return void
+     */
     public function setSignifydId($signifydId)
     {
         $this->signifydId = $signifydId;
     }
 
+    /**
+     * @return string
+     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
+    /**
+     * @return Decision
+     */
     public function getDecision()
     {
         return $this->decision;
     }
 
+    /**
+     * @param $decision
+     * @return void
+     */
     public function setDecision($decision)
     {
         $this->decision = $decision;
     }
 
+    /**
+     * @return Coverage
+     */
     public function getCoverage()
     {
         return $this->coverage;
     }
 
+    /**
+     * @param $coverage
+     * @return void
+     */
     public function setCoverage($coverage)
     {
         $this->coverage = $coverage;
     }
 
+    /**
+     * @return string
+     */
     public function getTraceId()
     {
         return $this->traceId;
     }
 
+    /**
+     * @param $traceId
+     * @return void
+     */
     public function setTraceId($traceId)
     {
         $this->traceId = $traceId;

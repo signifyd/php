@@ -66,6 +66,11 @@ class SourceAccountDetails extends Model
      */
     public $creditLimit;
 
+    /**
+     * Formatted as yyyy-MM-dd'T'HH:mm:ssZ per ISO 8601.
+     *
+     * @var string
+     */
     public $createdAt;
 
     /**
@@ -191,121 +196,205 @@ class SourceAccountDetails extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getAccountNumber()
     {
         return $this->accountNumber;
     }
 
+    /**
+     * @param $accountNumber
+     * @return void
+     */
     public function setAccountNumber($accountNumber)
     {
         $this->accountNumber = $accountNumber;
     }
 
+    /**
+     * @return bool
+     */
     public function getActive()
     {
         return $this->active;
     }
 
+    /**
+     * @param $active
+     * @return void
+     */
     public function setActive($active)
     {
         $this->active = $active;
     }
 
+    /**
+     * @return bool
+     */
     public function getVerified()
     {
         return $this->verified;
     }
 
+    /**
+     * @param $verified
+     * @return void
+     */
     public function setverified($verified)
     {
         $this->verified = $verified;
     }
 
+    /**
+     * @return float
+     */
     public function getAssetBalance()
     {
         return $this->assetBalance;
     }
 
+    /**
+     * @param $assetBalance
+     * @return void
+     */
     public function setAssetBalance($assetBalance)
     {
         $this->assetBalance = $assetBalance;
     }
 
+    /**
+     * @return float
+     */
     public function getCreditLimit()
     {
         return $this->creditLimit;
     }
 
+    /**
+     * @param $creditLimit
+     * @return void
+     */
     public function setCreditLimit($creditLimit)
     {
         $this->creditLimit = $creditLimit;
     }
 
+    /**
+     * @return string
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
+    /**
+     * @param $createdAt
+     * @return void
+     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
+    /**
+     * @return float
+     */
     public function getOwnerAnnualIncome()
     {
         return $this->ownerAnnualIncome;
     }
 
+    /**
+     * @param $ownerAnnualIncome
+     * @return void
+     */
     public function setOwnerAnnualIncome($ownerAnnualIncome)
     {
         $this->ownerAnnualIncome = $ownerAnnualIncome;
     }
 
+    /**
+     * @return string
+     */
     public function getOwnerDob()
     {
         return $this->ownerDob;
     }
 
+    /**
+     * @param $ownerDob
+     * @return void
+     */
     public function setOwnerDob($ownerDob)
     {
         $this->ownerDob = $ownerDob;
     }
 
+    /**
+     * @return string
+     */
     public function getOwnerName()
     {
         return $this->ownerName;
     }
 
+    /**
+     * @param $ownerName
+     * @return void
+     */
     public function setOwnerName($ownerName)
     {
         $this->ownerName = $ownerName;
     }
 
+    /**
+     * @return string
+     */
     public function getContactEmail()
     {
         return $this->contactEmail;
     }
 
+    /**
+     * @param $contactEmail
+     * @return void
+     */
     public function setContactEmail($contactEmail)
     {
         $this->contactEmail = $contactEmail;
     }
 
+    /**
+     * @return string
+     */
     public function getContactPhone()
     {
         return $this->contactPhone;
     }
 
+    /**
+     * @param $contactPhone
+     * @return void
+     */
     public function setContactPhone($contactPhone)
     {
         $this->contactPhone = $contactPhone;
     }
 
+    /**
+     * @return \Signifyd\Models\Address
+     */
     public function getContactAddress()
     {
         return $this->contactAddress;
     }
 
+    /**
+     * @param $contactAddress
+     * @return void
+     */
     public function setContactAddress($contactAddress)
     {
         $this->contactAddress = $contactAddress;

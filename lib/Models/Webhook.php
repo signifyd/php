@@ -28,13 +28,6 @@ use Signifyd\Core\Model;
 class Webhook extends Model
 {
     /**
-     * The type/topic of the event
-     *
-     * @var string $event
-     */
-    public $event;
-
-    /**
      * The URL to which the webhook data should be sent when the event is triggered
      *
      * @var string $url
@@ -47,7 +40,6 @@ class Webhook extends Model
      * @var array $fields The list of class fields
      */
     protected $fields = [
-        'event',
         'url'
     ];
 
@@ -57,7 +49,6 @@ class Webhook extends Model
      * @var array $fieldsValidation List of rules
      */
     protected $fieldsValidation = [
-        'event' => [],
         'url' => []
     ];
 
@@ -114,27 +105,4 @@ class Webhook extends Model
     {
         $this->url = $url;
     }
-
-    /**
-     * Get the event
-     *
-     * @return mixed
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * Set the event
-     *
-     * @param mixed $event Event
-     *
-     * @return void
-     */
-    public function setEvent($event)
-    {
-        $this->event = $event;
-    }
-
 }

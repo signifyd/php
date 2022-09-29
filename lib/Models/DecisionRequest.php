@@ -21,6 +21,9 @@ class DecisionRequest extends Model
         'paymentFraud' => []
     ];
 
+    /**
+     * @param $data
+     */
     public function __construct($data = [])
     {
         if (is_array($data) && !empty($data)) {
@@ -62,6 +65,4 @@ class DecisionRequest extends Model
     {
         $this->paymentFraud = $paymentFraud;
     }
-
-
 }

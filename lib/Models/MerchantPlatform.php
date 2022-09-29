@@ -91,21 +91,35 @@ class MerchantPlatform extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param $name
+     * @return void
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * @param $version
+     * @return void
+     */
     public function setVersion($version)
     {
         $this->version = $version;

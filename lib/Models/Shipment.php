@@ -168,21 +168,35 @@ class Shipment extends Model
         return (isset($valid[0]))? $valid : true;
     }
 
+    /**
+     * @return \Signifyd\Models\Recipient
+     */
     public function getDestination()
     {
         return $this->destination;
     }
 
+    /**
+     * @param $destination
+     * @return void
+     */
     public function setDestination($destination)
     {
         $this->destination = $destination;
     }
 
+    /**
+     * @return \Signifyd\Models\Origin
+     */
     public function getOrigin()
     {
         return $this->origin;
     }
 
+    /**
+     * @param $origin
+     * @return void
+     */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
@@ -210,41 +224,69 @@ class Shipment extends Model
         $this->carrier = $carrier;
     }
 
+    /**
+     * @return string
+     */
     public function getMinDeliveryDate()
     {
         return $this->minDeliveryDate;
     }
 
+    /**
+     * @param $minDeliveryDate
+     * @return void
+     */
     public function setMinDeliveryDate($minDeliveryDate)
     {
         $this->minDeliveryDate = $minDeliveryDate;
     }
 
+    /**
+     * @return string
+     */
     public function getMaxDeliveryDate()
     {
         return $this->maxDeliveryDate;
     }
 
+    /**
+     * @param $maxDeliveryDate
+     * @return void
+     */
     public function setMaxDeliveryDate($maxDeliveryDate)
     {
         $this->maxDeliveryDate = $maxDeliveryDate;
     }
 
+    /**
+     * @return string
+     */
     public function getShipmentId()
     {
         return $this->shipmentId;
     }
 
+    /**
+     * @param $shipmentId
+     * @return void
+     */
     public function setShipmentId($shipmentId)
     {
         $this->shipmentId = $shipmentId;
     }
 
+    /**
+     * @return string
+     */
     public function getFulfillmentMethod()
     {
         return $this->fulfillmentMethod;
     }
 
+    /**
+     * @param $fulfillmentMethod
+     * @return void
+     */
     public function setFulfillmentMethod($fulfillmentMethod)
     {
         $this->fulfillmentMethod = $fulfillmentMethod;

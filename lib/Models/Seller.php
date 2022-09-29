@@ -362,11 +362,18 @@ class Seller extends Model
         $this->phone = $phone;
     }
 
+    /**
+     * @return string
+     */
     public function getSellerId()
     {
         return $this->sellerId;
     }
 
+    /**
+     * @param $sellerId
+     * @return void
+     */
     public function setSellerId($sellerId)
     {
         $this->sellerId = $sellerId;
@@ -438,11 +445,18 @@ class Seller extends Model
         $this->aggregateOrderDollars = $aggregateOrderDollars;
     }
 
+    /**
+     * @return Address
+     */
     public function getContactAddress()
     {
         return $this->contactAddress;
     }
 
+    /**
+     * @param $contactAddress
+     * @return void
+     */
     public function setContactAddress($contactAddress)
     {
         $this->contactAddress = $contactAddress;
@@ -470,21 +484,35 @@ class Seller extends Model
         $this->lastUpdateDate = $lastUpdateDate;
     }
 
+    /**
+     * @return string
+     */
     public function getOnboardingIpAddress()
     {
         return $this->onboardingIpAddress;
     }
 
+    /**
+     * @param $onboardingIpAddress
+     * @return void
+     */
     public function setOnboardingIpAddress($onboardingIpAddress)
     {
         $this->onboardingIpAddress = $onboardingIpAddress;
     }
 
+    /**
+     * @return string
+     */
     public function getParentEntity()
     {
         return $this->parentEntity;
     }
 
+    /**
+     * @param $parentEntity
+     * @return void
+     */
     public function setParentEntity($parentEntity)
     {
         $this->parentEntity = $parentEntity;

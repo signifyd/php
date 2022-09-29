@@ -93,6 +93,12 @@ class CheckoutApi extends ApiModel
         return $response;
     }
 
+    /**
+     * @param $transaction
+     * @return bool|mixed|object|\Signifyd\Core\Response
+     * @throws ApiException
+     * @throws InvalidClassException
+     */
     public function createTransaction($transaction)
     {
         $this->logger->info('CheckoutApi: CreateTransaction method called');

@@ -101,21 +101,35 @@ class Reprice extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
+    /**
+     * @return Purchase
+     */
     public function getPurchase()
     {
         return $this->purchase;
     }
 
+    /**
+     * @param $purchase
+     * @return void
+     */
     public function setPurchase($purchase)
     {
         $this->purchase = $purchase;

@@ -26,8 +26,27 @@ use Signifyd\Core\Model;
  */
 class DiscountCode extends Model
 {
+    /**
+     * The name of the discount code entered during checkout.
+     *
+     * @var string
+     */
     public $code;
+
+    /**
+     * The fixed amount of the discount applied. e.g. $10 off purchase.
+     * This field should be NULL if a discount percentage is provided.
+     *
+     * @var mixed
+     */
     public $amount;
+
+    /**
+     * If a percentage discount is applied the percentage of the total order amount the
+     * discount applies to. e.g. 20% off purchase. This field should be NULL if amount is provided.
+     *
+     * @var mixed
+     */
     public $percentage;
 
     protected $fields = [
@@ -76,7 +95,7 @@ class DiscountCode extends Model
     /**
      * Get the discount code
      *
-     * @return mixed
+     * @return string
      */
     public function getCode()
     {
@@ -86,7 +105,7 @@ class DiscountCode extends Model
     /**
      * Set the discount code
      *
-     * @param mixed $code The discount code
+     * @param string $code The discount code
      *
      * @return void
      */

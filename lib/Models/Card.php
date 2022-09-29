@@ -261,71 +261,120 @@ class Card extends Model
         $this->billingAddress = $billingAddress;
     }
 
+    /**
+     * @return string
+     */
     public function getAccountHolderName()
     {
         return $this->accountHolderName;
     }
 
+    /**
+     * @param $accountHolderName
+     * @return void
+     */
     public function setAccountHolderName($accountHolderName)
     {
         $this->accountHolderName = $accountHolderName;
     }
 
+    /**
+     * @return string
+     */
     public function getAccountHolderTaxId()
     {
         return $this->accountHolderTaxId;
     }
 
+    /**
+     * @param $accountHolderTaxId
+     * @return void
+     */
     public function setAccountHolderTaxId($accountHolderTaxId)
     {
         $this->accountHolderTaxId = $accountHolderTaxId;
     }
 
+    /**
+     * @return string
+     */
     public function getAccountHolderTaxIdCountry()
     {
         return $this->accountHolderTaxIdCountry;
     }
 
+    /**
+     * @param $accountHolderTaxIdCountry
+     * @return void
+     */
     public function setAccountHolderTaxIdCountry($accountHolderTaxIdCountry)
     {
         $this->accountHolderTaxIdCountry = $accountHolderTaxIdCountry;
     }
 
+    /**
+     * @return string
+     */
     public function getAccountLast4()
     {
         return $this->accountLast4;
     }
 
+    /**
+     * @param $accountLast4
+     * @return void
+     */
     public function setAccountLast4($accountLast4)
     {
         $this->accountLast4 = $accountLast4;
     }
 
+    /**
+     * @return string
+     */
     public function getAbaRoutingNumber()
     {
         return $this->abaRoutingNumber;
     }
 
+    /**
+     * @param $abaRoutingNumber
+     * @return void
+     */
     public function setAbaRoutingNumber($abaRoutingNumber)
     {
         $this->abaRoutingNumber = $abaRoutingNumber;
     }
 
+    /**
+     * @return string
+     */
     public function getCardToken()
     {
         return $this->cardToken;
     }
 
+    /**
+     * @param $cardToken
+     * @return void
+     */
     public function setCardToken($cardToken)
     {
         $this->cardToken = $cardToken;
     }
 
+    /**
+     * @return string
+     */
     public function getCardTokenProvider()
     {
         return $this->cardTokenProvider;
     }
 
+    /**
+     * @param $cardTokenProvider
+     * @return void
+     */
     public function setCardTokenProvider($cardTokenProvider)
     {
         $this->cardTokenProvider = $cardTokenProvider;
@@ -375,31 +424,52 @@ class Card extends Model
         $this->cardLast4 = $cardLast4;
     }
 
+    /**
+     * @return string
+     */
     public function getCardBrand()
     {
         return $this->cardBrand;
     }
 
+    /**
+     * @param $cardBrand
+     * @return void
+     */
     public function setCardBrand($cardBrand)
     {
         $this->cardBrand = $cardBrand;
     }
 
+    /**
+     * @return string
+     */
     public function getCardFunding()
     {
         return $this->cardFunding;
     }
 
+    /**
+     * @param $cardFunding
+     * @return void
+     */
     public function setCardFunding($cardFunding)
     {
         $this->cardFunding = $cardFunding;
     }
 
+    /**
+     * @return CardInstallments
+     */
     public function getCardInstallments()
     {
         return $this->cardInstallments;
     }
 
+    /**
+     * @param $cardInstallments
+     * @return void
+     */
     public function setCardInstallments($cardInstallments)
     {
         $this->cardInstallments = $cardInstallments;

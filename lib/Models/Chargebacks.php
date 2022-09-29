@@ -91,21 +91,35 @@ class Chargebacks extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return float
+     */
     public function getAmount()
     {
         return $this->amount;
     }
 
+    /**
+     * @param $amount
+     * @return void
+     */
     public function setAmount($amount)
     {
         $this->amount = $amount;
     }
 
+    /**
+     * @return string
+     */
     public function getCurrency()
     {
         return $this->currency;
     }
 
+    /**
+     * @param $currency
+     * @return void
+     */
     public function setCurrency($currency)
     {
         $this->currency = $currency;

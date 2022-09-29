@@ -114,36 +114,61 @@ class Fulfillments extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
+    /**
+     * @return string
+     */
     public function getFulfillmentStatus()
     {
         return $this->fulfillmentStatus;
     }
 
+    /**
+     * @param $fulfillmentStatus
+     * @return void
+     */
     public function setFulfillmentStatus($fulfillmentStatus)
     {
         $this->fulfillmentStatus = $fulfillmentStatus;
     }
 
+    /**
+     * @return array
+     */
     public function getFulfillments()
     {
         return $this->fulfillments;
     }
 
+    /**
+     * @param $fulfillments
+     * @return void
+     */
     public function setFulfillments($fulfillments)
     {
         $this->fulfillments = $fulfillments;
     }
 
+    /**
+     * @param $fulfillment
+     * @return void
+     */
     public function addFulfillment($fulfillment)
     {
         $this->fulfillments[] = $fulfillment;

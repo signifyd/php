@@ -44,8 +44,8 @@ abstract class Response
    /**
      * Set the error
      *
-     * @param int    $httpCode The response code
-     * @param string $error    The response
+     * @param int $httpCode The response code
+     * @param string $error The response
      *
      * @return void
      */

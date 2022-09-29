@@ -353,41 +353,69 @@ class CaseModel extends Model
         $this->recipients[] = $recipient;
     }
 
+    /**
+     * @return \Signifyd\Models\ClientVersion
+     */
     public function getClientVersion()
     {
         return $this->clientVersion;
     }
 
+    /**
+     * @param $clientVersion
+     * @return void
+     */
     public function setClientVersion($clientVersion)
     {
         $this->clientVersion = $clientVersion;
     }
 
+    /**
+     * @return Boolean
+     */
     public function getCustomerSubmitForGuaranteeIndicator()
     {
         return $this->customerSubmitForGuaranteeIndicator;
     }
 
+    /**
+     * @param $customerSubmitForGuaranteeIndicator
+     * @return void
+     */
     public function setCustomerSubmitForGuaranteeIndicator($customerSubmitForGuaranteeIndicator)
     {
         $this->customerSubmitForGuaranteeIndicator = $customerSubmitForGuaranteeIndicator;
     }
 
+    /**
+     * @return \Signifyd\Models\DecisionRequest
+     */
     public function getDecisionRequest()
     {
         return $this->decisionRequest;
     }
 
+    /**
+     * @param $decisionRequest
+     * @return void
+     */
     public function setDecisionRequest($decisionRequest)
     {
         $this->decisionRequest = $decisionRequest;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPolicy()
     {
         return $this->policy;
     }
 
+    /**
+     * @param $policy
+     * @return void
+     */
     public function setPolicy($policy)
     {
         $this->policy = $policy;

@@ -124,31 +124,52 @@ class ScaEvaluation extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getOutcome()
     {
         return $this->outcome;
     }
 
+    /**
+     * @param $outcome
+     * @return void
+     */
     public function setOutcome($outcome)
     {
         $this->outcome = $outcome;
     }
 
+    /**
+     * @return ExclusionDetails
+     */
     public function getExclusionDetails()
     {
         return $this->exclusionDetails;
     }
 
+    /**
+     * @param $exclusionDetails
+     * @return void
+     */
     public function setExclusionDetails($exclusionDetails)
     {
         $this->exclusionDetails = $exclusionDetails;
     }
 
+    /**
+     * @return ExemptionDetails
+     */
     public function getExemptionDetails()
     {
         return $this->exemptionDetails;
     }
 
+    /**
+     * @param $exemptionDetails
+     * @return void
+     */
     public function setExemptionDetails($exemptionDetails)
     {
         $this->exemptionDetails = $exemptionDetails;
