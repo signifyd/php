@@ -206,6 +206,16 @@ class CheckoutModel extends Model
                     continue;
                 }
 
+                if ($field == 'purchase') {
+                    if ($case['purchase'] instanceof Purchase) {
+                        $this->setPurchase($case['purchase']);
+                    } elseif (is_array($case['purchase'])) {
+                        $objectPurchase = new Purchase($case['purchase']);
+                        $this->setPurchase($objectPurchase);
+                    }
+                    continue;
+                }
+
                 if (is_array($case[$field]) && !empty($case[$field])) {
                     if (in_array($field, $this->arrayOfObjectFields)) {
                         // init the class name
