@@ -26,17 +26,90 @@ use Signifyd\Core\Model;
  */
 class Product extends Model
 {
+    /**
+     * The name of the product.
+     *
+     * @var string
+     */
     public $itemName;
+
+    /**
+     * The price paid for each item (not the aggregate).
+     *
+     * @var float
+     */
     public $itemPrice;
+
+    /**
+     * The quantity of this item.
+     *
+     * @var float
+     */
     public $itemQuantity;
+
+    /**
+     * Indicates whether the item is electronically delivered e.g. gift cards.
+     * If not provided, defaults to false.
+     *
+     * @var bool
+     */
     public $itemIsDigital;
+
+    /**
+     * The name of the top-level product category. e.g. Apparel
+     *
+     * @var string
+     */
     public $itemCategory;
+
+    /**
+     * The name of the sub-category of the product if applicable. e.g. T-Shirt
+     *
+     * @var string
+     */
     public $itemSubCategory;
+
+    /**
+     * Your unique identifier for the product.
+     *
+     * @var string
+     */
     public $itemId;
+
+    /**
+     * The url to an image of the product.
+     *
+     * @var string
+     */
     public $itemImage;
+
+    /**
+     * The url to the product's page on your site.
+     *
+     * @var string
+     */
     public $itemUrl;
+
+    /**
+     * The weight of each item in grams.
+     *
+     * @var float
+     */
     public $itemWeight;
+
+    /**
+     * The item's shipment id.
+     *
+     * @var string
+     */
     public $shipmentId;
+
+    /**
+     * If this product is being delivered as part of a subscription,
+     * then you can include these fields to include data about the subscription itself.
+     *
+     * @var Subscription
+     */
     public $subscription;
 
     protected $fields = [
@@ -115,7 +188,7 @@ class Product extends Model
     /**
      * Get the item id
      *
-     * @return mixed
+     * @return string
      */
     public function getItemId()
     {
@@ -125,7 +198,7 @@ class Product extends Model
     /**
      * Set the item id
      *
-     * @param mixed $itemId The item Id
+     * @param string $itemId The item Id
      *
      * @return void
      */
@@ -137,7 +210,7 @@ class Product extends Model
     /**
      * Get the item name
      *
-     * @return mixed
+     * @return string
      */
     public function getItemName()
     {
@@ -147,7 +220,7 @@ class Product extends Model
     /**
      * Set the item name
      *
-     * @param mixed $itemName The item name
+     * @param string $itemName The item name
      *
      * @return void
      */
@@ -159,7 +232,7 @@ class Product extends Model
     /**
      * Get the item image
      *
-     * @return mixed
+     * @return string
      */
     public function getItemImage()
     {
@@ -169,7 +242,7 @@ class Product extends Model
     /**
      * Set the item image
      *
-     * @param mixed $itemImage The link of the item image
+     * @param string $itemImage The link of the item image
      *
      * @return void
      */
@@ -181,7 +254,7 @@ class Product extends Model
     /**
      * Get the item quantity
      *
-     * @return mixed
+     * @return float
      */
     public function getItemQuantity()
     {
@@ -191,7 +264,7 @@ class Product extends Model
     /**
      * Set the item quantity
      *
-     * @param mixed $itemQuantity The sold item quantity
+     * @param float $itemQuantity The sold item quantity
      *
      * @return void
      */
@@ -203,7 +276,7 @@ class Product extends Model
     /**
      * Get the item price
      *
-     * @return mixed
+     * @return float
      */
     public function getItemPrice()
     {
@@ -213,7 +286,7 @@ class Product extends Model
     /**
      * Set the item price
      *
-     * @param mixed $itemPrice The price of the item
+     * @param float $itemPrice The price of the item
      *
      * @return void
      */
@@ -225,7 +298,7 @@ class Product extends Model
     /**
      * Get the item weight
      *
-     * @return mixed
+     * @return float
      */
     public function getItemWeight()
     {
@@ -235,7 +308,7 @@ class Product extends Model
     /**
      * Set the item weight
      *
-     * @param mixed $itemWeight The weight of the sold item
+     * @param float $itemWeight The weight of the sold item
      *
      * @return void
      */
@@ -247,7 +320,7 @@ class Product extends Model
     /**
      * Is the item digital
      *
-     * @return mixed
+     * @return bool
      */
     public function getItemIsDigital()
     {
@@ -257,7 +330,7 @@ class Product extends Model
     /**
      * Set the type of the item
      *
-     * @param mixed $itemIsDigital If the item is digital or not
+     * @param bool $itemIsDigital If the item is digital or not
      *
      * @return void
      */
@@ -269,7 +342,7 @@ class Product extends Model
     /**
      * Get the item category
      *
-     * @return mixed
+     * @return string
      */
     public function getItemCategory()
     {
@@ -279,7 +352,7 @@ class Product extends Model
     /**
      * Set the item category
      *
-     * @param mixed $itemCategory The category of the sold item
+     * @param string $itemCategory The category of the sold item
      *
      * @return void
      */
@@ -291,7 +364,7 @@ class Product extends Model
     /**
      * Get the item subcategory
      *
-     * @return mixed
+     * @return string
      */
     public function getItemSubCategory()
     {
@@ -301,7 +374,7 @@ class Product extends Model
     /**
      * Set the item subcategory
      *
-     * @param mixed $itemSubCategory The subcategory of the sold item
+     * @param string $itemSubCategory The subcategory of the sold item
      *
      * @return void
      */
@@ -313,7 +386,7 @@ class Product extends Model
     /**
      * Get the item url
      *
-     * @return mixed
+     * @return string
      */
     public function getItemUrl()
     {
@@ -323,7 +396,7 @@ class Product extends Model
     /**
      * Set the item url
      *
-     * @param mixed $itemUrl The url of the item
+     * @param string $itemUrl The url of the item
      *
      * @return void
      */
@@ -332,21 +405,35 @@ class Product extends Model
         $this->itemUrl = $itemUrl;
     }
 
+    /**
+     * @return string
+     */
     public function getShipmentId()
     {
         return $this->shipmentId;
     }
 
+    /**
+     * @param $shipmentId
+     * @return void
+     */
     public function setShipmentId($shipmentId)
     {
         $this->shipmentId = $shipmentId;
     }
 
+    /**
+     * @return Subscription
+     */
     public function getSubscription()
     {
         return $this->subscription;
     }
 
+    /**
+     * @param $subscription
+     * @return void
+     */
     public function setSubscription($subscription)
     {
         $this->subscription = $subscription;

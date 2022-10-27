@@ -16,6 +16,11 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
         'sandbox' => 'https://payments.sandbox.braintree-api.com/graphql'
     ];
 
+    /**
+     * @param $transactionId
+     * @param $orderId
+     * @return BraintreeResponse|Response\ResponseInterface
+     */
     public function fetchData($transactionId, $orderId)
     {
         if (empty($this->response)) {

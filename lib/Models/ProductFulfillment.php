@@ -80,21 +80,35 @@ class ProductFulfillment extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getItemName()
     {
         return $this->itemName;
     }
 
+    /**
+     * @param $itemName
+     * @return void
+     */
     public function setItemName($itemName)
     {
         $this->itemName = $itemName;
     }
 
+    /**
+     * @return float
+     */
     public function getItemQuantity()
     {
         return $this->itemQuantity;
     }
 
+    /**
+     * @param $itemQuantity
+     * @return void
+     */
     public function setItemQuantity($itemQuantity)
     {
         $this->itemQuantity = $itemQuantity;

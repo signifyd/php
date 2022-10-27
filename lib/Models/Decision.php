@@ -143,61 +143,103 @@ class Decision extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
+    /**
+     * @param $createdAt
+     * @return void
+     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
+    /**
+     * @return string
+     */
     public function getCheckpointAction()
     {
         return $this->checkpointAction;
     }
 
+    /**
+     * @param $checkpointAction
+     * @return void
+     */
     public function setCheckpointAction($checkpointAction)
     {
         $this->checkpointAction = $checkpointAction;
     }
 
+    /**
+     * @return string
+     */
     public function getCheckpointActionReason()
     {
         return $this->checkpointActionReason;
     }
 
+    /**
+     * @param $checkpointActionReason
+     * @return void
+     */
     public function setCheckpointActionReason($checkpointActionReason)
     {
         $this->checkpointActionReason = $checkpointActionReason;
     }
 
+    /**
+     * @return string
+     */
     public function getCheckpointActionPolicy()
     {
         return $this->checkpointActionPolicy;
     }
 
+    /**
+     * @param $checkpointActionPolicy
+     * @return void
+     */
     public function setCheckpointActionPolicy($checkpointActionPolicy)
     {
         $this->checkpointActionPolicy = $checkpointActionPolicy;
     }
 
+    /**
+     * @return \Signifyd\Models\Policies
+     */
     public function getPolicies()
     {
         return $this->policies;
     }
 
+    /**
+     * @param $policies
+     * @return void
+     */
     public function setPolicies($policies)
     {
         $this->policies = $policies;
     }
 
+    /**
+     * @return float
+     */
     public function getScore()
     {
         return $this->score;
     }
 
+    /**
+     * @param $score
+     * @return void
+     */
     public function setScore($score)
     {
         $this->score = $score;

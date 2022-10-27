@@ -131,56 +131,95 @@ class Subscription extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getSubscriptionId()
     {
         return $this->subscriptionId;
     }
 
+    /**
+     * @param $subscriptionId
+     * @return void
+     */
     public function setSubscriptionId($subscriptionId)
     {
         $this->subscriptionId = $subscriptionId;
     }
 
+    /**
+     * @return string
+     */
     public function getNextDeliveryDate()
     {
         return $this->nextDeliveryDate;
     }
 
+    /**
+     * @param $nextDeliveryDate
+     * @return void
+     */
     public function setNextDeliveryDate($nextDeliveryDate)
     {
         $this->nextDeliveryDate = $nextDeliveryDate;
     }
 
+    /**
+     * @param $periodUnit
+     * @return void
+     */
     public function addPeriodUnit($periodUnit)
     {
         $this->periodUnit[] = $periodUnit;
     }
 
+    /**
+     * @return float
+     */
     public function getTotalPeriods()
     {
         return $this->totalPeriods;
     }
 
+    /**
+     * @param $totalPeriods
+     * @return void
+     */
     public function setTotalPeriods($totalPeriods)
     {
         $this->totalPeriods = $totalPeriods;
     }
 
+    /**
+     * @return float
+     */
     public function getRegularItemPrice()
     {
         return $this->regularItemPrice;
     }
 
+    /**
+     * @param $regularItemPrice
+     * @return void
+     */
     public function setRegularItemPrice($regularItemPrice)
     {
         $this->regularItemPrice = $regularItemPrice;
     }
 
+    /**
+     * @return float
+     */
     public function getCurrentPeriod()
     {
         return $this->currentPeriod;
     }
 
+    /**
+     * @param $currentPeriod
+     * @return void
+     */
     public function setCurrentPeriod($currentPeriod)
     {
         $this->currentPeriod = $currentPeriod;

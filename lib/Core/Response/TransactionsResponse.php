@@ -24,6 +24,10 @@ class TransactionsResponse extends Response
      */
     public $transactions;
 
+    /**
+     * @param $logger
+     * @throws LoggerException
+     */
     public function __construct($logger)
     {
         if (!is_object($logger) || get_class($logger) !== 'Signifyd\Core\Logging') {
@@ -33,6 +37,10 @@ class TransactionsResponse extends Response
         $this->logger = $logger;
     }
 
+    /**
+     * @param $response
+     * @return bool
+     */
     public function setObject($response)
     {
         $responseArr = json_decode($response, true);

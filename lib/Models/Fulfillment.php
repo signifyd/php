@@ -201,106 +201,180 @@ class Fulfillment extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getShipmentId()
     {
         return $this->shipmentId;
     }
 
+    /**
+     * @param $shipmentId
+     * @return void
+     */
     public function setShipmentId($shipmentId)
     {
         $this->shipmentId = $shipmentId;
     }
 
+    /**
+     * @return string
+     */
     public function getShippedAt()
     {
         return $this->shippedAt;
     }
 
+    /**
+     * @param $shippedAt
+     * @return void
+     */
     public function setShippedAt($shippedAt)
     {
         $this->shippedAt = $shippedAt;
     }
 
+    /**
+     * @return array
+     */
     public function getProducts()
     {
         return $this->products;
     }
 
+    /**
+     * @param $products
+     * @return void
+     */
     public function setProducts($products)
     {
         $this->products = $products;
     }
 
+    /**
+     * @param $product
+     * @return void
+     */
     public function addProduct($product)
     {
         $this->products[] = $product;
     }
 
+    /**
+     * @return string
+     */
     public function getShipmentStatus()
     {
         return $this->shipmentStatus;
     }
 
+    /**
+     * @param $shipmentStatus
+     * @return void
+     */
     public function setShipmentStatus($shipmentStatus)
     {
         $this->shipmentStatus = $shipmentStatus;
     }
 
+    /**
+     * @return array
+     */
     public function getTrackingUrls()
     {
         return $this->trackingUrls;
     }
 
+    /**
+     * @param $trackingUrls
+     * @return void
+     */
     public function setTrackingUrls($trackingUrls)
     {
         $this->trackingUrls = $trackingUrls;
     }
 
+    /**
+     * @return array
+     */
     public function getTrackingNumbers()
     {
         return $this->trackingNumbers;
     }
 
+    /**
+     * @param $trackingNumbers
+     * @return void
+     */
     public function setTrackingNumbers($trackingNumbers)
     {
         $this->trackingNumbers = $trackingNumbers;
     }
 
+    /**
+     * @return Destination
+     */
     public function getDestination()
     {
         return $this->destination;
     }
 
+    /**
+     * @param $destination
+     * @return void
+     */
     public function setDestination($destination)
     {
         $this->destination = $destination;
     }
 
+    /**
+     * @return Origin
+     */
     public function getOrigin()
     {
         return $this->origin;
     }
 
+    /**
+     * @param $origin
+     * @return void
+     */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
     }
 
+    /**
+     * @return string
+     */
     public function getCarrier()
     {
         return $this->carrier;
     }
 
+    /**
+     * @param $carrier
+     * @return void
+     */
     public function setCarrier($carrier)
     {
         $this->carrier = $carrier;
     }
 
+    /**
+     * @return string
+     */
     public function getFulfillmentMethod()
     {
         return $this->fulfillmentMethod;
     }
 
+    /**
+     * @param $fulfillmentMethod
+     * @return void
+     */
     public function setFulfillmentMethod($fulfillmentMethod)
     {
         $this->fulfillmentMethod = $fulfillmentMethod;

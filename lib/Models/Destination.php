@@ -152,61 +152,103 @@ class Destination extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getFullName()
     {
         return $this->fullName;
     }
 
+    /**
+     * @param $fullName
+     * @return void
+     */
     public function setFullName($fullName)
     {
         $this->fullName = $fullName;
     }
 
+    /**
+     * @return string
+     */
     public function getOrganization()
     {
         return $this->organization;
     }
 
+    /**
+     * @param $organization
+     * @return void
+     */
     public function setOrganization($organization)
     {
         $this->organization = $organization;
     }
 
+    /**
+     * @return Address
+     */
     public function getAddress()
     {
         return $this->address;
     }
 
+    /**
+     * @param $address
+     * @return void
+     */
     public function setAddress($address)
     {
         $this->address = $address;
     }
 
+    /**
+     * @return string
+     */
     public function getConfirmationPhone()
     {
         return $this->confirmationPhone;
     }
 
+    /**
+     * @param $confirmationPhone
+     * @return void
+     */
     public function setConfirmationPhone($confirmationPhone)
     {
         $this->confirmationPhone = $confirmationPhone;
     }
 
+    /**
+     * @return Driver
+     */
     public function getDriver()
     {
         return $this->driver;
     }
 
+    /**
+     * @param $driver
+     * @return void
+     */
     public function setDriver($driver)
     {
         $this->driver = $driver;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * @param $email
+     * @return void
+     */
     public function setEmail($email)
     {
         $this->email = $email;

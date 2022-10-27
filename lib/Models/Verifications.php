@@ -93,21 +93,35 @@ class Verifications extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getCvvResponseCode()
     {
         return $this->cvvResponseCode;
     }
 
+    /**
+     * @param $cvvResponseCode
+     * @return void
+     */
     public function setCvvResponseCode($cvvResponseCode)
     {
         $this->cvvResponseCode = $cvvResponseCode;
     }
 
+    /**
+     * @return string
+     */
     public function getAvsResponseCode()
     {
         return $this->avsResponseCode;
     }
 
+    /**
+     * @param $avsResponseCode
+     * @return void
+     */
     public function setAvsResponseCode($avsResponseCode)
     {
         $this->avsResponseCode = $avsResponseCode;

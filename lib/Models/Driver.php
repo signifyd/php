@@ -158,81 +158,137 @@ class Driver extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return float
+     */
     public function getRating()
     {
         return $this->rating;
     }
 
+    /**
+     * @param $rating
+     * @return void
+     */
     public function setRating($rating)
     {
         $this->rating = $rating;
     }
 
+    /**
+     * @return string
+     */
     public function getFullName()
     {
         return $this->fullName;
     }
 
+    /**
+     * @param $fullName
+     * @return void
+     */
     public function setFullName($fullName)
     {
         $this->fullName = $fullName;
     }
 
+    /**
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param $id
+     * @return void
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
 
+    /**
+     * @return string
+     */
     public function getVehicleType()
     {
         return $this->vehicleType;
     }
 
+    /**
+     * @param $vehicleType
+     * @return void
+     */
     public function setVehicleType($vehicleType)
     {
         $this->vehicleType = $vehicleType;
     }
 
+    /**
+     * @return string
+     */
     public function getVehicleColor()
     {
         return $this->vehicleColor;
     }
 
+    /**
+     * @param $vehicleColor
+     * @return void
+     */
     public function setVehicleColor($vehicleColor)
     {
         $this->vehicleColor = $vehicleColor;
     }
 
+    /**
+     * @return string
+     */
     public function getVehicleLicensePlateNumber()
     {
         return $this->vehicleLicensePlateNumber;
     }
 
+    /**
+     * @param $vehicleLicensePlateNumber
+     * @return void
+     */
     public function setVehicleLicensePlateNumber($vehicleLicensePlateNumber)
     {
         $this->vehicleLicensePlateNumber = $vehicleLicensePlateNumber;
     }
 
+    /**
+     * @return Device
+     */
     public function getDevice()
     {
         return $this->device;
     }
 
+    /**
+     * @param $device
+     * @return void
+     */
     public function setDevice($device)
     {
         $this->device = $device;
     }
 
+    /**
+     * @return string
+     */
     public function getExpectedDeliveryTime()
     {
         return $this->expectedDeliveryTime;
     }
 
+    /**
+     * @param $expectedDeliveryTime
+     * @return void
+     */
     public function setExpectedDeliveryTime($expectedDeliveryTime)
     {
         $this->expectedDeliveryTime = $expectedDeliveryTime;

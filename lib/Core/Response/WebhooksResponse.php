@@ -36,20 +36,6 @@ class WebhooksResponse extends Response
     public $id;
 
     /**
-     * The webhook event type
-     *
-     * @var string
-     */
-    public $eventType;
-
-    /**
-     * The webhook event disply text
-     *
-     * @var string
-     */
-    public $eventDisplayText;
-
-    /**
      * The webhook url
      *
      * @var string
@@ -57,11 +43,23 @@ class WebhooksResponse extends Response
     public $url;
 
     /**
-     * The team
-     *
-     * @var array
+     * @var string
      */
-    public $team = [];
+    public $topic;
+
+    /**
+     * Timestamp at which the webhook was created.
+     *
+     * @var string
+     */
+    public $createdAt;
+
+    /**
+     * Timestamp at which the webhook was updated.
+     *
+     * @var string
+     */
+    public $updatedAt;
 
     /**
      * If the response was in error
@@ -157,50 +155,6 @@ class WebhooksResponse extends Response
     }
 
     /**
-     * Get the event type
-     *
-     * @return mixed
-     */
-    public function getEventType()
-    {
-        return $this->eventType;
-    }
-
-    /**
-     * Set the event type
-     *
-     * @param mixed $eventType The event type
-     *
-     * @return void
-     */
-    public function setEventType($eventType)
-    {
-        $this->eventType = $eventType;
-    }
-
-    /**
-     * Get the event display text
-     *
-     * @return mixed
-     */
-    public function getEventDisplayText()
-    {
-        return $this->eventDisplayText;
-    }
-
-    /**
-     * Set the event display text
-     *
-     * @param mixed $eventDisplayText The event text
-     *
-     * @return void
-     */
-    public function setEventDisplayText($eventDisplayText)
-    {
-        $this->eventDisplayText = $eventDisplayText;
-    }
-
-    /**
      * Get the webhook url
      *
      * @return mixed
@@ -223,24 +177,53 @@ class WebhooksResponse extends Response
     }
 
     /**
-     * Get the Team
-     *
-     * @return mixed
+     * @return string
      */
-    public function getTeam()
+    public function getTopic()
     {
-        return $this->team;
+        return $this->topic;
     }
 
     /**
-     * Set the Team
-     *
-     * @param mixed $team The team
-     *
+     * @param $topic
      * @return void
      */
-    public function setTeam($team)
+    public function setTopic($topic)
     {
-        $this->team = $team;
+        $this->topic = $topic;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param $createdAt
+     * @return void
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param $updatedAt
+     * @return void
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

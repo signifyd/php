@@ -314,11 +314,18 @@ class Purchase extends Model
         $this->currency = $currency;
     }
 
+    /**
+     * @return string
+     */
     public function getConfirmationEmail()
     {
         return $this->confirmationEmail;
     }
 
+    /**
+     * @param $confirmationEmail
+     * @return void
+     */
     public function setConfirmationEmail($confirmationEmail)
     {
         $this->confirmationEmail = $confirmationEmail;
@@ -348,21 +355,35 @@ class Purchase extends Model
         $this->shipments[] = $shipment;
     }
 
+    /**
+     * @return string
+     */
     public function getConfirmationPhone()
     {
         return $this->confirmationPhone;
     }
 
+    /**
+     * @param $confirmationPhone
+     * @return void
+     */
     public function setConfirmationPhone($confirmationPhone)
     {
         $this->confirmationPhone = $confirmationPhone;
     }
 
+    /**
+     * @return float
+     */
     public function getTotalShippingCost()
     {
         return $this->totalShippingCost;
     }
 
+    /**
+     * @param $totalShippingCost
+     * @return void
+     */
     public function setTotalShippingCost($totalShippingCost)
     {
         $this->totalShippingCost = $totalShippingCost;
@@ -380,11 +401,18 @@ class Purchase extends Model
         $this->discountCodes[] = $discountCode;
     }
 
+    /**
+     * @return string
+     */
     public function getReceivedBy()
     {
         return $this->receivedBy;
     }
 
+    /**
+     * @param $receivedBy
+     * @return void
+     */
     public function setReceivedBy($receivedBy)
     {
         $this->receivedBy = $receivedBy;

@@ -71,11 +71,18 @@ class ExclusionDetails extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getExclusion()
     {
         return $this->exclusion;
     }
 
+    /**
+     * @param $exclusion
+     * @return void
+     */
     public function setExclusion($exclusion)
     {
         $this->exclusion = $exclusion;

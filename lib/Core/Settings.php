@@ -132,7 +132,8 @@ class Settings
      */
     public function getApiAddress($endpoint = null)
     {
-        if (strpos($endpoint, 'orders') !== false) {
+        if (strpos($endpoint, 'orders') !== false ||
+            strpos($endpoint, 'webhooks') !== false) {
             return $this->apiAddress . 'v3/';
         }
 
@@ -261,21 +262,35 @@ class Settings
         $this->logEnabled = $logEnabled;
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getLogFileName()
     {
         return $this->logFileName;
     }
 
+    /**
+     * @param $logFileName
+     * @return void
+     */
     public function setLogFileName($logFileName)
     {
         $this->logFileName = $logFileName;
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getLogLocation()
     {
         return $this->logLocation;
     }
 
+    /**
+     * @param $logLocation
+     * @return void
+     */
     public function setLogLocation($logLocation)
     {
         $this->logLocation = $logLocation;

@@ -384,31 +384,52 @@ class UserAccount extends Model
         $this->lastUpdateDate = $lastUpdateDate;
     }
 
+    /**
+     * @return string
+     */
     public function getEmailLastUpdateDate()
     {
         return $this->emailLastUpdateDate;
     }
 
+    /**
+     * @param $emailLastUpdateDate
+     * @return void
+     */
     public function setEmailLastUpdateDate($emailLastUpdateDate)
     {
         $this->emailLastUpdateDate = $emailLastUpdateDate;
     }
 
+    /**
+     * @return string
+     */
     public function getPhoneLastUpdateDate()
     {
         return $this->phoneLastUpdateDate;
     }
 
+    /**
+     * @param $phoneLastUpdateDate
+     * @return void
+     */
     public function setPhoneLastUpdateDate($phoneLastUpdateDate)
     {
         $this->phoneLastUpdateDate = $phoneLastUpdateDate;
     }
 
+    /**
+     * @return string
+     */
     public function getPasswordLastUpdateDate()
     {
         return $this->passwordLastUpdateDate;
     }
 
+    /**
+     * @param $passwordLastUpdateDate
+     * @return void
+     */
     public function setPasswordLastUpdateDate($passwordLastUpdateDate)
     {
         $this->passwordLastUpdateDate = $passwordLastUpdateDate;

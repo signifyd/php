@@ -115,36 +115,61 @@ class CheckoutTransaction extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getCheckoutId()
     {
         return $this->checkoutId;
     }
 
+    /**
+     * @param $checkoutId
+     * @return void
+     */
     public function setCheckoutId($checkoutId)
     {
         $this->checkoutId = $checkoutId;
     }
 
+    /**
+     * @return string
+     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
+    /**
+     * @return array
+     */
     public function getTransactions()
     {
         return $this->transactions;
     }
 
+    /**
+     * @param $transactions
+     * @return void
+     */
     public function setTransactions($transactions)
     {
         $this->transactions = $transactions;
     }
 
+    /**
+     * @param $transaction
+     * @return void
+     */
     public function addTransaction($transaction)
     {
         $this->transactions[] = $transaction;

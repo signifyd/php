@@ -174,111 +174,188 @@ class ThreeDsResult extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getEci()
     {
         return $this->eci;
     }
 
+    /**
+     * @param $eci
+     * @return void
+     */
     public function setEci($eci)
     {
         $this->eci = $eci;
     }
 
+    /**
+     * @return string
+     */
     public function getCavv()
     {
         return $this->cavv;
     }
 
+    /**
+     * @param $cavv
+     * @return void
+     */
     public function setCavv($cavv)
     {
         $this->cavv = $cavv;
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * @param $version
+     * @return void
+     */
     public function setVersion($version)
     {
         $this->version = $version;
     }
 
+    /**
+     * @return string
+     */
     public function getTransStatus()
     {
         return $this->transStatus;
     }
 
+    /**
+     * @param $transStatus
+     * @return void
+     */
     public function setTransStatus($transStatus)
     {
         $this->transStatus = $transStatus;
     }
 
+    /**
+     * @return string
+     */
     public function getTransStatusReason()
     {
         return $this->transStatusReason;
     }
 
+    /**
+     * @param $transStatusReason
+     * @return void
+     */
     public function setTransStatusReason($transStatusReason)
     {
         $this->transStatusReason = $transStatusReason;
     }
 
+    /**
+     * @return string
+     */
     public function getAcsOperatorId()
     {
         return $this->acsOperatorId;
     }
 
+    /**
+     * @param $acsOperatorId
+     * @return void
+     */
     public function setAcsOperatorId($acsOperatorId)
     {
         $this->acsOperatorId = $acsOperatorId;
     }
 
+    /**
+     * @return string
+     */
     public function getDsTransId()
     {
         return $this->dsTransId;
     }
 
+    /**
+     * @param $dsTransId
+     * @return void
+     */
     public function setDsTransId($dsTransId)
     {
         $this->dsTransId = $dsTransId;
     }
 
+    /**
+     * @return string
+     */
     public function getThreeDsServerTransId()
     {
         return $this->threeDsServerTransId;
     }
 
+    /**
+     * @param $threeDsServerTransId
+     * @return void
+     */
     public function setThreeDsServerTransId($threeDsServerTransId)
     {
         $this->threeDsServerTransId = $threeDsServerTransId;
     }
 
+    /**
+     * @return string
+     */
     public function getCavvAlgorithm()
     {
         return $this->cavvAlgorithm;
     }
 
+    /**
+     * @param $cavvAlgorithm
+     * @return void
+     */
     public function setCavvAlgorithm($cavvAlgorithm)
     {
         $this->cavvAlgorithm = $cavvAlgorithm;
     }
 
+    /**
+     * @return string
+     */
     public function getExemptionIndicator()
     {
         return $this->exemptionIndicator;
     }
 
+    /**
+     * @param $exemptionIndicator
+     * @return void
+     */
     public function setExemptionIndicator($exemptionIndicator)
     {
         $this->exemptionIndicator = $exemptionIndicator;
     }
 
+    /**
+     * @return string
+     */
     public function getTimestamp()
     {
         return $this->timestamp;
     }
 
+    /**
+     * @param $timestamp
+     * @return void
+     */
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;

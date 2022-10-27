@@ -80,21 +80,35 @@ class ExemptionDetails extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getExemption()
     {
         return $this->exemption;
     }
 
+    /**
+     * @param $exemption
+     * @return void
+     */
     public function setExemption($exemption)
     {
         $this->exemption = $exemption;
     }
 
+    /**
+     * @return string
+     */
     public function getPlacement()
     {
         return $this->placement;
     }
 
+    /**
+     * @param $placement
+     * @return void
+     */
     public function setPlacement($placement)
     {
         $this->placement = $placement;

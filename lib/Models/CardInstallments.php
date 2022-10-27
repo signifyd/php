@@ -109,41 +109,69 @@ class CardInstallments extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getInterval()
     {
         return $this->interval;
     }
 
+    /**
+     * @param $interval
+     * @return void
+     */
     public function setInterval($interval)
     {
         $this->interval = $interval;
     }
 
+    /**
+     * @return int
+     */
     public function getCount()
     {
         return $this->count;
     }
 
+    /**
+     * @param $count
+     * @return void
+     */
     public function setCount($count)
     {
         $this->count = $count;
     }
 
+    /**
+     * @return float
+     */
     public function getTotalValue()
     {
         return $this->totalValue;
     }
 
+    /**
+     * @param $totalValue
+     * @return void
+     */
     public function setTotalValue($totalValue)
     {
         $this->totalValue = $totalValue;
     }
 
+    /**
+     * @return float
+     */
     public function getInstallmentValue()
     {
         return $this->installmentValue;
     }
 
+    /**
+     * @param $installmentValue
+     * @return void
+     */
     public function setInstallmentValue($installmentValue)
     {
         $this->installmentValue = $installmentValue;

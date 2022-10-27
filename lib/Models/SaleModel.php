@@ -213,156 +213,220 @@ class SaleModel extends Model
     public function validate()
     {
         $valid = [];
-//        foreach ($this->fields as $field) {
-//            $obj = $this->{'get' . ucfirst($field)}();
-//            if (null === $obj) {
-//                continue;
-//            }
-//
-//            if ($field == 'customerSubmitForGuaranteeIndicator') {
-//                $dataValid = is_bool($obj) ? true : false;
-//                $valid[] = $dataValid;
-//                continue;
-//            }
-//
-//            if (is_array($obj)) {
-//                foreach ($obj as $data) {
-//                    $dataValid = $data->validate();
-//                    if (true !== $dataValid) {
-//                        $valid[] = $dataValid;
-//                    }
-//                }
-//            } else {
-//                $objValid = $obj->validate();
-//                if (true !== $objValid) {
-//                    $valid[] = $objValid;
-//                }
-//            }
-//        }
 
         return (!isset($valid[0]))? true : $valid;
     }
 
+    /**
+     * @param $orderId
+     * @return void
+     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
+    /**
+     * @return string
+     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
+    /**
+     * @param $purchase
+     * @return void
+     */
     public function setPurchase($purchase)
     {
         $this->purchase = $purchase;
     }
 
+    /**
+     * @return Purchase
+     */
     public function getPurchase()
     {
         return $this->purchase;
     }
 
+    /**
+     * @param $userAccount
+     * @return void
+     */
     public function setUserAccount($userAccount)
     {
         $this->userAccount = $userAccount;
     }
 
+    /**
+     * @return UserAccount
+     */
     public function getUserAccount()
     {
         return $this->userAccount;
     }
 
+    /**
+     * @param $membership
+     * @return void
+     */
     public function addMembership($membership)
     {
         $this->memberships[] = $membership;
     }
 
+    /**
+     * @param $coverageRequest
+     * @return void
+     */
     public function addCoverageRequest($coverageRequest)
     {
         $this->coverageRequests[] = $coverageRequest;
     }
 
+    /**
+     * @param $coverageRequests
+     * @return void
+     */
     public function setCoverageRequests($coverageRequests)
     {
         $this->coverageRequests = $coverageRequests;
     }
 
+    /**
+     * @return array
+     */
     public function getCoverageRequests()
     {
         return $this->coverageRequests;
     }
 
+    /**
+     * @param $merchantCategoryCode
+     * @return void
+     */
     public function setMerchantCategoryCode($merchantCategoryCode)
     {
         $this->merchantCategoryCode = $merchantCategoryCode;
     }
 
+    /**
+     * @return string
+     */
     public function getMerchantCategoryCode()
     {
         return $this->merchantCategoryCode;
     }
 
+    /**
+     * @param $device
+     * @return void
+     */
     public function setDevice($device)
     {
         $this->device = $device;
     }
 
+    /**
+     * @return Device
+     */
     public function getDevice()
     {
         return $this->device;
     }
 
+    /**
+     * @param $merchantPlatform
+     * @return void
+     */
     public function setMerchantPlatform($merchantPlatform)
     {
         $this->merchantPlatform = $merchantPlatform;
     }
 
+    /**
+     * @return MerchantPlatform
+     */
     public function getMerchantPlatform()
     {
         return $this->merchantPlatform;
     }
 
+    /**
+     * @param $signifydClient
+     * @return void
+     */
     public function setSignifydClient($signifydClient)
     {
         $this->signifydClient = $signifydClient;
     }
 
+    /**
+     * @return SignifydClient
+     */
     public function getSignifydClient()
     {
         return $this->signifydClient;
     }
 
+    /**
+     * @param $transaction
+     * @return void
+     */
     public function addTransaction($transaction)
     {
         $this->transactions[] = $transaction;
     }
 
+    /**
+     * @param $seller
+     * @return void
+     */
     public function addSeller($seller)
     {
         $this->sellers[] = $seller;
     }
 
+    /**
+     * @param $tag
+     * @return void
+     */
     public function addTag($tag)
     {
         $this->tags[] = $tag;
     }
 
+    /**
+     * @param $tags
+     * @return void
+     */
     public function setTags($tags)
     {
         $this->tags = $tags;
     }
 
+    /**
+     * @return array
+     */
     public function getTags()
     {
         return $this->tags;
     }
 
+    /**
+     * @param $customerOrderRecommendation
+     * @return void
+     */
     public function setCustomerOrderRecommendation($customerOrderRecommendation)
     {
         $this->customerOrderRecommendation = $customerOrderRecommendation;
     }
 
+    /**
+     * @return string
+     */
     public function getCustomerOrderRecommendation()
     {
         return $this->customerOrderRecommendation;

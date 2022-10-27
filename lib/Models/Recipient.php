@@ -149,11 +149,18 @@ class Recipient extends Model
         $this->fullName = $fullName;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * @param $email
+     * @return void
+     */
     public function setEmail($email)
     {
         $this->email = $email;
@@ -191,6 +198,10 @@ class Recipient extends Model
         return $this->address;
     }
 
+    /**
+     * @param $address
+     * @return void
+     */
     public function setAddress($address)
     {
         $this->address = $address;

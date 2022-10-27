@@ -107,31 +107,52 @@ class Coverage extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return Chargebacks
+     */
     public function getFraudChargebacks()
     {
         return $this->fraudChargebacks;
     }
 
+    /**
+     * @param $fraudChargebacks
+     * @return void
+     */
     public function setFraudChargebacks($fraudChargebacks)
     {
         $this->fraudChargebacks = $fraudChargebacks;
     }
 
+    /**
+     * @return Chargebacks
+     */
     public function getInrChargebacks()
     {
         return $this->inrChargebacks;
     }
 
+    /**
+     * @param $inrChargebacks
+     * @return void
+     */
     public function setInrChargebacks($inrChargebacks)
     {
         $this->inrChargebacks = $inrChargebacks;
     }
 
+    /**
+     * @return Chargebacks
+     */
     public function getAllChargebacks()
     {
         return $this->allChargebacks;
     }
 
+    /**
+     * @param $allChargebacks
+     * @return void
+     */
     public function setAllChargebacks($allChargebacks)
     {
         $this->allChargebacks = $allChargebacks;

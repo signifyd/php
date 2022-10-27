@@ -111,16 +111,27 @@ class Policies extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return Policy
+     */
     public function getDefault()
     {
         return $this->default;
     }
 
+    /**
+     * @param $default
+     * @return void
+     */
     public function setDefault($default)
     {
         $this->default = $default;
     }
 
+    /**
+     * @param $overriding
+     * @return void
+     */
     public function addOverriding($overriding)
     {
         $this->overriding[] = $overriding;

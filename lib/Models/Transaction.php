@@ -473,101 +473,171 @@ class Transaction extends Model
         $this->createdAt = $createdAt;
     }
 
+    /**
+     * @return SourceAccountDetails
+     */
     public function getSourceAccountDetails()
     {
         return $this->sourceAccountDetails;
     }
 
+    /**
+     * @param $sourceAccountDetails
+     * @return void
+     */
     public function setSourceAccountDetails($sourceAccountDetails)
     {
         $this->sourceAccountDetails = $sourceAccountDetails;
     }
 
+    /**
+     * @return AcquirerDetails
+     */
     public function getAcquirerDetails()
     {
         return $this->acquirerDetails;
     }
 
+    /**
+     * @param $acquirerDetails
+     * @return void
+     */
     public function setAcquirerDetails($acquirerDetails)
     {
         $this->acquirerDetails = $acquirerDetails;
     }
 
+    /**
+     * @return string
+     */
     public function getGatewayStatusMessage()
     {
         return $this->gatewayStatusMessage;
     }
 
+    /**
+     * @param $gatewayStatusMessage
+     * @return void
+     */
     public function setGatewayStatusMessage($gatewayStatusMessage)
     {
         $this->gatewayStatusMessage = $gatewayStatusMessage;
     }
 
+    /**
+     * @return string
+     */
     public function getParentTransactionId()
     {
         return $this->parentTransactionId;
     }
 
+    /**
+     * @param $parentTransactionId
+     * @return void
+     */
     public function setParentTransactionId($parentTransactionId)
     {
         $this->parentTransactionId = $parentTransactionId;
     }
 
+    /**
+     * @return string
+     */
     public function getScaExemptionRequested()
     {
         return $this->scaExemptionRequested;
     }
 
+    /**
+     * @param $scaExemptionRequested
+     * @return void
+     */
     public function setScaExemptionRequested($scaExemptionRequested)
     {
         $this->scaExemptionRequested = $scaExemptionRequested;
     }
 
+    /**
+     * @return string
+     */
     public function getPaypalPendingReasonCode()
     {
         return $this->paypalPendingReasonCode;
     }
 
+    /**
+     * @param $paypalPendingReasonCode
+     * @return void
+     */
     public function setPaypalPendingReasonCode($paypalPendingReasonCode)
     {
         $this->paypalPendingReasonCode = $paypalPendingReasonCode;
     }
 
+    /**
+     * @return string
+     */
     public function getPaypalProtectionEligibility()
     {
         return $this->paypalProtectionEligibility;
     }
 
+    /**
+     * @param $paypalProtectionEligibility
+     * @return void
+     */
     public function setPaypalProtectionEligibility($paypalProtectionEligibility)
     {
         $this->paypalProtectionEligibility = $paypalProtectionEligibility;
     }
 
+    /**
+     * @return string
+     */
     public function getPaypalProtectionEligibilityType()
     {
         return $this->paypalProtectionEligibilityType;
     }
 
+    /**
+     * @param $paypalProtectionEligibilityType
+     * @return void
+     */
     public function setPaypalProtectionEligibilityType($paypalProtectionEligibilityType)
     {
         $this->paypalProtectionEligibilityType = $paypalProtectionEligibilityType;
     }
 
+    /**
+     * @return Verifications
+     */
     public function getVerifications()
     {
         return $this->verifications;
     }
 
+    /**
+     * @param $verifications
+     * @return void
+     */
     public function setVerifications($verifications)
     {
         $this->verifications = $verifications;
     }
 
+    /**
+     * @return ThreeDsResult
+     */
     public function getThreeDsResult()
     {
         return $this->threeDsResult;
     }
 
+    /**
+     * @param $threeDsResult
+     * @return void
+     */
     public function setThreeDsResult($threeDsResult)
     {
         $this->threeDsResult = $threeDsResult;

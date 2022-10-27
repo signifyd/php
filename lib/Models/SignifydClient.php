@@ -91,21 +91,35 @@ class SignifydClient extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getApplication()
     {
         return $this->application;
     }
 
+    /**
+     * @param $application
+     * @return void
+     */
     public function setApplication($application)
     {
         $this->application = $application;
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * @param $version
+     * @return void
+     */
     public function setVersion($version)
     {
         $this->version = $version;

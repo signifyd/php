@@ -109,41 +109,69 @@ class Membership extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getMembershipId()
     {
         return $this->membershipId;
     }
 
+    /**
+     * @param $membershipId
+     * @return void
+     */
     public function setMembershipId($membershipId)
     {
         $this->membershipId = $membershipId;
     }
 
+    /**
+     * @return string
+     */
     public function getPhoneNumber()
     {
         return $this->phoneNumber;
     }
 
+    /**
+     * @param $phoneNumber
+     * @return void
+     */
     public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
     }
 
+    /**
+     * @return string
+     */
     public function getEmailAddress()
     {
         return $this->emailAddress;
     }
 
+    /**
+     * @param $emailAddress
+     * @return void
+     */
     public function setEmailAddress($emailAddress)
     {
         $this->emailAddress = $emailAddress;
     }
 
+    /**
+     * @return string
+     */
     public function getMembershipName()
     {
         return $this->membershipName;
     }
 
+    /**
+     * @param $membershipName
+     * @return void
+     */
     public function setMembershipName($membershipName)
     {
         $this->membershipName = $membershipName;

@@ -50,6 +50,9 @@ class Policy extends Model
         'reason' => []
     ];
 
+    /**
+     * @param $data
+     */
     public function __construct($data = [])
     {
         if (!empty($data) && is_array($data)) {
@@ -92,31 +95,52 @@ class Policy extends Model
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function getStatus()
     {
         return $this->status;
     }
 
+    /**
+     * @param $status
+     * @return void
+     */
     public function setStatus($status)
     {
         $this->status = $status;
     }
 
+    /**
+     * @return string
+     */
     public function getAction()
     {
         return $this->action;
     }
 
+    /**
+     * @param $action
+     * @return void
+     */
     public function setAction($action)
     {
         $this->action = $action;
     }
 
+    /**
+     * @return string
+     */
     public function getReason()
     {
         return $this->reason;
     }
 
+    /**
+     * @param $reason
+     * @return void
+     */
     public function setReason($reason)
     {
         $this->reason = $reason;

@@ -103,21 +103,35 @@ class Origin extends Model
         return (!isset($valid[0]))? true : false;
     }
 
+    /**
+     * @return string
+     */
     public function getLocationId()
     {
         return $this->locationId;
     }
 
+    /**
+     * @param $locationId
+     * @return void
+     */
     public function setLocationId($locationId)
     {
         $this->locationId = $locationId;
     }
 
+    /**
+     * @return \Signifyd\Models\Address
+     */
     public function getAddress()
     {
         return $this->address;
     }
 
+    /**
+     * @param $address
+     * @return void
+     */
     public function setAddress($address)
     {
         $this->address = $address;

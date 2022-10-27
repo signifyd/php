@@ -117,7 +117,7 @@ class WebhooksApi
     /**
      * Create a new webhook or webhooks for a team.
      *
-     * @param array|object $webHooks Webhook data
+     * @param array|object $webHook Webhook data
      *
      * @return object WebhooksBulkApi
      *
@@ -125,13 +125,13 @@ class WebhooksApi
      * @throws WebhookModelException
      * @throws LoggerException
      */
-    public function createWebhooks($webHooks)
+    public function createWebhooks($teamId, $webHook)
     {
         $this->logger->info('CreateWebhooks method called');
-        if (is_array($webHooks)) {
-            if (isset($webHooks['event'])) {
-                $webHooks = new Webhook($webHooks);
-                $valid = $webHooks->validate();
+        if (is_array($webHook)) {
+            if (isset($webHook['url'])) {
+                $webHook = new Webhook($webHook);
+                $valid = $webHook->validate();
                 if (false === $valid) {
                     $this->logger->error('Webhook not valid after array init');
                     $webHookResponse = new WebhooksBulkResponse($this->logger);
@@ -141,27 +141,9 @@ class WebhooksApi
                     );
                     return $webHookResponse;
                 }
-            } else {
-                $webhooksArr = [];
-                foreach ($webHooks as $webHook) {
-                    $webHooksObj = new Webhook($webHook);
-                    $valid = $webHooksObj->validate();
-                    if (false === $valid) {
-                        $this->logger->error('Webhook not valid after array init');
-                        $webHookResponse = new WebhooksBulkResponse($this->logger);
-                        $webHookResponse->setIsError(true);
-                        $webHookResponse->setErrorMessage(
-                            'Webhook not valid after array init'
-                        );
-                        return $webHookResponse;
-                    }
-
-                    $webhooksArr[] = $webHooksObj;
-                }
-
             }
-        } elseif ($webHooks instanceof Webhook) {
-            $valid = $webHooks->validate();
+        } elseif ($webHook instanceof Webhook) {
+            $valid = $webHook->validate();
             if (false === $valid) {
                 $this->logger->error('Case not valid after object init');
                 $webHookResponse = new WebhooksBulkResponse($this->logger);
@@ -171,8 +153,6 @@ class WebhooksApi
                 );
                 return $webHookResponse;
             }
-
-            $webHooks = [$webHooks];
         } else {
             $this->logger->error('Invalid parameter for create webhook');
             throw new WebhookModelException(
@@ -181,76 +161,16 @@ class WebhooksApi
         }
 
         $this->logger->info(
-            'Connection call create case api with case: ' . json_encode($webHooks)
+            'Connection call create webhook api with: ' . json_encode($webHook)
         );
 
-        $payload = json_encode(['webhooks' => $webHooks]);
-        $endpoint = 'teams/webhooks';
+        $payload = json_encode($webHook);
+        $endpoint = "teams/{$teamId}/webhooks";
         $response = $this->connection->callApi(
             $endpoint,
             $payload,
             'post',
-            'webhooksBulk'
-        );
-
-        return $response;
-    }
-
-    /**
-     * Update existing webhooks for a team in bulk.
-     *
-     * @param mixed $webHooks Webhooks data
-     *
-     * @return \Signifyd\Core\Response\WebhooksBulkResponse
-     *
-     * @throws InvalidClassException
-     * @throws WebhookModelException
-     * @throws LoggerException
-     */
-    public function updateWebhooks($webHooks)
-    {
-        $this->logger->info('Update wehbooks method called');
-        if (is_array($webHooks)) {
-            $webHook = new Webhook($webHooks);
-            $valid = $webHook->validate();
-            if (false === $valid) {
-                $this->logger->error('Webhook not valid after array init');
-                $webHookResponse = new WebhooksBulkResponse($this->logger);
-                $webHookResponse->setIsError(true);
-                $webHookResponse->setErrorMessage(
-                    'Webhook not valid after array init'
-                );
-                return $webHookResponse;
-            }
-        } elseif ($webHooks instanceof Webhook) {
-            $valid = $webHooks->validate();
-            if (false === $valid) {
-                $this->logger->error('Webhook not valid after object init');
-                $webHookResponse = new WebhooksBulkResponse($this->logger);
-                $webHookResponse->setIsError(true);
-                $webHookResponse->setErrorMessage(
-                    'Webhook not valid after object init'
-                );
-                return $webHookResponse;
-            }
-        } else {
-            $this->logger->error('Invalid parameter for update webhooks');
-            throw new WebhookModelException(
-                'Invalid parameter for webhooks'
-            );
-        }
-
-        $this->logger->info(
-            'Connection call update webhooks api with webhook: ' . $webHook->toJson()
-        );
-
-        $payload = json_encode($webHooks);
-        $endpoint = 'teams/webhooks';
-        $response = $this->connection->callApi(
-            $endpoint,
-            $payload,
-            'put',
-            'webhooksBulk'
+            'webhooks'
         );
 
         return $response;
@@ -263,9 +183,9 @@ class WebhooksApi
      *
      * @throws InvalidClassException
      */
-    public function getWebhooks()
+    public function getWebhooks($teamId)
     {
-        $endpoint = 'teams/webhooks';
+        $endpoint = "teams/{$teamId}/webhooks";
         $response = $this->connection->callApi($endpoint, '', 'get', 'webhooksBulk');
 
         return $response;
@@ -282,7 +202,7 @@ class WebhooksApi
      * @throws WebhookModelException
      * @throws LoggerException
      */
-    public function updateWebhook($webHook)
+    public function updateWebhook($webHook, $teamId, $hookId)
     {
         $this->logger->info('Update webhook method called');
         if (is_array($webHook)) {
@@ -318,11 +238,11 @@ class WebhooksApi
         );
 
         $payload = $webHook->toJson();
-        $endpoint = 'teams/webhooks/' . $webHook->getId();
+        $endpoint = "teams/{$teamId}/webhooks/{$hookId}";
         $response = $this->connection->callApi(
             $endpoint,
             $payload,
-            'put',
+            'post',
             'webhooks'
         );
 
@@ -339,24 +259,13 @@ class WebhooksApi
      * @throws InvalidClassException
      * @throws LoggerException
      */
-    public function deleteWebhook($webHook)
+    public function deleteWebhook($teamId, $hookId)
     {
-        $this->logger->info('Get delete webhook method called');
-        if (false === is_numeric($webHook->getId())) {
-            $this->logger->error(
-                'Invalid webhook id for get case' . $webHook->getId()
-            );
-            $caseResponse = new WebhooksResponse($this->logger);
-            $caseResponse->setIsError(true);
-            $caseResponse->setErrorMessage('Invalid webhook id');
-            return $caseResponse;
-        }
-
         $this->logger->info(
-            'Connection call delete webhook with Id: ' . $webHook->getId()
+            'Connection call delete webhook with Id: ' . $hookId
         );
 
-        $endpoint = 'teams/webhooks/' . $webHook->getId();
+        $endpoint = "teams/{$teamId}/webhooks/{$hookId}";
         $response = $this->connection->callApi(
             $endpoint,
             '',
