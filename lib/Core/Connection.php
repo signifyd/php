@@ -191,9 +191,17 @@ class Connection
             $this->logger->info("Raw request: " . json_encode($info));
             $this->logger->info("Raw response: " . $response);
             $error = curl_error($this->curl);
-            $this->logger->error("Curl error: " . $error);
+
+            if (empty($error) === false) {
+                $this->logger->error("Curl error: " . $error);
+            }
+
             $curlErrorNo = curl_error($this->curl);
-            $this->logger->error("Curl errorNo: " . $curlErrorNo);
+
+            if (empty($curlErrorNo) === false) {
+                $this->logger->error("Curl errorNo: " . $curlErrorNo);
+            }
+
             curl_close($this->curl);
 
             if ($info['http_code'] == 409 || $info['http_code'] > 500) {
