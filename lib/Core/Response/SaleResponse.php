@@ -17,6 +17,7 @@ use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Response;
 use Signifyd\Models\Decision;
 use Signifyd\Models\Coverage;
+use Signifyd\Core\Logging;
 
 class SaleResponse extends Response
 {
@@ -60,6 +61,11 @@ class SaleResponse extends Response
     public $errors;
 
     /**
+     * @var Logging
+     */
+    public $logger;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -88,16 +94,10 @@ class SaleResponse extends Response
     ];
 
     /**
-     * UserAccount constructor.
-     *
-     * @param array $data The user account data
+     * @param Logging $logger
      */
-    public function __construct($logger)
+    public function __construct(Logging $logger)
     {
-        if (!is_object($logger) || get_class($logger) !== 'Signifyd\Core\Logging') {
-            throw new LoggerException('Invalid logger parameter');
-        }
-
         $this->logger = $logger;
     }
 
