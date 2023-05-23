@@ -1,7 +1,11 @@
-Signifyd PHP SDK
-================
+## :warning: WARNING :warning:
+> **V2 SDK is deprecated**
+Please refer to our [V3 API documentation](https://docs.signifyd.com) and download the OpenAPI specification linked at the top of the page to generate PHP and other SDKs for the latest version of Signifyd's Antifraud APIs.
 
-This repository contains the PHP SDK client for the [Signifyd APIs](https://www.developer.signifyd.com/api/)
+Signifyd V2 PHP SDK
+===================
+
+This repository contains the PHP SDK client for the **deprecated** [Signifyd V2 API](https://developer.signifyd.com/api-v2/).
 
 Overview
 --------
