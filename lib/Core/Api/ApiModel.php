@@ -92,9 +92,26 @@ class ApiModel
      * @throws InvalidClassException
      * @throws \Signifyd\Core\Exceptions\LoggerException
      */
-    public function getCase($signifydId)
+    public function getCase($orderId)
     {
-        //TODO: implements getCase for v3
+        $this->logger->info('SaleApi: Get case method called');
+        if (false === is_numeric($orderId)) {
+            $this->logger->error('SaleApi: Invalid case id for get case' . $orderId);
+        }
+
+        $this->logger->info(
+            'SaleApi: Connection call get case api with order id: ' . $orderId
+        );
+
+        $endpoint = 'orders/' . $orderId . '/decision';
+        $response = $this->connection->callApi(
+            $endpoint,
+            '',
+            'get',
+            'sale'
+        );
+
+        return $response;
     }
 
     /**
