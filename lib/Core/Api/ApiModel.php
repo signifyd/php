@@ -210,4 +210,29 @@ class ApiModel
 
         return $response;
     }
+
+    /**
+     * Record a return, exchanges, and/or refund for the order.
+     *
+     * @param $returnData
+     * @return bool|mixed|object|\Signifyd\Core\Response
+     * @throws InvalidClassException
+     */
+    public function recordReturn($returnData)
+    {
+        $return = new \Signifyd\Models\RecordReturn($returnData);
+
+        $this->logger->info(
+            'Connection call record a return with: ' . $return->toJson()
+        );
+
+        $response = $this->connection->callApi(
+            'orders/events/returns/records',
+            $return->toJson(),
+            'post',
+            'return'
+        );
+
+        return $response;
+    }
 }
