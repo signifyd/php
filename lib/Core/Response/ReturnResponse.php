@@ -25,4 +25,21 @@ class ReturnResponse extends SaleResponse
         'traceId',
         'returnId',
     ];
+
+    /**
+     * @return string
+     */
+    public function getReturnId()
+    {
+        return $this->returnId;
+    }
+
+    /**
+     * @param $returnId
+     * @return void
+     */
+    public function setReturnId($returnId)
+    {
+        $this->returnId = $returnId;
+    }
 }

@@ -13,7 +13,6 @@
  */
 namespace Signifyd\Core\Response;
 
-use Signifyd\Core\Exceptions\LoggerException;
 use Signifyd\Core\Response;
 use Signifyd\Models\Decision;
 use Signifyd\Models\Coverage;
