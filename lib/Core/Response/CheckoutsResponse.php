@@ -76,6 +76,8 @@ class CheckoutsResponse extends Response
 
     public $errors;
 
+    public $logger;
+
     /**
      * The class attributes
      *
