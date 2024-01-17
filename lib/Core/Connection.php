@@ -198,7 +198,7 @@ class Connection
 
             $curlErrorNo = curl_errno($this->curl);
 
-            if (empty($curlErrorNo) === false) {
+            if ($curlErrorNo !== CURLE_OK) {
                 $this->logger->error("Curl errorNo: " . $curlErrorNo);
             }
 
