@@ -6,7 +6,7 @@ use Signifyd\Models\Payment\Response\DefaultResponse;
 
 class Authorizenet extends AbstractGateway
 {
-    protected $response = '';
+    protected $response = [];
 
     /**
      * @var string[]
@@ -22,7 +22,7 @@ class Authorizenet extends AbstractGateway
      */
     public function fetchData($transactionId, $orderId)
     {
-        if (empty($this->response)) {
+        if (isset($this->response[$orderId]) === false) {
             $request = [
                 "getTransactionDetailsRequest" => [
                     "merchantAuthentication" => [
@@ -52,7 +52,7 @@ class Authorizenet extends AbstractGateway
             $response = curl_exec($curl);
 
             $info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true);
-            $this->response = new \Signifyd\Models\Payment\Response\Authorizenet();
+            $this->response[$orderId] = new \Signifyd\Models\Payment\Response\Authorizenet();
 
             if (isset($info['transaction']) &&
                 isset($info['transaction']['billTo']) &&
@@ -60,7 +60,7 @@ class Authorizenet extends AbstractGateway
                 isset($info['transaction']['billTo']['lastName'])
             ) {
                 $holderName = $info['transaction']['billTo']['firstName'] . " " . $info['transaction']['billTo']['lastName'];
-                $this->response->setCardholder($holderName);
+                $this->response[$orderId]->setCardholder($holderName);
             }
 
             if (isset($info['transaction']) &&
@@ -69,24 +69,24 @@ class Authorizenet extends AbstractGateway
                 isset($info['transaction']['payment']['creditCard']['cardNumber'])
             ) {
                 $last4 = substr($info['transaction']['payment']['creditCard']['cardNumber'], -4);
-                $this->response->setLast4($last4);
+                $this->response[$orderId]->setLast4($last4);
             }
 
             if (isset($info['transaction']) &&
                 isset($info['transaction']['AVSResponse'])
             ) {
                 $avs = $info['transaction']['AVSResponse'];
-                $this->response->setAvs($avs);
+                $this->response[$orderId]->setAvs($avs);
             }
 
             if (isset($info['transaction']) &&
                 isset($info['transaction']['cardCodeResponse'])
             ) {
                 $cvv = $info['transaction']['cardCodeResponse'];
-                $this->response->setCvv($cvv);
+                $this->response[$orderId]->setCvv($cvv);
             }
         }
 
-        return $this->response;
+        return $this->response[$orderId];
     }
 }

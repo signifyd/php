@@ -6,7 +6,7 @@ use Signifyd\Models\Payment\Response\BraintreeResponse;
 
 class Braintree extends \Signifyd\Models\Payment\AbstractGateway
 {
-    protected $response = '';
+    protected $response = [];
 
     /**
      * @var string[]
@@ -23,7 +23,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
      */
     public function fetchData($transactionId, $orderId)
     {
-        if (empty($this->response)) {
+        if (isset($this->response[$orderId]) === false) {
             $requestArr = [
                 'query' => 'query Search($input: PaymentSearchInput!) {
                     search {
@@ -93,7 +93,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
             curl_close($ch);
 
             $info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $serverOutput), true);
-            $this->response = new BraintreeResponse();
+            $this->response[$orderId] = new BraintreeResponse();
 
             if (isset($info['data']) &&
                 isset($info['data']['search']) &&
@@ -105,7 +105,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
                 isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['last4'])
             ) {
                 $last4 = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['last4'];
-                $this->response->setLast4($last4);
+                $this->response[$orderId]->setLast4($last4);
             }
 
             if (isset($info['data']) &&
@@ -119,7 +119,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
 
             ) {
                 $bin = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['bin'];
-                $this->response->setBin($bin);
+                $this->response[$orderId]->setBin($bin);
             }
 
             if (isset($info['data']) &&
@@ -133,7 +133,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
 
             ) {
                 $expirationMonth = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationMonth'];
-                $this->response->setExpiryMonth($expirationMonth);
+                $this->response[$orderId]->setExpiryMonth($expirationMonth);
             }
 
             if (isset($info['data']) &&
@@ -147,7 +147,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
 
             ) {
                 $expirationYear = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['expirationYear'];
-                $this->response->setExpiryYear($expirationYear);
+                $this->response[$orderId]->setExpiryYear($expirationYear);
             }
 
             if (isset($info['data']) &&
@@ -160,7 +160,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
                 isset($info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['cardholderName'])
             ) {
                 $cardholderName = $info['data']['search']['payments']['edges'][0]['node']['paymentMethodSnapshot']['cardholderName'];
-                $this->response->setCardholder($cardholderName);
+                $this->response[$orderId]->setCardholder($cardholderName);
             }
 
             if (isset($info['data']) &&
@@ -175,7 +175,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
                 isset($info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['cvvResponse'])
             ) {
                 $cvvResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['cvvResponse'];
-                $this->response->setCvv($cvvResponse);
+                $this->response[$orderId]->setCvv($cvvResponse);
             }
 
             if (isset($info['data']) &&
@@ -193,10 +193,10 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
                 $avsPostalCodeResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsPostalCodeResponse'];
                 $avsStreetAddressResponse = $info['data']['search']['payments']['edges'][0]['node']['statusHistory'][0]['processorResponse']['avsStreetAddressResponse'];
 
-                $this->response->setAvsResponse($avsPostalCodeResponse, $avsStreetAddressResponse);
+                $this->response[$orderId]->setAvsResponse($avsPostalCodeResponse, $avsStreetAddressResponse);
             }
         }
 
-        return $this->response;
+        return $this->response[$orderId];
     }
 }
