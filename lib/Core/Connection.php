@@ -196,9 +196,9 @@ class Connection
                 $this->logger->error("Curl error: " . $error);
             }
 
-            $curlErrorNo = curl_error($this->curl);
+            $curlErrorNo = curl_errno($this->curl);
 
-            if (empty($curlErrorNo) === false) {
+            if ($curlErrorNo !== CURLE_OK) {
                 $this->logger->error("Curl errorNo: " . $curlErrorNo);
             }
 
