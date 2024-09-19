@@ -15,6 +15,7 @@ namespace Signifyd\Core\Api;
 
 use Signifyd\Core\Exceptions\ApiException;
 use Signifyd\Core\Exceptions\InvalidClassException;
+use Signifyd\Core\LoggerProtection;
 use Signifyd\Models\CheckoutModel;
 use Signifyd\Models\CheckoutTransaction;
 use Signifyd\Models\SendTransaction;
@@ -55,9 +56,10 @@ class CheckoutApi extends ApiModel
      * @throws InvalidClassException
      * @throws \Signifyd\Core\Exceptions\LoggerException
      */
-    public function createOrder($endpoint, $order)
+    public function createOrder($endpoint, $order, $listOfFiesdsToPrivate = null)
     {
         $this->logger->info('CheckoutApi: CreateOrder method called');
+
         if (is_array($order)) {
             $order = new CheckoutModel($order);
             $valid = $order->validate();
@@ -80,9 +82,13 @@ class CheckoutApi extends ApiModel
             );
         }
 
+        $loggerProtection = New LoggerProtection();
+
         $this->logger->info(
-            'Connection call checkout api with: ' . $order->toJson()
+            'Connection call checkout api with: '
+            . json_encode($loggerProtection((array) $order, $listOfFiesdsToPrivate))
         );
+
         $response = $this->connection->callApi(
             $endpoint,
             $order->toJson(),
@@ -99,7 +105,7 @@ class CheckoutApi extends ApiModel
      * @throws ApiException
      * @throws InvalidClassException
      */
-    public function createTransaction($transaction)
+    public function createTransaction($transaction, $listOfFiesdsToPrivate = null)
     {
         $this->logger->info('CheckoutApi: CreateTransaction method called');
         if (is_array($transaction)) {
@@ -124,9 +130,13 @@ class CheckoutApi extends ApiModel
             );
         }
 
+        $loggerProtection = New LoggerProtection();
+
         $this->logger->info(
-            'Connection call create case api with transaction: ' . $transaction->toJson()
+            'Connection call create case api with transaction: '
+            . json_encode($loggerProtection((array) $transaction, $listOfFiesdsToPrivate))
         );
+
         $response = $this->connection->callApi(
             'orders/events/transactions',
             $transaction->toJson(),

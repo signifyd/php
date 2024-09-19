@@ -184,7 +184,6 @@ class Connection
         $retry = 0;
         while ($retry <= 4) {
             $status = true;
-            $this->logger->info("Raw payload: " . $payload);
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $payload);
             $response = curl_exec($this->curl);
             $info = curl_getinfo($this->curl);

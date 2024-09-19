@@ -17,6 +17,7 @@ use Signifyd\Core\Connection;
 use Signifyd\Core\Exceptions\CaseModelException;
 use Signifyd\Core\Exceptions\FulfillmentException;
 use Signifyd\Core\Exceptions\InvalidClassException;
+use Signifyd\Core\LoggerProtection;
 use Signifyd\Core\Logging;
 use Signifyd\Core\Response\CaseResponse;
 use Signifyd\Core\Response\FulfillmentBulkResponse;
@@ -93,7 +94,7 @@ class CaseApi
      * @throws InvalidClassException
      * @throws \Signifyd\Core\Exceptions\LoggerException
      */
-    public function createCase($case)
+    public function createCase($case, $listOfFiesdsToPrivate = null)
     {
         $this->logger->info('CreateCase method called');
         if (is_array($case)) {
@@ -119,10 +120,13 @@ class CaseApi
         }
 
         $case = $this->addPlatform($case);
+        $loggerProtection = New LoggerProtection();
 
         $this->logger->info(
-            'Connection call create case api with case: ' . $case->toJson()
+            'Connection call create case api with case: '
+            . json_encode($loggerProtection((array) $case, $listOfFiesdsToPrivate))
         );
+
         $response = $this->connection->callApi(
             'cases',
             $case->toJson(),

@@ -16,6 +16,7 @@ namespace Signifyd\Core\Api;
 use Signifyd\Core\Connection;
 use Signifyd\Core\Exceptions\ApiException;
 use Signifyd\Core\Exceptions\InvalidClassException;
+use Signifyd\Core\LoggerProtection;
 use Signifyd\Core\Logging;
 use Signifyd\Core\Response\CaseResponse;
 use Signifyd\Core\Settings;
@@ -147,7 +148,7 @@ class ApiModel
      * @throws ApiException
      * @throws InvalidClassException
      */
-    public function reroute($reroute)
+    public function reroute($reroute, $listOfFiesdsToPrivate = null)
     {
         $this->logger->info('SaleApi: reroute method called');
         if (is_array($reroute)) {
@@ -172,8 +173,11 @@ class ApiModel
             );
         }
 
+        $loggerProtection = New LoggerProtection();
+
         $this->logger->info(
-            'Connection call reroute with: ' . $reroute->toJson()
+            'Connection call reroute with: '
+            . json_encode($loggerProtection((array) $reroute, $listOfFiesdsToPrivate))
         );
 
         $response = $this->connection->callApi(
@@ -193,12 +197,15 @@ class ApiModel
      * @return bool|mixed|object|\Signifyd\Core\Response
      * @throws InvalidClassException
      */
-    public function addFulfillment($fulfillmentsData)
+    public function addFulfillment($fulfillmentsData, $listOfFiesdsToPrivate = null)
     {
         $fulfillments = new \Signifyd\Models\Fulfillments($fulfillmentsData);
 
+        $loggerProtection = New LoggerProtection();
+
         $this->logger->info(
-            'Connection call addFulfillments with: ' . $fulfillments->toJson()
+            'Connection call addFulfillments with: '
+            . json_encode($loggerProtection((array) $fulfillments, $listOfFiesdsToPrivate))
         );
 
         $response = $this->connection->callApi(

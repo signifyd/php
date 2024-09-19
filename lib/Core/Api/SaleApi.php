@@ -17,6 +17,7 @@ use Signifyd\Core\Connection;
 use Signifyd\Core\Exceptions\ApiException;
 use Signifyd\Core\Exceptions\InvalidClassException;
 use Signifyd\Models\SaleModel;
+use Signifyd\Core\LoggerProtection;
 
 /**
  * Class CaseApi
@@ -54,7 +55,7 @@ class SaleApi extends ApiModel
      * @throws InvalidClassException
      * @throws \Signifyd\Core\Exceptions\LoggerException
      */
-    public function createOrder($endpoint, $order)
+    public function createOrder($endpoint, $order, $listOfFiesdsToPrivate = null)
     {
         $this->logger->info('SaleApi: CreateOrder method called');
         if (is_array($order)) {
@@ -79,9 +80,13 @@ class SaleApi extends ApiModel
             );
         }
 
+        $loggerProtection = New LoggerProtection();
+
         $this->logger->info(
-            'Connection call sale api with: ' . $order->toJson()
+            'Connection call sale api with: '
+            . json_encode($loggerProtection((array) $order, $listOfFiesdsToPrivate))
         );
+
         $response = $this->connection->callApi(
             $endpoint,
             $order->toJson(),
