@@ -108,9 +108,9 @@ class LoggerProtection
     protected function validateFieldsToPrivate($listOfFiesdsToPrivate)
     {
         if (isset($listOfFiesdsToPrivate) === false) {
-            return [];            
+            return [];
         }
-        
+
         $name = ['accountHolderName','fullName','username'];
         $phone = ['phone','confirmationPhone',];
         $email = ['confirmationEmail','email'];
