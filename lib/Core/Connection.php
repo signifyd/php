@@ -63,7 +63,7 @@ class Connection
      *
      * @var array The retry timings
      */
-    private $_retryIntervals = [0.25, 0.5, 1, 2, 3];
+    private $_retryIntervals = [0, 0, 1, 2, 3];
 
     /**
      * Connection constructor.
