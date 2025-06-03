@@ -58,6 +58,14 @@ class SaleApi extends ApiModel
     public function createOrder($endpoint, $order, $listOfFiesdsToPrivate = null)
     {
         $this->logger->info('SaleApi: CreateOrder method called');
+
+        if (empty($order['purchase'])) {
+            $this->logger->info('Invalid request: empty data');
+            throw new ApiException(
+                'Invalid request: empty data'
+            );
+        }
+
         if (is_array($order)) {
             $order = new SaleModel($order);
             $valid = $order->validate();
