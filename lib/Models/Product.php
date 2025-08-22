@@ -112,6 +112,20 @@ class Product extends Model
      */
     public $subscription;
 
+    /**
+     * Personalized message included with the gift order.
+     *
+     * @var string
+     */
+    public $giftMessage;
+
+    /**
+     * Identifier linking the order to a specific gift registry.
+     *
+     * @var string
+     */
+    public $registryId;
+
     protected $fields = [
         'itemId',
         'itemName',
@@ -125,6 +139,8 @@ class Product extends Model
         'itemSubCategory',
         'shipmentId',
         'subscription',
+        'giftMessage',
+        'registryId'
     ];
 
     protected $fieldsValidation = [
@@ -140,6 +156,8 @@ class Product extends Model
         'itemSubCategory' => [],
         'shipmentId' => [],
         'subscription' => [],
+        'giftMessage' => [],
+        'registryId' => []
     ];
 
     /**
@@ -420,6 +438,40 @@ class Product extends Model
     public function setShipmentId($shipmentId)
     {
         $this->shipmentId = $shipmentId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGiftMessage()
+    {
+        return $this->giftMessage;
+    }
+
+    /**
+     * @param $giftMessage
+     * @return void
+     */
+    public function setGiftMessage($giftMessage)
+    {
+        $this->giftMessage = $giftMessage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegistryId()
+    {
+        return $this->registryId;
+    }
+
+    /**
+     * @param $registryId
+     * @return void
+     */
+    public function setRegistryId($registryId)
+    {
+        $this->registryId = $registryId;
     }
 
     /**

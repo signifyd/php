@@ -16,9 +16,16 @@ class ReturnedItem
      * @var string
      */
     public $reason;
+    /**
+     * Further information on the reason that the buyer is making this return for the item.
+     *
+     * @var string
+     */
+    public $subReason;
 
     protected $fields = [
         'reason',
+        'subReason',
         'itemId',
         'itemName',
         'itemUrl',
@@ -48,5 +55,22 @@ class ReturnedItem
     public function setReason($reason)
     {
         $this->reason = $reason;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubReason()
+    {
+        return $this->subReason;
+    }
+
+    /**
+     * @param $subReason
+     * @return void
+     */
+    public function setSubReason($subReason)
+    {
+        $this->subReason = $subReason;
     }
 }

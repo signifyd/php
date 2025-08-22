@@ -142,6 +142,13 @@ class CheckoutModel extends Model
     public $customerOrderRecommendation;
 
     /**
+     * This field specifies how the decision returned in the decision field will be made.
+     *
+     * @var string
+     */
+    public $decisionMechanism;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -161,7 +168,8 @@ class CheckoutModel extends Model
         'sellers',
         'tags',
         'additionalEvalRequests',
-        'customerOrderRecommendation'
+        'customerOrderRecommendation',
+        'decisionMechanism'
     ];
 
     protected $arrayOfObjectFields = [
@@ -173,7 +181,8 @@ class CheckoutModel extends Model
         'checkoutId',
         'orderId',
         'merchantCategoryCode',
-        'customerOrderRecommendation'
+        'customerOrderRecommendation',
+        'decisionMechanism'
     ];
 
     /**
@@ -512,5 +521,22 @@ class CheckoutModel extends Model
     public function getCustomerOrderRecommendation()
     {
         return $this->customerOrderRecommendation;
+    }
+
+    /**
+     * @param $decisionMechanism
+     * @return void
+     */
+    public function setDecisionMechanism($decisionMechanism)
+    {
+        $this->decisionMechanism = $decisionMechanism;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDecisionMechanism()
+    {
+        return $this->decisionMechanism;
     }
 }

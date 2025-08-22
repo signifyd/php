@@ -127,6 +127,21 @@ class SaleModel extends Model
     public $customerOrderRecommendation;
 
     /**
+     * Specify SYNC if you require the Response to contain a decision field. Defaults to ASYNC_ONLY
+     *
+     * @var string
+     */
+    public $decisionDelivery;
+
+    /**
+     * This field specifies how the decision returned in the decision field will be made.
+     * Defaults to SIGNIFYD_RECOMMENDATION
+     *
+     * @var string
+     */
+    public $decisionMechanism;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -144,7 +159,9 @@ class SaleModel extends Model
         'transactions',
         'sellers',
         'tags',
-        'customerOrderRecommendation'
+        'customerOrderRecommendation',
+        'decisionDelivery',
+        'decisionMechanism'
     ];
 
     protected $arrayOfObjectFields = [
@@ -156,7 +173,9 @@ class SaleModel extends Model
     protected $stringFields = [
         'orderId',
         'merchantCategoryCode',
-        'customerOrderRecommendation'
+        'customerOrderRecommendation',
+        'decisionDelivery',
+        'decisionMechanism'
     ];
 
     /**
@@ -430,5 +449,39 @@ class SaleModel extends Model
     public function getCustomerOrderRecommendation()
     {
         return $this->customerOrderRecommendation;
+    }
+
+    /**
+     * @param $decisionDelivery
+     * @return void
+     */
+    public function setDecisionDelivery($decisionDelivery)
+    {
+        $this->decisionDelivery = $decisionDelivery;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDecisionDelivery()
+    {
+        return $this->decisionDelivery;
+    }
+
+    /**
+     * @param $decisionMechanism
+     * @return void
+     */
+    public function setDecisionMechanism($decisionMechanism)
+    {
+        $this->decisionMechanism = $decisionMechanism;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDecisionMechanism()
+    {
+        return $this->decisionMechanism;
     }
 }

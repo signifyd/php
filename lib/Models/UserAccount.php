@@ -119,6 +119,27 @@ class UserAccount extends Model
     public $passwordLastUpdateDate;
 
     /**
+     * Unique identifier of the associate linked to this order, such as employee ID.
+     *
+     * @var string
+     */
+    public $associateId;
+
+    /**
+     * An array of saved payment methods added to the account.
+     *
+     * @var array of SavedPayments
+     */
+    public $savedPayments;
+
+    /**
+     * An array of saved addresses methods added to the account.
+     *
+     * @var array of SavedAddress
+     */
+    public $savedAddresses;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -135,7 +156,8 @@ class UserAccount extends Model
         'lastUpdateDate',
         'emailLastUpdateDate',
         'phoneLastUpdateDate',
-        'passwordLastUpdateDate'
+        'passwordLastUpdateDate',
+        'associateId'
     ];
 
     /**
@@ -165,6 +187,32 @@ class UserAccount extends Model
         if (!empty($data) && is_array($data)) {
             foreach ($data as $field => $value) {
                 if (!in_array($field, $this->fields)) {
+                    continue;
+                }
+
+                if ($field == 'savedPayments') {
+                    foreach ($value as $item) {
+                        if ($item instanceof SavedPayment) {
+                            $object = $item;
+                        } else {
+                            $object = new SavedPayment($item);
+                        }
+
+                        $this->addSavedPayment($object);
+                    }
+                    continue;
+                }
+
+                if ($field == 'savedAddresses') {
+                    foreach ($value as $item) {
+                        if ($item instanceof SavedAddress) {
+                            $object = $item;
+                        } else {
+                            $object = new SavedAddress($item);
+                        }
+
+                        $this->addSavedAddress($object);
+                    }
                     continue;
                 }
 
@@ -433,5 +481,74 @@ class UserAccount extends Model
     public function setPasswordLastUpdateDate($passwordLastUpdateDate)
     {
         $this->passwordLastUpdateDate = $passwordLastUpdateDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssociateId()
+    {
+        return $this->associateId;
+    }
+
+    /**
+     * @param $associateId
+     * @return void
+     */
+    public function setAssociateId($associateId)
+    {
+        $this->associateId = $associateId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSavedPayments()
+    {
+        return $this->savedPayments;
+    }
+
+    /**
+     * @param $savedPayments
+     * @return void
+     */
+    public function setSavedPayments($savedPayments)
+    {
+        $this->savedPayments = $savedPayments;
+    }
+
+    /**
+     * @param $product
+     * @return void
+     */
+    public function addSavedPayment($savedPayment)
+    {
+        $this->savedPayments[] = $savedPayment;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSavedAddresses()
+    {
+        return $this->savedAddresses;
+    }
+
+    /**
+     * @param $savedAddresses
+     * @return void
+     */
+    public function setSavedAddresses($savedAddresses)
+    {
+        $this->savedAddresses = $savedAddresses;
+    }
+
+    /**
+     * @param $product
+     * @return void
+     */
+    public function addSavedAddress($savedAddress)
+    {
+        $this->savedAddresses[] = $savedAddress;
     }
 }
