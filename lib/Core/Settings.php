@@ -132,12 +132,12 @@ class Settings
      */
     public function getApiAddress($endpoint = null)
     {
-        if (strpos($endpoint, 'teams/webhooks') !== false) {
+        if (mb_strpos($endpoint, 'teams/webhooks') !== false) {
             return $this->apiAddress . 'v2/';
         }
 
-        if (strpos($endpoint, 'orders') !== false ||
-            strpos($endpoint, 'webhooks') !== false) {
+        if (mb_strpos($endpoint, 'orders') !== false ||
+            mb_strpos($endpoint, 'webhooks') !== false) {
             return $this->apiAddress . 'v3/';
         }
 

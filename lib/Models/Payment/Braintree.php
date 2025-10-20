@@ -92,7 +92,7 @@ class Braintree extends \Signifyd\Models\Payment\AbstractGateway
             $serverOutput = curl_exec($ch);
             curl_close($ch);
 
-            $info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $serverOutput), true);
+            $info = json_decode(preg_replace('/[\p{C}]+/u', '', $serverOutput), true);
             $this->response[$orderId] = new BraintreeResponse();
 
             if (isset($info['data']) &&

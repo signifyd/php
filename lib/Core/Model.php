@@ -120,7 +120,7 @@ class Model
             return true;
         }
 
-        $lowerFieldValue = strtolower($fieldValue);
+        $lowerFieldValue = mb_strtolower($fieldValue);
         if (in_array($lowerFieldValue, $allowedValues)) {
             return true;
         }
@@ -142,7 +142,7 @@ class Model
         }
 
         $avsCvvValidCodes = "YASRUZNWXBTPCDGIMF";
-        if (false === strpos($avsCvvValidCodes, $code)) {
+        if (false === mb_strpos($avsCvvValidCodes, $code)) {
             return false;
         }
 

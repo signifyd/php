@@ -233,7 +233,7 @@ class Connection
      */
     public function makeUrl($endpoint)
     {
-        if (substr($this->settings->getApiAddress($endpoint), -1) != '/') {
+        if (mb_substr($this->settings->getApiAddress($endpoint), -1) != '/') {
             return $this->settings->getApiAddress($endpoint) . '/' . $endpoint;
         }
         return $this->settings->getApiAddress($endpoint) . $endpoint;
@@ -327,7 +327,7 @@ class Connection
 
                 $key = $h[0];
             } else {
-                if (substr($h[0], 0, 1) == "\t") {
+                if (mb_substr($h[0], 0, 1) == "\t") {
                     $headers[$key] .= "\r\n\t".trim($h[0]);
                 } elseif (!$key) {
                     $headers[0] = trim($h[0]);trim($h[0]);
