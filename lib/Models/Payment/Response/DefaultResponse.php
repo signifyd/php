@@ -69,7 +69,7 @@ class DefaultResponse implements ResponseInterface
      */
     public function setCardholder($cardholder)
     {
-        if (preg_match("/^([a-zA-Z' ]+)$/", $cardholder)) {
+        if (preg_match("/^([\p{L}' ]+)$/u", $cardholder)) {
             $this->cardholder = $cardholder;
         } else {
             $this->cardholder = null;
@@ -92,7 +92,7 @@ class DefaultResponse implements ResponseInterface
      */
     public function setLast4($last4)
     {
-        if (strlen($last4) !== 4) {
+        if (mb_strlen($last4) !== 4) {
            $this->last4 = null;
         }
 
@@ -115,7 +115,7 @@ class DefaultResponse implements ResponseInterface
      */
     public function setBin($bin)
     {
-        if (strlen($bin) !== 6) {
+        if (mb_strlen($bin) !== 6) {
             $this->last4 = null;
         }
         

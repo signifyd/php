@@ -180,7 +180,7 @@ class SaleModel extends Model
                 if (is_array($case[$field]) && !empty($case[$field])) {
                     if (in_array($field, $this->arrayOfObjectFields)) {
                         // init the class name
-                        $singular = substr($field,0,-1);
+                        $singular = mb_substr($field,0,-1);
                         $className = ucfirst($singular);
                         $class = '\Signifyd\Models\\' . $className;
 

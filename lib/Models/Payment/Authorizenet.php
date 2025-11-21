@@ -51,7 +51,7 @@ class Authorizenet extends AbstractGateway
             curl_setopt_array($curl, $options);
             $response = curl_exec($curl);
 
-            $info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true);
+            $info = json_decode(preg_replace('/[\p{C}]+/u', '', $response), true);
             $this->response[$orderId] = new \Signifyd\Models\Payment\Response\Authorizenet();
 
             if (isset($info['transaction']) &&
@@ -68,7 +68,7 @@ class Authorizenet extends AbstractGateway
                 isset($info['transaction']['payment']['creditCard']) &&
                 isset($info['transaction']['payment']['creditCard']['cardNumber'])
             ) {
-                $last4 = substr($info['transaction']['payment']['creditCard']['cardNumber'], -4);
+                $last4 = mb_substr($info['transaction']['payment']['creditCard']['cardNumber'], -4);
                 $this->response[$orderId]->setLast4($last4);
             }
 

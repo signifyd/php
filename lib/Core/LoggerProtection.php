@@ -90,10 +90,10 @@ class LoggerProtection
             return '***';
         }
 
-        if (strlen($fieldToPrivate) >= 12) {
-            return substr($fieldToPrivate, 0, 3) . '***' . substr($fieldToPrivate, -3);
-        } elseif (strlen($fieldToPrivate) >= 7 && strlen($fieldToPrivate) <= 11) {
-            return '***' . substr($fieldToPrivate, -3);
+        if (mb_strlen($fieldToPrivate) >= 12) {
+            return mb_substr($fieldToPrivate, 0, 3) . '***' . mb_substr($fieldToPrivate, -3);
+        } elseif (mb_strlen($fieldToPrivate) >= 7 && mb_strlen($fieldToPrivate) <= 11) {
+            return '***' . mb_substr($fieldToPrivate, -3);
         } else {
             return '***';
         }
