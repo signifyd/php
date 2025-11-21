@@ -59,7 +59,7 @@ class RecordReturn extends Model
     public $initiator;
 
     /**
-     * Seller tags
+     * The tracking number(s) for the returned item(s).
      *
      * @var array of string
      */
@@ -88,6 +88,28 @@ class RecordReturn extends Model
     public $replacementOrderId;
 
     /**
+     * The status of the Return. For every update you get to a Return after creation,
+     * you can call recordReturn to update the status of the return.
+     *
+     * @var string
+     */
+    public $returnStatus;
+
+    /**
+     * The time the return occurred. If this field is empty the present time is used instead.
+     *
+     * @var string
+     */
+    public $returnDate;
+
+    /**
+     * The time the return occurred. If this field is empty the present time is used instead.
+     *
+     * @var array of string
+     */
+    public $tags;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -103,7 +125,10 @@ class RecordReturn extends Model
         'trackingNumbers',
         'refundTransactionId',
         'storeCreditId',
-        'replacementOrderId'
+        'replacementOrderId',
+        'returnStatus',
+        'returnDate',
+        'tags'
     ];
 
     /**
@@ -122,7 +147,10 @@ class RecordReturn extends Model
         'trackingNumbers' => [],
         'refundTransactionId' => [],
         'storeCreditId' => [],
-        'replacementOrderId' => []
+        'replacementOrderId' => [],
+        'returnStatus' => [],
+        'returnDate' => [],
+        'tags' => []
     ];
 
     /**
@@ -300,6 +328,57 @@ class RecordReturn extends Model
     public function setReplacementOrderId($replacementOrderId)
     {
         $this->replacementOrderId = $replacementOrderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReturnStatus()
+    {
+        return $this->returnStatus;
+    }
+
+    /**
+     * @param $returnStatus
+     * @return void
+     */
+    public function setReturnStatus($returnStatus)
+    {
+        $this->returnStatus = $returnStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReturnDate()
+    {
+        return $this->returnDate;
+    }
+
+    /**
+     * @param $returnDate
+     * @return void
+     */
+    public function setReturnDate($returnDate)
+    {
+        $this->returnDate = $returnDate;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param $tags
+     * @return void
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
     }
 
     /**

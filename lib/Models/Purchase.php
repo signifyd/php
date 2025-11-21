@@ -115,6 +115,13 @@ class Purchase extends Model
     public $receivedBy;
 
     /**
+     * The source or channel through which the order was placed.
+     *
+     * @var string
+     */
+    public $orderSource;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -130,8 +137,10 @@ class Purchase extends Model
         'confirmationPhone',
         'totalShippingCost',
         'discountCodes',
-        'receivedBy'
+        'receivedBy',
+        'orderSource'
     ];
+
     /**
      * The validation rules
      *
@@ -416,6 +425,23 @@ class Purchase extends Model
     public function setReceivedBy($receivedBy)
     {
         $this->receivedBy = $receivedBy;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderSource()
+    {
+        return $this->orderSource;
+    }
+
+    /**
+     * @param $orderSource
+     * @return void
+     */
+    public function setOrderSource($orderSource)
+    {
+        $this->orderSource = $orderSource;
     }
 
     /**

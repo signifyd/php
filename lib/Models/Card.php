@@ -141,6 +141,22 @@ class Card extends Model
     public $cardInstallments;
 
     /**
+     * The routing number of the non-US bank account that was used for this transaction,
+     * such as a SWIFT code. If a US bank account, please use abaRoutingNumber.
+     *
+     * @var string|null
+     */
+    public $bankRoutingNumber;
+
+    /**
+     * The country of origin of the bank account that was used for this transaction.
+     * Country must be provided along with bankRoutingNumber. If you send a US ABA Number, this field is not required.
+     *
+     * @var string|null
+     */
+    public $bankRoutingCountry;
+
+    /**
      * The class attributes
      *
      * @var array $fields The list of class fields
@@ -161,6 +177,8 @@ class Card extends Model
         'cardBrand',
         'cardFunding',
         'cardInstallments',
+        'bankRoutingNumber',
+        'bankRoutingCountry'
     ];
 
     /**
@@ -184,6 +202,8 @@ class Card extends Model
         'cardBrand' => [],
         'cardFunding' => [],
         'cardInstallments' => [],
+        'bankRoutingNumber' => [],
+        'bankRoutingCountry' => []
     ];
 
     /**
@@ -456,6 +476,40 @@ class Card extends Model
     public function setCardFunding($cardFunding)
     {
         $this->cardFunding = $cardFunding;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBankRoutingNumber()
+    {
+        return $this->bankRoutingNumber;
+    }
+
+    /**
+     * @param $bankRoutingNumber
+     * @return void
+     */
+    public function setBankRoutingNumber($bankRoutingNumber)
+    {
+        $this->bankRoutingNumber = $bankRoutingNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBankRoutingCountry()
+    {
+        return $this->bankRoutingCountry;
+    }
+
+    /**
+     * @param $bankRoutingCountry
+     * @return void
+     */
+    public function setBankRoutingCountry($bankRoutingCountry)
+    {
+        $this->bankRoutingCountry = $bankRoutingCountry;
     }
 
     /**
