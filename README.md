@@ -1,11 +1,7 @@
-## :warning: WARNING :warning:
-> **V2 SDK is deprecated**
-Please refer to our [V3 API documentation](https://docs.signifyd.com) and download the OpenAPI specification linked at the top of the page to generate PHP and other SDKs for the latest version of Signifyd's Antifraud APIs.
-
-Signifyd V2 PHP SDK
+Signifyd V3 PHP SDK
 ===================
 
-This repository contains the PHP SDK client for the **deprecated** [Signifyd V2 API](https://developer.signifyd.com/api-v2/).
+This repository contains the PHP SDK client for the [V3 API documentation](https://docs.signifyd.com).
 
 Overview
 --------
@@ -613,7 +609,7 @@ Contains a shipping/billing address
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **apiKey** | **string** | The api key from Signifyd |
-**apiAddress** | **string** | The default api url | "https://api.signifyd.com/v2/";
+**apiAddress** | **string** | The default api url | "https://api.signifyd.com/v3/";
 **validateData** | **string** | To validate or not the data | true;
 **timeout** | **integer** | The default timeout for the curl connection | 30;
 **retry** | **boolean** | Should the SDK retry when it receives know errors | false;

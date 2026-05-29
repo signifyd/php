@@ -101,9 +101,9 @@ class Subscription extends Model
     ];
 
     /**
-     * UserAccount constructor.
+     * Subscription constructor.
      *
-     * @param array $data The user account data
+     * @param array $data The subscription data
      */
     public function __construct($data = [])
     {
@@ -119,7 +119,7 @@ class Subscription extends Model
     }
 
     /**
-     * Validate the user account
+     * Validate the subscription
      *
      * @return bool
      */
@@ -127,7 +127,7 @@ class Subscription extends Model
     {
         $valid = [];
 
-        //TODO add code to validate the user account
+        //TODO add code to validate the subscription
         return (!isset($valid[0]))? true : false;
     }
 
