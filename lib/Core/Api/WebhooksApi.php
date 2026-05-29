@@ -96,6 +96,7 @@ class WebhooksApi
         $this->logger->info("Api request hash: " . $hash);
         $this->logger->info("Api request hash check: " . $check);
 
+
         if ($check == $hash) {
             return true;
         } else {

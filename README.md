@@ -1,11 +1,7 @@
-## :warning: WARNING :warning:
-> **V2 SDK is deprecated**
-Please refer to our [V3 API documentation](https://docs.signifyd.com) and download the OpenAPI specification linked at the top of the page to generate PHP and other SDKs for the latest version of Signifyd's Antifraud APIs.
+Signifyd PHP SDK
+=================
 
-Signifyd V2 PHP SDK
-===================
-
-This repository contains the PHP SDK client for the **deprecated** [Signifyd V2 API](https://developer.signifyd.com/api-v2/).
+This repository contains the PHP SDK client for the **Signifyd V3 API**.
 
 Overview
 --------
@@ -13,15 +9,15 @@ This document will give an overview on the available methods in the Signifyd PHP
 
 Support
 --------
-For questions or issues please contact our [support team](https://www.signifyd.com/contact/). You can submit feedback and suggestions for improvement [here](https://github.com/signifyd/php/issues).
+For questions or issues please contact our [support team](http://signifyd.com/contact). You can submit feedback and suggestions for improvement [here](https://github.com/signifyd/php/issues).
 
 Examples
 --------
-If you are looking for a sample code that was tested and works, check out the [`sdk-examples`](https://github.com/signifyd/signifyd-php/tree/development-not-for-use/sdk-examples) repository.
+If you are looking for a sample code that was tested and works, check out the [`sdk-examples`](https://github.com/signifyd/php/tree/main/sdk-examples) repository.
 
 Requirements
 ------------
-* `PHP >= 5.6.0`
+* `PHP >= 7.4.0`
 * In order to use the API you need to provide your API key. You can find your API key on your [account page](https://app.signifyd.com/settings).
 
 Installing the SDK
@@ -60,29 +56,63 @@ $ php composer.phar install
 
 Getting Started
 ---------------
-There are 3 api classes that each represents the 3 main parts of the API
+The V3 API is organized into groups. Each group has dedicated API classes.
 
-***CASE API*** Which works with cases which are orders submitted to Signifyd for review. A case contains payment, recipient, product, shipping, and account information.
+#### COMMERCE
+***CHECKOUT API*** Which works with checkout events which are orders submitted to Signifyd for review before payment authorization. A checkout event contains purchase, payment, shipment, and account information.
 
-***GUARANTEE API*** Which works with guarantee which is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to learn more.
+***TRANSACTION API*** Which works with transaction events which record the final payment outcome after your processor has authorized or declined the payment. Used as the follow-up step in the Pre-Auth flow.
 
-***WEBHOOKS API*** Which works with webhooks which are messages sent by SIGNIFYD via HTTP POST to a url you configure on your Notifications page in the SIGNIFYD settings. Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to receive pushed updates about a case, rather than poll SIGNIFYD for status changes.
+***SALE API*** Which works with sale events which are orders submitted to Signifyd for review after payment authorization. A sale event combines order, transaction, and account information in a single call.
 
-API Clases
-----------
+***FULFILLMENT API*** Which works with fulfillment events which notify Signifyd of order fulfillment status updates. Sending fulfillment data helps improve fraud detection accuracy and supports chargeback dispute evidence.
 
-### CaseApi
+***PURCHASE MANAGEMENT API*** Which works with post-submission order management events — rerouting shipments to a new destination and retrieving fraud decisions for previously submitted orders. This group does not have a dedicated SDK class yet — see the API Classes section for direct usage examples.
 
-The CaseApi is the class the maps the main case functionality of the Signify API. This class has the methods that work with the Signify investigations (called cases).
+***RETURNS & APPEASEMENTS API*** Which works with return, refund, and exchange events — submitting return requests for fraud evaluation, recording return outcomes, and providing feedback on return quality. This group does not have a dedicated SDK class yet — see the API Classes section for direct usage examples.
 
-There are multiple ways to instantiate the CaseApi class.
+***CHARGEBACKS API*** Which works with chargeback events — reporting new chargebacks against orders and updating chargeback stage information throughout the dispute lifecycle. This group does not have a dedicated SDK class yet — see the API Classes section for direct usage examples.
+
+#### WEBHOOKS
+***WEBHOOKS API*** Which works with webhooks which are messages sent by SIGNIFYD via HTTP POST to a url you configure. Webhook messages are sent when a checkpoint action decision is made on a submitted order. They allow your application to receive pushed updates about an order's decision, rather than poll SIGNIFYD for status changes.
+
+#### ACCOUNTS
+The Accounts group covers consumer account lifecycle events submitted to Signifyd for fraud analysis. This group does not have a dedicated SDK class yet — see the API Classes section for direct usage examples.
+
+***ACCOUNT MODIFICATION API*** Which works with account modification events — detecting risky changes to account information such as email, password, phone, or address that may indicate account takeover in progress.
+
+***ACCOUNT LOGIN API*** Which works with login events — detecting and preventing account takeover (ATO) attempts by analysing each login in real time, enabling high-risk logins to be blocked while maintaining a seamless experience for trusted users.
+
+***ACCOUNT OPENING API*** Which works with account opening events — detecting and preventing false account creation by cross-referencing against the Signifyd network when a new account is being created.
+
+#### PARTNERS
+The Partners group provides management of organizations, teams, members, and users for Signifyd partners. This group does not have a dedicated SDK class yet — see the API Classes section for direct usage examples.
+
+***ORGANIZATIONS API*** Which works with organization management — retrieving organization details and managing organization-level members that have access to all teams belonging to that organization.
+
+***USERS API*** Which works with user creation and lookup for a given partner.
+
+***TEAMS API*** Which works with team management — creating, updating, and managing teams and their members, products, and lifecycle status.
+
+***PARTNERS (MEMBERS) API*** Which works with partner-level member management — adding, updating, and removing members that have access to all teams belonging to the partner.
+
+API Classes
+-----------
+
+#### COMMERCE
+
+### CheckoutApi
+
+The CheckoutApi is the class that maps the Pre-Auth checkout event functionality of the Signifyd API. This class has the methods that work with Checkout events — orders submitted to Signifyd for review before payment authorization.
+
+There are multiple ways to instantiate the CheckoutApi class.
 Usage examples:
 ```php
 <?php
     // This might differ depending on the location of the file from which you your project
     require __DIR__ . '/vendor/autoload.php'; 
     
-    $caseApi = new \Signifyd\Core\Api\CaseApi(["apiKey" => "your api key"]);
+    $checkoutApi = new \Signifyd\Core\Api\CheckoutApi(["apiKey" => "your api key"]);
 ``` 
 Or using the Settings Class
 ```php
@@ -91,256 +121,153 @@ Or using the Settings Class
     require __DIR__ . '/vendor/autoload.php'; 
     
     $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
-    $caseApi = new \Signifyd\Core\Api\CaseApi($settings);
+    $checkoutApi = new \Signifyd\Core\Api\CheckoutApi($settings);
 ``` 
 
 #### Class methods
-All methods accept two type of data as parameters. 
+All methods accept two type of data as parameters.
 
-The parameter as an array, which means that the constructor of the model will set the values of the class properties 
+The parameter as an array, which means that the constructor of the model will set the values of the class properties
 based on the data passed to the constructor.
 
-The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to 
+The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to
 the model.
 
 
-##### createCase($case);
-Submit an order for fraud review.
-There are multiple ways for the data to be sent to the createCase method. One way is to send an array with all the data 
-required to the createCase method. This is useful if you know what data needs to be sent. 
+##### createCheckout($checkout);
+Submit an order for fraud review before payment authorization.
+There are multiple ways for the data to be sent to the createCheckout method. One way is to send an array with all the data
+required to the createCheckout method. This is useful if you know what data needs to be sent.
 
-For more info about the data that can be added please check the `CaseModel` model.
+For more info about the data that can be added please check the `Checkout` model.
 ```php
     ....
-    // Case data
-    $caseData = [
+    // Checkout data
+    $checkoutData = [
+        "orderId"    => "ORDER-10045",
+        "checkoutId" => "CHECKOUT-10045",
         "purchase" => [
-            // Data related to purchase event represented in this Case Creation request.
+            // Data related to the purchase event represented in this Checkout Creation request.
         ],
-        "recipient" => [
-            // Data related to person or organization receiving the items purchased.
-        ],
-        "card" => [
-            // Data related to the card that was used for the purchase and its cardholder.
+        "checkoutPaymentDetails" => [
+            // Data related to the payment method and billing address used at checkout.
         ],
         "userAccount" => [
-            //User account if exists before placing an orders these data values are details from that account. 
+            // User account data if the buyer has an account.
         ],
-        "seller" => [
-            // All data related to the seller of the product. 
-        ]        
     ];
-    $caseResponse = $caseApi->createCase($caseData);
+    $checkoutResponse = $checkoutApi->createCheckout($checkoutData);
     ....
 ``` 
 Another way is to use the setters and getters of the models so you can add data.
 ```php
     ....
-    $case = \Signifyd\Models\CaseModel();
+    $checkout = new \Signifyd\Models\Checkout();
     // Purchase array data or Purchase Object
-    $case->setPurchase($purchase);
+    $checkout->setPurchase($purchase);
     
-    // Recipient array data or Recipient Object
-    $case->setRecipient($recipient);
-    
-    // Card array data or Card Object
-    $case->setCard($card);
+    // CheckoutPaymentDetails array data or CheckoutPaymentDetails Object
+    $checkout->setCheckoutPaymentDetails($checkoutPaymentDetails);
     
     // userAccount array data or userAccount Object
-    $case->setUserAccount($userAccount);
+    $checkout->setUserAccount($userAccount);
     
-    // Seller array data or Seller Object
-    $case->setSeller($seller);
-    
-    $caseResponse = $caseApi->createCase($case);
+    $checkoutResponse = $checkoutApi->createCheckout($checkout);
 ```
 An example of a JSON object sent to our API:
 ```json
 {
+    "orderId": "ORDER-10045",
+    "checkoutId": "CHECKOUT-10045",
     "purchase": {
-        "orderSessionId": "uha3d98weicm20eufhlqe",
         "browserIpAddress": "192.168.1.1",
-        "orderId": "4fj58as",
-        "createdAt": "2016-07-11T17:54:31-05:00",
-        "paymentGateway": "stripe",
-        "paymentMethod": "credit_card",
-        "transactionId": "1a2sf3f44f21s1",
+        "orderedAt": "2024-09-15T14:23:00Z",
+        "orderChannel": "WEB",
+        "totalPrice": 129.99,
         "currency": "USD",
-        "avsResponseCode": "Y",
-        "cvvResponseCode": "M",
-        "orderChannel": "PHONE",
-        "receivedBy": "John Doe",
-        "totalPrice": 74.99,
         "products": [
             {
-                "itemId": "1",
-                "itemName": "Sparkly sandals",
-                "itemUrl": "http://mydomain.com/sparkly-sandals",
-                "itemImage": "http://mydomain.com/images/sparkly-sandals.jpeg",
+                "itemId": "SKU-001",
+                "itemName": "Wireless Headphones",
+                "itemUrl": "https://store.example.com/products/headphones",
+                "itemImage": "https://store.example.com/images/headphones.jpg",
                 "itemQuantity": 1,
-                "itemPrice": 49.99,
-                "itemWeight": 5
-            },
-            {
-                "itemId": "2",
-                "itemName": "Summer tank top",
-                "itemUrl": "http://mydomain.com/summer-tank",
-                "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
-                "itemQuantity": 1,
-                "itemPrice": 19.99,
-                "itemWeight": 2
+                "itemPrice": 129.99,
+                "itemCategory": "Electronics"
             }
         ],
         "shipments": [
             {
                 "shipper": "UPS",
-                "shippingMethod": "ground",
-                "shippingPrice": 10,
-                "trackingNumber": "3A4U569H1572924642"
-            },
-            {
-                "shipper": "USPS",
-                "shippingMethod": "international",
-                "shippingPrice": 20,
-                "trackingNumber": "9201120200855113889012"
+                "shippingMethod": "GROUND",
+                "shippingPrice": 0.00,
+                "destination": {
+                    "fullName": "Jane Smith",
+                    "streetAddress": "123 Main St",
+                    "unit": "Apt 4B",
+                    "city": "New York",
+                    "provinceCode": "NY",
+                    "postalCode": "10001",
+                    "countryCode": "US"
+                }
             }
         ]
     },
-    "recipient": {
-        "fullName": "Bob Smith",
-        "confirmationEmail": "bob@gmail.com",
-        "confirmationPhone": "5047130000",
-        "organization": "SIGNIFYD",
-        "deliveryAddress": {
-            "streetAddress": "123 State Street",
-            "unit": "2A",
-            "city": "Chicago",
-            "provinceCode": "IL",
-            "postalCode": "60622",
-            "countryCode": "US",
-            "latitude": 41.92,
-            "longitude": -87.65
+    "checkoutPaymentDetails": [
+        {
+            "billingAddress": {
+                "streetAddress": "123 Main St",
+                "unit": "Apt 4B",
+                "city": "New York",
+                "provinceCode": "NY",
+                "postalCode": "10001",
+                "countryCode": "US"
+            },
+            "paymentMethod": "CREDIT_CARD",
+            "cardBin": "411111",
+            "cardLast4": "1111"
         }
-    },
-    "card": {
-        "cardHolderName": "Robert Smith",
-        "bin": 407441,
-        "last4": "1234",
-        "expiryMonth": 12,
-        "expiryYear": 2015,
-        "billingAddress": {
-            "streetAddress": null,
-            "unit": "2A",
-            "city": "Chicago",
-            "provinceCode": "IL",
-            "postalCode": "60622",
-            "countryCode": "US",
-            "latitude": 41.92,
-            "longitude": -87.65
-        }
-    },
+    ],
     "userAccount": {
-        "email": "bob@gmail.com",
-        "username": "bobbo",
+        "email": "jane.smith@example.com",
+        "username": "janesmith",
         "phone": "5555551212",
-        "createdDate": "2013-01-18T17:54:31-05:00",
-        "accountNumber": "54321",
-        "lastOrderId": "4321",
-        "aggregateOrderCount": 40,
-        "aggregateOrderDollars": 5000,
-        "lastUpdateDate": "2013-01-18T17:54:31-05:00"
-    },
-    "seller": {
-        "name": "We sell awesome stuff, Inc.",
-        "domain": "wesellawesomestuff.com",
-        "shipFromAddress": {
-            "streetAddress": "1850 Mercer Rd",
-            "unit": null,
-            "city": "Lexington",
-            "provinceCode": "KY",
-            "postalCode": "40511",
-            "countryCode": "US",
-            "latitude": 38.07,
-            "longitude": -84.53
-        },
-        "corporateAddress": {
-            "streetAddress": "410 Terry Ave",
-            "unit": "3L",
-            "city": "Seattle",
-            "provinceCode": "WA",
-            "postalCode": "98109",
-            "countryCode": "US",
-            "latitude": 47.6,
-            "longitude": -122.33
-        }
+        "createdDate": "2022-03-10T00:00:00Z",
+        "accountNumber": "ACC-9876",
+        "lastOrderId": "ORDER-10040"
     }
 }
 ```
-This method with return a `CaseResponse` which will have the `caseId` property populated.
-In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `CheckoutResponse` which will have the `checkpointAction` property populated.
+In case of error the `CheckoutResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
-##### getCase($caseId);
-Retrieve details about an individual case by investigation id or case id.
+##### getDecision($orderId);
+Retrieve the current fraud decision for an order by orderId.
 ```php
     ....
-    $caseId = 123456789;
-    $caseResponse = $caseApi->getCase($caseId);
+    $orderId = 'ORDER-10045';
+    $decisionResponse = $checkoutApi->getDecision($orderId);
     ....
 ```
-This sends the request to our API Endpoint to get a case. As a parameter for this method you need to send a case id, an optional parameter is the entry.
+This sends the request to our API Endpoint to get a decision. As a parameter for this method you need to send an orderId.
 
-This method with return a `CaseResponse` which will have all the properties populated.
-In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `DecisionResponse` which will have all the properties populated.
+In case of error the `DecisionResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
-##### addFulfillment($fulfillments);
-This sends the request to our API Endpoint to add fulfillments for order. One way is to send an array with all the data required to the addFulfillment method.
+### TransactionApi
 
-For more info about the data that can be added please check the `Fulfillment` model.
-```php
-    ....
-    $fulfillmentData = [
-        // Fulfilment data
-    ];
-    $caseResponse = $caseApi->addFulfillment($fulfillmentData);
-    ....
-```
-This method with return a `FulfillmentBulkResponse` which will have the `objects` property populated with `Fulfillment` model all the properties populated.
-In case of error the `FulfillmentBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
-Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+The TransactionApi is the class that maps the Transaction event functionality of the Signifyd API. After receiving a Checkout decision and sending payment to your processor, call this API to record the final payment result. This closes the Pre-Auth loop.
 
-##### updatePayment($paymentUpdate);
-Update payment data by sending updated information.
-This sends the request to our API Endpoint to update the payment for an existing case.
-
-For more info about the data that can be added please check the `PaymentUpdate` model.
-```php
-    ....
-    $paymentUpdate = new Signifyd\Models\PaymentUpdate([
-        // Payment update data
-    ]);
-
-    // Add data to payment update
-    $caseResponse = $caseApi->updatePayment($paymentUpdate);
-    ....
-```
-This method with return a `CaseResponse` which will have the properties populated.
-In case of error the `CaseResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
-Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
-
-### GuaranteeApi
-The GuaranteeApi is the class the maps the main guarantee functionality of the Signify API. This class has the methods 
-that work with guarantees.
-
-There are multiple ways to instantiate the GuaranteeApi class.
+There are multiple ways to instantiate the TransactionApi class.
 Usage examples:
 ```php
 <?php
     // This might differ depending on the location of the file from which you your project
     require __DIR__ . '/vendor/autoload.php'; 
     
-    $guaranteeApi = new \Signifyd\Core\Api\GuaranteeApi(["apiKey" => "your api key"]);
+    $transactionApi = new \Signifyd\Core\Api\TransactionApi(["apiKey" => "your api key"]);
 ``` 
 Or using the Settings Class
 ```php
@@ -348,49 +275,533 @@ Or using the Settings Class
     // This might differ depending on the location of the file from which you your project
     require __DIR__ . '/vendor/autoload.php'; 
     
-    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api"]);
-    $guaranteeApi = new \Signifyd\Core\Api\GuaranteeApi($settings);
+    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
+    $transactionApi = new \Signifyd\Core\Api\TransactionApi($settings);
 ``` 
 
 #### Class methods
-All methods accept two type of data as parameters. 
+All methods accept two type of data as parameters.
 
-The parameter as an array, which means that the constructor of the model will set the values of the class properties 
+The parameter as an array, which means that the constructor of the model will set the values of the class properties
 based on the data passed to the constructor.
 
-The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to 
+The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to
 the model.
 
-##### createGuarantee($guarantee);
-Submit a request to guarantee an existing case.
+##### createTransaction($transaction);
+Record the final payment outcome after your processor has authorized or declined the payment.
 
-For more info about the data that can be added please check the `Guarantee` model.
+For more info about the data that can be added please check the `Transaction` model.
 ```php
     ....
-    $guarantee = new \Signifyd\Model\Guarantee(['caseId' => 123456]);
-    $guaranteeResponse = $guaranteeApi->createGuarantee($quarantee);
+    $transactionData = [
+        "orderId"    => "ORDER-10045",
+        "checkoutId" => "CHECKOUT-10045",
+        "transactions" => [
+            [
+                "transactionId"        => "TXN-78912",
+                "currency"             => "USD",
+                "amount"               => 129.99,
+                "paymentMethod"        => "CREDIT_CARD",
+                "gateway"              => "stripe",
+                "gatewayStatusCode"    => "200",
+                "gatewayStatusMessage" => "approved",
+                "type"                 => "AUTHORIZATION",
+                "avsResponseCode"      => "Y",
+                "cvvResponseCode"      => "M",
+                "checkoutPaymentDetails" => [
+                    "cardBin"   => "411111",
+                    "cardLast4" => "1111"
+                ]
+            ]
+        ]
+    ];
+    $transactionResponse = $transactionApi->createTransaction($transactionData);
     ....
 ```
-This method with return a `GuaranteeResponse` which will have the properties populated.
-In case of error the `GuaranteeResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `TransactionResponse` which will have the properties populated.
+In case of error the `TransactionResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
-##### cancelGuarantee($guarantee);
-A Guarantee can be canceled for orders that no longer require a guarantee.
+### SaleApi
 
-For more info about the data that can be added please check the `Guarantee` model.
+The SaleApi is the class that maps the Post-Auth sale event functionality of the Signifyd API. This class has the methods that work with Sale events — orders submitted to Signifyd for review after payment has been authorized by your payment processor.
+
+There are multiple ways to instantiate the SaleApi class.
+Usage examples:
+```php
+<?php
+    // This might differ depending on the location of the file from which you your project
+    require __DIR__ . '/vendor/autoload.php'; 
+    
+    $saleApi = new \Signifyd\Core\Api\SaleApi(["apiKey" => "your api key"]);
+``` 
+Or using the Settings Class
+```php
+<?php
+    // This might differ depending on the location of the file from which you your project
+    require __DIR__ . '/vendor/autoload.php'; 
+    
+    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
+    $saleApi = new \Signifyd\Core\Api\SaleApi($settings);
+``` 
+
+#### Class methods
+All methods accept two type of data as parameters.
+
+The parameter as an array, which means that the constructor of the model will set the values of the class properties
+based on the data passed to the constructor.
+
+The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to
+the model.
+
+##### createSale($sale);
+Submit an order for fraud review after payment authorization.
+There are multiple ways for the data to be sent to the createSale method. One way is to send an array with all the data
+required to the createSale method. This is useful if you know what data needs to be sent.
+
+For more info about the data that can be added please check the `Sale` model.
 ```php
     ....
-    $quarantee = new \Signifyd\Model\Guarantee(['caseId' => 123456789]);
-    $guaranteeResponse = $guaranteeApi->cancelGuarantee($quarantee);
+    // Sale data
+    $saleData = [
+        "orderId" => "ORDER-10046",
+        "purchase" => [
+            // Data related to the purchase event represented in this Sale Creation request.
+        ],
+        "transactions" => [
+            // Data related to the payment transaction(s) for this order.
+        ],
+        "userAccount" => [
+            // User account data if the buyer has an account.
+        ],
+    ];
+    $saleResponse = $saleApi->createSale($saleData);
+    ....
+``` 
+Another way is to use the setters and getters of the models so you can add data.
+```php
+    ....
+    $sale = new \Signifyd\Models\Sale();
+    // Purchase array data or Purchase Object
+    $sale->setPurchase($purchase);
+    
+    // Transaction array data or Transaction Object
+    $sale->setTransactions($transactions);
+    
+    // userAccount array data or userAccount Object
+    $sale->setUserAccount($userAccount);
+    
+    $saleResponse = $saleApi->createSale($sale);
+```
+An example of a JSON object sent to our API:
+```json
+{
+    "orderId": "ORDER-10046",
+    "purchase": {
+        "browserIpAddress": "10.0.0.42",
+        "orderedAt": "2024-09-15T16:00:00Z",
+        "orderChannel": "WEB",
+        "totalPrice": 74.99,
+        "currency": "USD",
+        "products": [
+            {
+                "itemId": "SKU-202",
+                "itemName": "Running Shoes",
+                "itemUrl": "https://store.example.com/products/shoes",
+                "itemImage": "https://store.example.com/images/shoes.jpeg",
+                "itemQuantity": 1,
+                "itemPrice": 74.99
+            }
+        ],
+        "shipments": [
+            {
+                "shipper": "FedEx",
+                "shippingMethod": "EXPRESS",
+                "shippingPrice": 9.99,
+                "destination": {
+                    "fullName": "John Doe",
+                    "streetAddress": "456 Oak Ave",
+                    "city": "Austin",
+                    "provinceCode": "TX",
+                    "postalCode": "73301",
+                    "countryCode": "US"
+                }
+            }
+        ]
+    },
+    "transactions": [
+        {
+            "transactionId": "TXN-99234",
+            "currency": "USD",
+            "amount": 74.99,
+            "paymentMethod": "CREDIT_CARD",
+            "gateway": "braintree",
+            "gatewayStatusCode": "1000",
+            "gatewayStatusMessage": "Approved",
+            "type": "AUTHORIZATION",
+            "avsResponseCode": "Y",
+            "cvvResponseCode": "M",
+            "checkoutPaymentDetails": {
+                "cardBin": "555555",
+                "cardLast4": "4444",
+                "billingAddress": {
+                    "streetAddress": "456 Oak Ave",
+                    "city": "Austin",
+                    "provinceCode": "TX",
+                    "postalCode": "73301",
+                    "countryCode": "US"
+                }
+            }
+        }
+    ],
+    "userAccount": {
+        "email": "john.doe@example.com",
+        "username": "johndoe",
+        "phone": "5555559876",
+        "createdDate": "2021-06-01T00:00:00Z",
+        "accountNumber": "54321",
+        "lastOrderId": "ORDER-10040"
+    }
+}
+```
+This method with return a `SaleResponse` which will have the `checkpointAction` property populated.
+In case of error the `SaleResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
+### FulfillmentApi
+
+The FulfillmentApi is the class that notifies Signifyd of order fulfillment status updates. Sending fulfillment data helps Signifyd improve fraud detection accuracy and supports chargeback dispute evidence.
+
+There are multiple ways to instantiate the FulfillmentApi class.
+Usage examples:
+```php
+<?php
+    // This might differ depending on the location of the file from which you your project
+    require __DIR__ . '/vendor/autoload.php'; 
+    
+    $fulfillmentApi = new \Signifyd\Core\Api\FulfillmentApi(["apiKey" => "your api key"]);
+``` 
+Or using the Settings Class
+```php
+<?php
+    // This might differ depending on the location of the file from which you your project
+    require __DIR__ . '/vendor/autoload.php'; 
+    
+    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
+    $fulfillmentApi = new \Signifyd\Core\Api\FulfillmentApi($settings);
+``` 
+
+#### Class methods
+All methods accept two type of data as parameters.
+
+The parameter as an array, which means that the constructor of the model will set the values of the class properties
+based on the data passed to the constructor.
+
+The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to
+the model.
+
+##### createFulfillment($fulfillment);
+This sends the request to our API Endpoint to add fulfillment status for an order. One way is to send an array with all the data required to the createFulfillment method.
+
+For more info about the data that can be added please check the `Fulfillment` model.
+```php
+    ....
+    $fulfillmentData = [
+        "orderId" => "ORDER-10046",
+        "fulfillments" => [
+            // Fulfillment data
+        ]
+    ];
+    $fulfillmentResponse = $fulfillmentApi->createFulfillment($fulfillmentData);
     ....
 ```
-This method with return a `GuaranteeResponse` which will have the properties populated.
-In case of error the `GuaranteeResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `FulfillmentResponse` which will have the properties populated.
+In case of error the `FulfillmentResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
+#### PURCHASE MANAGEMENT
+
+> **Note:** The Purchase Management group does not have a dedicated SDK class yet. The examples below use [GuzzleHttp](https://docs.guzzlephp.org/) to call the API directly. A dedicated `PurchaseManagementApi` class will be added in a future version of the SDK.
+
+### Reroute
+
+The Reroute API allows you to update the shipment destination for a previously submitted order.
+
+##### POST /v3/orders/events/reroutes
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/reroutes', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'   => 'ORDER-10045',
+            'shipments' => [
+                [
+                    'destination' => [
+                        'fullName'      => 'Jane Smith',
+                        'streetAddress' => '456 New Ave',
+                        'city'          => 'Austin',
+                        'provinceCode'  => 'TX',
+                        'postalCode'    => '73301',
+                        'countryCode'   => 'US',
+                    ],
+                ],
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+### Get Decision
+
+Retrieves the latest fraud decision for a previously submitted order.
+
+##### GET /v3/orders/{orderId}/decision
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/orders/ORDER-10045/decision', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+### Get Decisions
+
+Retrieves the full list of decisions associated with an order.
+
+##### GET /v3/orders/{orderId}/decisions
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/orders/ORDER-10045/decisions', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### RETURNS & APPEASEMENTS
+
+> **Note:** The Returns & Appeasements group does not have a dedicated SDK class yet. The examples below use [GuzzleHttp](https://docs.guzzlephp.org/) to call the API directly. A dedicated `ReturnsApi` class will be added in a future version of the SDK.
+
+### Attempt Return
+
+Submit a return, refund, or exchange request to Signifyd for fraud evaluation. Use this endpoint when you need a decision from Signifyd before processing the return.
+
+##### POST /v3/orders/events/returns/attempts
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/returns/attempts', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'      => 'ORDER-10045',
+            'returnId'     => 'RETURN-001',
+            'returnDate'   => '2024-09-20T10:00:00Z',
+            'returnPolicy' => 'EVALUATE',
+            'returnedItems' => [
+                [
+                    'itemId'       => 'SKU-001',
+                    'itemName'     => 'Wireless Headphones',
+                    'itemQuantity' => 1,
+                    'itemPrice'    => 129.99,
+                ],
+            ],
+            'refund' => [
+                'amount'   => 129.99,
+                'currency' => 'USD',
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `returnPolicy`: `EVALUATE`, `INFO_ONLY`.
+
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+### Execute Return
+
+Inform Signifyd of the final action taken on a return request previously submitted via the Attempt Return endpoint.
+
+##### POST /v3/orders/events/returns/executions
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/returns/executions', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'      => 'ORDER-10045',
+            'returnId'     => 'RETURN-001',
+            'returnStatus' => 'REFUNDED',
+            'executedAt'   => '2024-09-21T14:00:00Z',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `returnStatus`: `OPEN`, `CANCELED`, `REFUNDED`, `REPLACED`, `IN_ANALYSIS`, `DECLINED`, `RETURN_PENDING`, `PARTIAL_SETTLEMENT`.
+
+This endpoint returns `200` if already executed (no update), `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+### Record Return
+
+Record a return, exchange, or refund that does not require a decision from Signifyd (i.e. already processed on your side).
+
+##### POST /v3/orders/events/returns/records
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/returns/records', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'      => 'ORDER-10045',
+            'returnId'     => 'RETURN-002',
+            'returnStatus' => 'REFUNDED',
+            'returnDate'   => '2024-09-21T14:00:00Z',
+            'returnedItems' => [
+                [
+                    'itemId'       => 'SKU-202',
+                    'itemQuantity' => 1,
+                    'itemPrice'    => 74.99,
+                ],
+            ],
+            'refund' => [
+                'amount'            => 74.99,
+                'currency'          => 'USD',
+                'refundTransactionId' => 'TXN-REFUND-001',
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `returnStatus`: `CANCELED`, `REFUNDED`, `REPLACED`, `DECLINED`.
+
+This endpoint returns `201` on success, `204` if no response expected, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, `409` on conflict, and `500` on server error.
+
+### Return Feedback
+
+Provide Signifyd with quality feedback on a return decision — whether the return turned out to be legitimate, abusive, or fraudulent.
+
+##### POST /v3/orders/events/returns/feedback
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/returns/feedback', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'       => 'ORDER-10045',
+            'returnId'      => 'RETURN-001',
+            'returnOutcome' => 'GOOD',
+            'feedbackAt'    => '2024-09-25T10:00:00Z',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `returnOutcome`: `GOOD`, `ABUSIVE`, `FRAUD`, `NO_ITEM_RETURNED`.
+
+This endpoint returns `200` if feedback already exists (no update), `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### CHARGEBACKS
+
+> **Note:** The Chargebacks group does not have a dedicated SDK class yet. The examples below use [GuzzleHttp](https://docs.guzzlephp.org/) to call the API directly. A dedicated `ChargebackApi` class will be added in a future version of the SDK.
+
+### Create Chargeback
+
+Report a new chargeback against an order to Signifyd. Multiple chargebacks can be created against the same order depending on team settings.
+
+##### POST /v3/orders/events/chargebacks
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/chargebacks', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'      => 'ORDER-10045',
+            'chargebackId' => 'CB-78901',
+            'chargeback'   => [
+                'amount'   => 74.99,
+                'currency' => 'USD',
+                'reason'   => 'FRAUD',
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `201` on success, `204` if no response expected, `400` on validation failure, `401` on authentication failure, `404` if order not found, `409` if chargeback already exists, and `500` on server error.
+
+### Chargeback Stage
+
+Update the stage of an existing chargeback as it progresses through the dispute lifecycle.
+
+##### POST /v3/orders/events/chargebacks/stages
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/chargebacks/stages', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orderId'         => 'ORDER-10045',
+            'chargebackId'    => 'CB-78901',
+            'chargebackStage' => 'CHARGEBACK',
+            'dueDate'         => '2024-10-15T00:00:00Z',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `chargebackStage`: `RETRIEVAL`, `CHARGEBACK`, `PREARBITRATION`, `ARBITRATION`, `RECALLED`.
+
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `404` if chargeback not found, `409` if stage transition conflicts, and `500` on server error.
+
+#### WEBHOOKS
 
 ### WebhookApi
-The WebhookApi is the class the maps the main webhooks functionality of the Signify API. This class has the methods 
+The WebhookApi is the class that maps the main webhooks functionality of the Signifyd API. This class has the methods
 that work with webhooks.
 
 There are multiple ways to instantiate the WebhookApi class.
@@ -400,7 +811,7 @@ Usage examples:
     // This might differ depending on the location of the file from which you your project
     require __DIR__ . '/vendor/autoload.php'; 
     
-    $webhooksApi = new \Signifyd\Core\Api\WebhooksApi(["apiKey" => "your api key"]);
+    $webhookApi = new \Signifyd\Core\Api\WebhookApi(["apiKey" => "your api key"]);
 ``` 
 Or using the Settings Class
 ```php
@@ -409,215 +820,712 @@ Or using the Settings Class
     require __DIR__ . '/vendor/autoload.php'; 
     
     $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
-    $webhooksApi = new \Signifyd\Core\Api\WebhooksApi($settings);
+    $webhookApi = new \Signifyd\Core\Api\WebhookApi($settings);
 ``` 
 
 #### Class methods
-All methods accept two type of data as parameters. 
+All methods accept two type of data as parameters.
 
-The parameter as an array, which means that the constructor of the model will set the values of the class properties 
+The parameter as an array, which means that the constructor of the model will set the values of the class properties
 based on the data passed to the constructor.
 
-The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to 
+The parameter as an object, which means that after the instanciate of the class you can use the setters to add data to
 the model.
 
-##### validWebhookRequest($request, $hash, $topic);
-Check if a webhook callback is valid.
+##### createWebhook($webhook);
+Create a webhook in Signifyd.
+
+For more info about the data that can be added please check the `Webhook` model.
 ```php
     ....
-    $valid = $webhooksApi->validWebhookRequest($request, $hash, $topic);
+    $webhook = new \Signifyd\Models\Webhook([
+        "url"     => "https://your-store.com/signifyd/webhook",
+        "event"   => "ORDER_CHECKPOINT_ACTION_UPDATE",
+        "enabled" => true
+    ]);
+    $webhookResponse = $webhookApi->createWebhook($webhook);
     ....
 ```
-This is a helper function which does not connect to signifyd.
-This method with return a boolean `true` in case of a valid request or `false` in case of a invalid request.
-
-##### createWebhooks($webhooks);
-Create webhooks in Signifyd.
-
-For more info about the data that can be added please check the `Wehbook` model.
-```php
-    ....
-    $webhook1 = new \Signifyd\Model\Webhook([
-        // Webhook data
-    ]);
-    $webhook2 = new \Signifyd\Model\Webhook([
-        // Webhook data
-    ]);
-    $webhooks = [$webhook1, $webhook2];
-    $webhooksBulkResponse = $webhooksApi->createWebhooks($webhooks);
-    ....
-```
-This method with return a `WebhooksBulkResponse` which will have the `objects` property populated with `WebhooksResponse` with all the properties populated.
-In case of error the `WebhooksBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
-Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
-
-##### updateWebhooks($webhooks);
-Update webhooks in Signifyd.
-
-For more info about the data that can be added please check the `Wehbook` model.
-```php
-    ....
-    $webhook1 = new \Signifyd\Model\Webhook([
-        // Webhook data
-    ]);
-    $webhook2 = new \Signifyd\Model\Webhook([
-        // Webhook data
-    ]);
-    $webhooks = [$webhook1, $webhook2];
-    $webhooksBulkResponse = $webhooksApi->updateWebhooks($webhooks);
-    ....
-```
-This method with return a `WebhooksBulkResponse` which will have the `objects` property populated with `WebhooksResponse` with all the properties populated.
-In case of error the `WebhooksBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
-Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
-
-##### getWebhooks();
-Retrive a list of webhooks set in Signifyd.
-```php
-    ....
-    $webhooksBulkResponse = $webhooksApi->getWebhooks();
-    ....
-```
-This method with return a `WebhooksBulkResponse` which will have the `objects` property populated with `WebhooksResponse` with all the properties populated.
-In case of error the `WebhooksBulkResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `WebhookResponse` which will have the properties populated.
+In case of error the `WebhookResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ##### updateWebhook($webhook);
-Update a single webhook in Signifyd.
+Update a webhook in Signifyd.
 
-For more info about the data that can be added please check the `Wehbook` model.
+For more info about the data that can be added please check the `Webhook` model.
 ```php
     ....
-    $webhook = new \Signifyd\Model\Webhook([
+    $webhook = new \Signifyd\Models\Webhook([
         // Webhook data
     ]);
-    $webhooksResponse = $webhooksApi->updateWebhook($webhook);
+    $webhookResponse = $webhookApi->updateWebhook($webhook);
     ....
 ```
-This method with return a `WebhooksResponse` which will have the properties populated.
-In case of error the `WebhooksResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `WebhookResponse` which will have the properties populated.
+In case of error the `WebhookResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
+
+##### getWebhooks();
+Retrieve a list of webhooks set in Signifyd.
+```php
+    ....
+    $webhookResponse = $webhookApi->getWebhooks();
+    ....
+```
+This method with return a `WebhookResponse` which will have the properties populated.
+In case of error the `WebhookResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ##### deleteWebhook($webhook);
 Delete a webhook from Signifyd.
 
-For more info about the data that can be added please check the `Wehbook` model.
+For more info about the data that can be added please check the `Webhook` model.
 ```php
     ....
-    $webhook = new \Signifyd\Model\Webhook([
+    $webhook = new \Signifyd\Models\Webhook([
         // Webhook data
     ]);
-    $webhooksResponse = $webhooksApi->deleteWebhook($webhook);
+    $webhookResponse = $webhookApi->deleteWebhook($webhook);
     ....
 ```
-This method with return a `WebhooksResponse` which will have the properties populated.
-In case of error the `WebhooksResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+This method with return a `WebhookResponse` which will have the properties populated.
+In case of error the `WebhookResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
 Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
+#### ACCOUNTS
+
+> **Note:** The Accounts group does not have a dedicated SDK class yet. The examples below use [GuzzleHttp](https://docs.guzzlephp.org/) to call the API directly. Note that these endpoints currently use Signifyd's v2 API paths, as v3 equivalents are not yet available. A dedicated `AccountApi` class will be added in a future version of the SDK.
+
+### Account Modification
+
+The Account Modification API is designed to detect risky changes to user account information, such as changing their email, password, address, or contact details. By sending this event, Signifyd analyses the modification and determines the effectiveness of the change and if it should be blocked.
+
+##### POST /v2/consumers/events/modifications
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v2/consumers/events/modifications', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'modifiedField'    => 'FIELD_EMAIL',
+            'modifiedAt'       => '2024-09-15T14:23:00Z',
+            'newEmail'         => 'new.email@example.com',
+            'loginMethodType'  => 'PASSWORD',
+            'userFingerprint'  => 'abc123fingerprint',
+            'emailIdentifier'  => 'john.doe@example.com',
+            'device'           => [
+                'browserIpAddress' => '192.168.1.1',
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+An example of a JSON object sent to our API:
+```json
+{
+    "modifiedField": "FIELD_EMAIL",
+    "modifiedAt": "2024-09-15T14:23:00Z",
+    "newEmail": "new.email@example.com",
+    "loginMethodType": "PASSWORD",
+    "userFingerprint": "abc123fingerprint",
+    "emailIdentifier": "john.doe@example.com",
+    "device": {
+        "browserIpAddress": "192.168.1.1"
+    }
+}
+```
+Available values for `modifiedField`: `FIELD_EMAIL`, `FIELD_PASSWORD`, `FIELD_PHONE`, `FIELD_ADDRESS`, `FIELD_NAME`.
+
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if the entity is not found, and `500` on server error.
+
+### Account Login
+
+The Account Login API is designed to detect and prevent account takeover (ATO) attempts. It enables actionable, real-time actions on login events enabling businesses to block high-risk logins while maintaining a seamless experience for trusted users.
+
+##### POST /v2/consumers/events/logins
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v2/consumers/events/logins', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'loginMethodType'  => 'PASSWORD',
+            'loginResult'      => 'SUCCESS',
+            'loginAt'          => '2024-09-15T14:23:00Z',
+            'loginAccountId'   => 'ACC-9876',
+            'isNewDevice'      => false,
+            'emailIdentifier'  => 'john.doe@example.com',
+            'device'           => [
+                'browserIpAddress' => '192.168.1.1',
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+An example of a JSON object sent to our API:
+```json
+{
+    "loginMethodType": "PASSWORD",
+    "loginResult": "SUCCESS",
+    "loginAt": "2024-09-15T14:23:00Z",
+    "loginAccountId": "ACC-9876",
+    "isNewDevice": false,
+    "emailIdentifier": "john.doe@example.com",
+    "device": {
+        "browserIpAddress": "192.168.1.1"
+    }
+}
+```
+Available values for `loginMethodType`: `PASSWORD`, `SOCIAL_FACEBOOK`, `SOCIAL_GOOGLE`, `SOCIAL_TWITTER`, `SOCIAL_APPLE`, `KEY_TOKEN`.
+
+This endpoint returns `200` on success, `201` when a new login record is created, `400` on validation failure, `401` on authentication failure, `403` on permission denied, and `500` on server error.
+
+### Account Opening
+
+The Account Opening API is designed to detect and prevent false account creation. It automatically identifies if the account that is being created is associated with the Signifyd network — if it is, Signifyd can add additional context. By incorporating this check into your account open flow, you can identify and ensure ATO behaviour and protect against like-for-like fraud.
+
+##### POST /v2/consumers/events/openings
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v2/consumers/events/openings', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'openingId'       => 'OPENING-10001',
+            'fullName'        => 'John Doe',
+            'accountNumber'   => 'ACC-9876',
+            'email'           => 'john.doe@example.com',
+            'verifiedEmail'   => true,
+            'phone'           => '5555551212',
+            'verifiedPhone'   => false,
+            'createdAt'       => '2024-09-15T14:23:00Z',
+            'signupMethod'    => 'PASSWORD',
+            'accountType'     => 'SILVER',
+            'emailIdentifier' => 'john.doe@example.com',
+            'device'          => [
+                'browserIpAddress' => '192.168.1.1',
+            ],
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+An example of a JSON object sent to our API:
+```json
+{
+    "openingId": "OPENING-10001",
+    "fullName": "John Doe",
+    "accountNumber": "ACC-9876",
+    "email": "john.doe@example.com",
+    "verifiedEmail": true,
+    "phone": "5555551212",
+    "verifiedPhone": false,
+    "createdAt": "2024-09-15T14:23:00Z",
+    "signupMethod": "PASSWORD",
+    "accountType": "SILVER",
+    "emailIdentifier": "john.doe@example.com",
+    "device": {
+        "browserIpAddress": "192.168.1.1"
+    }
+}
+```
+This endpoint returns `200` if the Account Opening event has been successfully created, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if the entity is not found, and `500` on server error.
+
+#### PARTNERS
+
+> **Note:** The Partners group does not have a dedicated SDK class yet. The examples below use [GuzzleHttp](https://docs.guzzlephp.org/) to call the API directly. A dedicated `PartnerApi` class will be added in a future version of the SDK.
+
+The Partners API is used by Signifyd partners to manage their organizations, teams, members, and users. All endpoints require a `partnerId` path parameter, which is Signifyd's unique identifier for the partner. This can also accept the placeholder `0` which will automatically populate with your `partnerId` using your partner credentials via API.
+
+### Organizations
+
+#### Get Organization
+Retrieve details for a specific organization within a partner account.
+
+##### GET /v3/partners/{partnerId}/organizations/{orgId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/partners/0/organizations/12345', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Add Organization Member
+Adds a user as an `Organization` level member, granting access to all `Teams` belonging to that `Organization`.
+
+##### POST /v3/partners/{partnerId}/organizations/{orgId}/members
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/organizations/12345/members', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'content-type'  => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'userId' => 123456,
+            'role'   => 'MEMBER',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `role`: `REVIEWER`, `MEMBER`, `ADMIN`.
+
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, `408` if the user already has a membership at the `Organization` level, and `500` on server error.
+
+### Users
+
+#### Create User
+Creates a user with a given email address or finds an already created user by the Partner. The user will initially not be a member of any Team or Organization.
+
+##### POST /v3/partners/{partnerId}/users
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/users', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'email' => 'user@mycompany.com',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` if the user already exists and is owned by the Partner, `201` if the user is successfully created, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+### Teams
+
+A fundamental unit of the Signifyd API. A single `Team` typically equates to a single investment. Orders are submitted to Signifyd under that `Team` and users belonging to that `Team` can access those orders in the Signifyd Console.
+
+#### Create Team
+##### POST /v3/partners/{partnerId}/teams
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/teams', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'orgId'               => 12345,
+            'name'                => 'Initrode East Division',
+            'website'             => 'https://initrode-east.com',
+            'chargebackSettings'  => 'CHARGEBACKSETTINGS_DIRECT',
+            'merchantDescription' => 'A retail store chain',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Get Team
+##### GET /v3/partners/{partnerId}/teams/{teamId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/partners/0/teams/789123', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Update Team
+##### POST /v3/partners/{partnerId}/teams/{teamId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/teams/789123', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'name'                => 'Initrode East Division',
+            'website'             => 'https://initrode-east.com',
+            'merchantDescription' => 'A retail store chain',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Set Team Live
+Changes the team status from `BURN_IN` to `LIVE`. For teams created using the Partners API, Signifyd will have to approve internally before this endpoint can work.
+
+##### POST /v3/partners/{partnerId}/teams/{teamId}/live
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/teams/789123/live', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, `408` if the request conflicts with data already on the system, and `500` on server error.
+
+#### Add Team Product
+Adds a product offering to the Team.
+
+##### POST /v3/partners/{partnerId}/teams/{teamId}/products
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/teams/789123/products', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'product' => 'GFP',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `product`: `GFP` (Guaranteed Fraud Protection), `CBR` (Chargeback Recovery), `RECS` (Recommendations), `SCOR` (Scoring).
+
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, `408` if the request conflicts with existing data, and `500` on server error.
+
+#### Get Team Members
+Gets a paginated list of details for all members at the `Team` level.
+
+##### GET /v3/partners/{partnerId}/teams/{teamId}/members
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/partners/0/teams/789123/members', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'query' => [
+            'limit'  => 50,
+            'offset' => 0,
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Add Team Member
+Adds a user as a `Team` level member.
+
+##### POST /v3/partners/{partnerId}/teams/{teamId}/members
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/teams/789123/members', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'userId' => 123456,
+            'role'   => 'REVIEWER',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+Available values for `role`: `REVIEWER` (can view Orders, cannot perform User management), `MEMBER` (can view Orders and cancel guarantee Orders, cannot perform User management), `ADMIN` (full rights and privileges).
+
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, `408` if the user already has a membership at the `Team` level, and `500` on server error.
+
+#### Update Team Member
+Updates a member at a `Team` level. Any fields not specified will not be changed.
+
+##### POST /v3/partners/{partnerId}/teams/{teamId}/members/{userId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/teams/789123/members/123456', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'role' => 'ADMIN',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Get Team Member
+Gets the details of a `Team` member.
+
+##### GET /v3/partners/{partnerId}/teams/{teamId}/members/{userId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/partners/0/teams/789123/members/123456', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Remove Team Member
+Removes `Team` membership from a user.
+
+##### DELETE /v3/partners/{partnerId}/teams/{teamId}/members/{userId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('DELETE', 'https://api.signifyd.com/v3/partners/0/teams/789123/members/123456', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `204` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+### Partners (Members)
+
+#### Get Partner Members
+Gets a paginated list of details for all members at the `Partner` level.
+
+##### GET /v3/partners/{partnerId}/members
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/partners/0/members', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'query' => [
+            'limit'  => 50,
+            'offset' => 0,
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Add Partner Member
+Adds a user as a `Partner` level member. Such members will have access to all `Teams` belonging to the `Partner`. Members at `Partner` level can only be removed at `Partner` level.
+
+##### POST /v3/partners/{partnerId}/members
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/members', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'userId' => 123456,
+            'role'   => 'REVIEWER',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `201` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, `408` if the user already has a membership at the `Partner` level, and `500` on server error.
+
+#### Update Partner Member
+Updates a member at a `Partner` level. Any fields not specified will not be changed.
+
+##### POST /v3/partners/{partnerId}/members/{userId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('POST', 'https://api.signifyd.com/v3/partners/0/members/123456', [
+        'headers' => [
+            'accept'       => 'application/json',
+            'content-type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+        'json' => [
+            'role' => 'ADMIN',
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Get Partner Member
+Gets the details of a `Partner` member.
+
+##### GET /v3/partners/{partnerId}/members/{userId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('GET', 'https://api.signifyd.com/v3/partners/0/members/123456', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `200` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
+#### Remove Partner Member
+Removes `Partner` membership from a user. This will remove the ability for that user to access information regarding all `Organizations` and `Teams` that the user is not directly a member of.
+
+##### DELETE /v3/partners/{partnerId}/members/{userId}
+```php
+    ....
+    $client = new \GuzzleHttp\Client();
+    $response = $client->request('DELETE', 'https://api.signifyd.com/v3/partners/0/members/123456', [
+        'headers' => [
+            'accept'        => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
+        ],
+    ]);
+    echo $response->getBody();
+    ....
+```
+This endpoint returns `204` on success, `400` on validation failure, `401` on authentication failure, `403` on permission denied, `404` if not found, and `500` on server error.
+
 SDK API Responses
--------------
-### CaseResponse
-Case response is the response that is returned when the case api is called
+-----------------
+### CheckoutResponse
+Checkout response is the response that is returned when the checkout api is called
 ##### Properties
 Name | 
 ------- | 
-**guaranteeEligible** 
-**guaranteeDisposition** |
-**status** |
-**caseId** |
-**score** |
-**uuid** |
-**headline** |
 **orderId** |
-**orderDate** |
-**orderAmount** |
-**associatedTeam** |
-**reviewDisposition** |
-**createdAt** |
-**updatedAt** |
-**orderOutcome** |
-**currency** |
-**adjustedScore** |
-**testInvestigation** |
-**logger** |
+**checkoutId** |
+**signifydId** |
+**checkpointAction** |
+**score** |
+**checkpointActionReason** |
+**checkpointActionPolicy** |
+**coverage** |
 **isError** | 
 **errorMessage** |
 
 You can access any value by using the getters methods in the response
 
-### FulfillmentBulkResponse
-Fulfillment bulk response onse is the response that is returned when the case api addFulfillment method is called
+### TransactionResponse
+Transaction response is the response that is returned when the transaction api is called
 ##### Properties
 Name |
 ------- |
-**objects** | 
-**logger** |
+**orderId** |
+**signifydId** |
 **isError** | 
 **errorMessage** |
 
 You can access any value by using the getters methods in the response
 
-### GuaranteeResponse
-Guarantee response is the returned value when the guarantee api is called
+### SaleResponse
+Sale response is the response that is returned when the sale api is called
 ##### Properties
 Name |
 ------- |
-**disposition** | 
-**reviewedBy** | 
-**reviewedAt** | 
-**submittedBy** | 
-**submittedAt** | 
-**rereviewCount** | 
-**guaranteeId** | 
-**caseId** | 
+**orderId** |
+**signifydId** |
+**checkpointAction** |
+**score** |
+**checkpointActionReason** |
+**checkpointActionPolicy** |
+**coverage** |
 **isError** | 
-**errorMessage** | 
-**logger** | 
+**errorMessage** |
 
 You can access any value by using the getters methods in the response
 
-### WebhooksResponse
-Webhoook response is the returned value when the webhook api for update and delete webhook methods are called
+### FulfillmentResponse
+Fulfillment response is the response that is returned when the fulfillment api is called
+##### Properties
+Name |
+------- |
+**orderId** | 
+**isError** | 
+**errorMessage** |
+
+You can access any value by using the getters methods in the response
+
+### WebhookResponse
+Webhook response is the returned value when the webhook api methods are called
 ##### Properties
 Name |
 ------- |
 **id** | 
 **eventType** | 
-**eventDisplayText** | 
 **url** | 
-**team** | 
+**enabled** | 
 **isError** | 
 **errorMessage** | 
-**responseArray** | 
-**logger** | 
-
-You can access any value by using the getters methods in the response
-
-### WebhooksBulkResponse
-Webhoook bulk response is the returned value when the webhook api for get, create and update webhooks methods are called
-##### Properties
-Name |
-------- |
-**objects** | 
-**isError** | 
-**errorMessage** |
-**logger** | 
 
 You can access any value by using the getters methods in the response
 
 SDK Settings
 ------------
 ### Settings
-Contains a shipping/billing address
+Contains the SDK configuration settings
 ##### Properties
 Name | Type | Description | Notes
 ------- | ------- | ------- | -------
 **apiKey** | **string** | The api key from Signifyd |
-**apiAddress** | **string** | The default api url | "https://api.signifyd.com/v2/";
+**apiAddress** | **string** | The default api url | "https://api.signifyd.com/v3/";
 **validateData** | **string** | To validate or not the data | true;
 **timeout** | **integer** | The default timeout for the curl connection | 30;
 **retry** | **boolean** | Should the SDK retry when it receives know errors | false;
-**SSLVerification** | **boolean** | Should curl check the ssl certificate | false;
+**SSLVerification** | **boolean** | Should curl check the ssl certificate | true;
 **consoleOut** | **boolean** | Should the SDK output the logs to php://stdout | false;
 **logEnabled** | **boolean** | Should the logs be enabled | true;
 
@@ -629,217 +1537,170 @@ The address object is a container for the address information, for the order tha
 The address class can be found under namespace "Signifyd\Models", located lib/Models/Address.php.
 
 ```php
-    // instantiating the address model class
-    $addressData = ['streetAddress' => '2 Brodway', '...'];
+    $addressData = ['streetAddress' => '2 Broadway', '...'];
     $address = new \Signifyd\Models\Address($addressData);
 ```
 or
 ```php
-    // instantiating the address model class
     $address = new \Signifyd\Models\Address();
-    $address->setSteetAddress('2 Brodway');
+    $address->setStreetAddress('2 Broadway');
 ```
 
-### Card
-Data related to the card that was used for the purchase and its cardholder
-The card object is a container for the card information, for the order that was placed in your store.
-The card class can be found under namespace "Signifyd\Models", located lib/Models/Card.php.
+### Checkout
+Data related to the Pre-Auth checkout event.
+The checkout object is the main container for the checkout related information that is sent to our API on checkout creation as a JSON string.
+The checkout class can be found under namespace "Signifyd\Models", located lib/Models/Checkout.php.
+The checkout object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 
 ```php
-    // instantiating the card model class
-    $cardData = ['cardHolderName' => 'John Doe', '...'];
-    $card = new \Signifyd\Models\Card($cardData);
+    $checkoutData = ['orderId' => 'ORDER-10045', 'purchase' => new \Signifyd\Models\Purchase(), '...'];
+    $checkout = new \Signifyd\Models\Checkout($checkoutData);
 ```
 or
 ```php
-    // instantiating the card model class
-    $card = new \Signifyd\Models\Card();
-    $card->setCardHolderName('John Doe');
+    $checkout = new \Signifyd\Models\Checkout();
+    $checkout->setOrderId('ORDER-10045');
+    $checkout->setPurchase(new \Signifyd\Models\Purchase());
 ```
-### CaseModel
-Data related to the case
-The case object is the main container for the case related information that is sent to our API on case creation as a JSON string.
-The case class can be found under namespace "Signifyd\Models", located lib/Models/CaseModel.php.
-The case object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
+
+### CheckoutPaymentDetails
+Data related to the payment method and billing address used at checkout.
+The checkoutPaymentDetails object is a container for the payment information collected during checkout.
+The checkoutPaymentDetails class can be found under namespace "Signifyd\Models", located lib/Models/CheckoutPaymentDetails.php.
 
 ```php
-    // instantiating the case model class
-    $caseData = ['purchase' => new \Signifyd\Model\Purchase(), '...'];
-    $caseModel = new \Signifyd\Models\CaseModel($caseData);
+    $paymentData = ['paymentMethod' => 'CREDIT_CARD', 'cardBin' => '411111', '...'];
+    $checkoutPaymentDetails = new \Signifyd\Models\CheckoutPaymentDetails($paymentData);
 ```
 or
 ```php
-    // instantiating the case model class
-    $caseModel = new \Signifyd\Models\CaseModel();
-    $caseModel->setPurchase(new \Signifyd\Model\Purchase());
+    $checkoutPaymentDetails = new \Signifyd\Models\CheckoutPaymentDetails();
+    $checkoutPaymentDetails->setPaymentMethod('CREDIT_CARD');
+    $checkoutPaymentDetails->setCardBin('411111');
 ```
+
 ### DiscountCode
-Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage.
+Any discount codes, coupons, or promotional codes used during checkout to receive a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage.
 The discountCode object is the container for discount code related information for the order that was placed in your store.
 The discountCode class can be found under namespace "Signifyd\Models", located lib/Models/DiscountCode.php.
 The discountCode object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 
 ```php
-    // instantiating the discount code model class
     $discountCodeData = ['code' => '598218sdareqw74fds', '...'];
     $discountCode = new \Signifyd\Models\DiscountCode($discountCodeData);
 ```
 or
 ```php
-    // instantiating the discount code model class
-    
     $discountCode = new \Signifyd\Models\DiscountCode();
 ```
-### Guarantee
-Guarantee data
-The guarantee object is the container for guarantee information that is sent to our API.
-The guarantee class can be found under namespace "Signifyd\Models", located lib/Models/Guarantee.php.
-The guarantee object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 
-```php
-    // instantiating the guarantee model class
-    $guaranteeData = ['caseId' => 1234567890];
-    $guarantee = new \Signifyd\Models\Guarantee($guaranteeData);
-```
-or
-```php
-    // instantiating the guarantee model class
-    
-    $guarantee = new \Signifyd\Models\Guarantee();
-```
-### PaymentUpdate
-Payment update data
-The paymentUpdate object is a container for the payment update information, for the order that was placed in your store.
-The paymentUpdate class can be found under namespace "Signifyd\Models", located lib/Models/PaymentUpdate.php.
-
-```php
-    // instantiating the payment update model class
-    $paymentUpdateData = ['paymentGateway' => 'Authorizenet', '...'];
-    $paymentUpdate = new \Signifyd\Models\PaymentUpdate($paymentUpdateData);
-```
-or
-```php
-    // instantiating the payment update model class
-    
-    $paymentUpdate = new \Signifyd\Models\PaymentUpdate();
-```
 ### Product
-The products purchased in the transaction
+The products purchased in the transaction.
 The product object is a container for the product information, for the order that was placed in your store.
-The product class can be found under namespace "Signifyd\Models", located lib/Models/Recipient.php.
+The product class can be found under namespace "Signifyd\Models", located lib/Models/Product.php.
 ```php
-    // instantiating the product model class
-    $productData = ['itemId' => 1251541, '...'];
+    $productData = ['itemId' => 'SKU-001', '...'];
     $product = new \Signifyd\Models\Product($productData);
 ```
 or
 ```php
-    // instantiating the product model class
-    
     $product = new \Signifyd\Models\Product();
 ```
+
 ### Purchase
-Data related to purchase event represented in this Case Creation request.
+Data related to purchase event represented in this request.
 The purchase object is a container for the order information, the order that was placed in your store.
 The purchase class can be found under namespace "Signifyd\Models", located lib/Models/Purchase.php.
 ```php
-    // instantiating the purchase address model class
-    $purchaseData = ['orderSessionId' => '1121aseaa324321ahiuhfsdiuhaiufds', '...'];
+    $purchaseData = ['browserIpAddress' => '192.168.1.1', '...'];
     $purchase = new \Signifyd\Models\Purchase($purchaseData);
 ```
 or
 ```php
-    // instantiating the purchase address model class
-    
     $purchase = new \Signifyd\Models\Purchase();
 ```
-### Recipient
-Data related to person or organization receiving the items purchased.
-The recipient object is a container for the recipient information, for the order that was placed in your store.
-The recipient class can be found under namespace "Signifyd\Models", located lib/Models/Recipient.php.
+
+### Sale
+Data related to the Post-Auth sale event.
+The sale object is the main container for the sale related information that is sent to our API on sale creation as a JSON string.
+The sale class can be found under namespace "Signifyd\Models", located lib/Models/Sale.php.
+The sale object has as properties other objects from the "Signifyd\Models" namespace, in order to facilitate the creation of a correct object that our API will be able to process without errors.
 
 ```php
-    // instantiating the recipient model class
-    $recipientData = ['fullName' => 'John Doe', '...'];
-    $recipient = new \Signifyd\Models\Recipient($recipientData);
+    $saleData = ['orderId' => 'ORDER-10046', 'purchase' => new \Signifyd\Models\Purchase(), '...'];
+    $sale = new \Signifyd\Models\Sale($saleData);
 ```
 or
 ```php
-    // instantiating the recipient model class
-    
-    $recipient = new \Signifyd\Models\Recipient();
+    $sale = new \Signifyd\Models\Sale();
+    $sale->setOrderId('ORDER-10046');
+    $sale->setPurchase(new \Signifyd\Models\Purchase());
 ```
-### Seller
-All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
-The seller object is a container for the seller information, for the order that was placed in your store.
-The seller class can be found under namespace "Signifyd\Models", located lib/Models/Seller.php.
 
-```php
-    // instantiating the seller model class
-    $sellerData = ['name' => 'My company', '...'];
-    $seller = new \Signifyd\Models\Seller($sellerData);
-```
-or
-```php
-    // instantiating the seller model class
-    
-    $seller = new \Signifyd\Models\Seller();
-```
 ### Shipment
 The shipments associated with this purchase.
 The shipment object is a container for the shipment information, for the order that was placed in your store.
 The shipment class can be found under namespace "Signifyd\Models", located lib/Models/Shipment.php.
 
 ```php
-    // instantiating the shipment model class
     $shipmentData = ['shipper' => 'Fedex', '...'];
     $shipment = new \Signifyd\Models\Shipment($shipmentData);
 ```
 or
 ```php
-    // instantiating the shipment model class
-    
     $shipment = new \Signifyd\Models\Shipment();
 ```
+
 ### Team
 
 ```php
-    // instantiating the team model class
     $teamData = ['teamId' => 1, '...'];
     $team = new \Signifyd\Models\Team($teamData);
 ```
 or
 ```php
-    // instantiating the team model class
-    
     $team = new \Signifyd\Models\Team();
 ```
+
+### Transaction
+Data related to a payment transaction for an order.
+The transaction object is a container for the transaction information, for the order that was placed in your store.
+The transaction class can be found under namespace "Signifyd\Models", located lib/Models/Transaction.php.
+
+```php
+    $transactionData = ['transactionId' => 'TXN-78912', 'gateway' => 'stripe', '...'];
+    $transaction = new \Signifyd\Models\Transaction($transactionData);
+```
+or
+```php
+    $transaction = new \Signifyd\Models\Transaction();
+    $transaction->setTransactionId('TXN-78912');
+    $transaction->setGateway('stripe');
+```
+
 ### UserAccount
 The userAccount object is a container for the user account information, for the order that was placed in your store.
 The userAccount class can be found under namespace "Signifyd\Models", located lib/Models/UserAccount.php.
 
 ```php
-    // instantiating the user account model class
-    $userData = ['emailAddress' => 'john@doe.com', '...'];
+    $userData = ['email' => 'john@doe.com', '...'];
     $userAccount = new \Signifyd\Models\UserAccount($userData);
 ```
 or
 ```php
-    // instantiating the user account model class
     $userAccount = new \Signifyd\Models\UserAccount();
 ```
+
 ### Webhook
-Wehook data
-The webhook object is a container for the user account information, for the order that was placed in your store.
+Webhook data.
+The webhook object is a container for the webhook registration information.
 The webhook class can be found under namespace "Signifyd\Models", located lib/Models/Webhook.php.
 
 ```php
-    // instantiating the webhook model class
-    $webhookData = ['event' => '', 'url' => 'Your Url'];
-    $webhook = new \Signifyd\Models\Webhook($webHookData);
+    $webhookData = ['event' => 'ORDER_CHECKPOINT_ACTION_UPDATE', 'url' => 'Your Url'];
+    $webhook = new \Signifyd\Models\Webhook($webhookData);
 ```
 or
 ```php
-    // instantiating the webhook model class
     $webhook = new \Signifyd\Models\Webhook();
 ```
