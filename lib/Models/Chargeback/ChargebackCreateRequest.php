@@ -35,85 +35,79 @@ class ChargebackCreateRequest extends Model
     public Amount $amount;
 
     /**
-     * A Payment Processor's view of the reason for the chargeback.
+     * A Payment Processor's view of the reason for the chargeback. Not enforced by the API, but its
+     * absence may compromise Guarantee liability-shift coverage for the chargeback.
      *
-     * @var Reason
+     * @var ?Reason
      */
-    public Reason $reason;
+    public ?Reason $reason = null;
 
     /**
      * Card holder's email.
      *
      * @var ?string
      */
-    public ?string $cardholderEmail;
+    public ?string $cardholderEmail = null;
 
     /**
      * Card holder's name.
      *
      * @var ?string
      */
-    public ?string $cardholderName;
+    public ?string $cardholderName = null;
 
     /**
      * The amount of Chargeback Fees intended to cover the costs and efforts involved in returning
      * funds from the merchant to the rightful cardholder.
      *
-     * @var ChargebackFees
+     * @var ?Amount
      */
-    public ChargebackFees $chargebackFees;
+    public ?Amount $chargebackFees = null;
 
     /**
      * Formatted as yyyy-MM-dd'T'HH:mm:ssZ per ISO 8601.
      *
-     * @var string
+     * @var ?string
      */
-    public string $issuerReportedDate;
+    public ?string $issuerReportedDate = null;
 
     /**
      * Formatted as yyyy-MM-dd'T'HH:mm:ssZ per ISO 8601.
      *
-     * @var string
+     * @var ?string
      */
-    public string $dueDate;
+    public ?string $dueDate = null;
 
     /**
      * Payment processor (e.g. WORLDPAY, ADYEN, PAYPAL etc.).
      *
-     * @var string
+     * @var ?string
      */
-    public string $paymentProcessor;
+    public ?string $paymentProcessor = null;
 
     /**
      * Payment network (e.g. Visa, Mastercard, etc.).
      *
-     * @var string
+     * @var ?string
      */
-    public string $paymentNetwork;
+    public ?string $paymentNetwork = null;
 
     /**
      * The Chargeback Stage refers to the stage within the chargeback dispute lifecycle that the chargeback is in with
      * respect to the payment processor/gateway.
      *
-     * @var string
+     * @var ?string
      */
-    public string $chargebackStage;
+    public ?string $chargebackStage = null;
 
     /**
      * Assumed ownership is an optional field passed to Signifyd to provide details about the assumed owning party
      * of the representation rights upon creation of the chargeback case.
      * This field will be ignored unless the caller is a Signifyd partner.
      *
-     * @var AssumedOwnership
+     * @var ?AssumedOwnership
      */
-    public AssumedOwnership $assumedOwnership;
-
-    /**
-     * This object is not required if the Fulfillments API endpoint has been used.
-     *
-     * @var Fullfilments
-     */
-    public Fullfilments $fullfilments;
+    public ?AssumedOwnership $assumedOwnership = null;
 
     /**
      * The class attributes
@@ -131,16 +125,10 @@ class ChargebackCreateRequest extends Model
         'paymentProcessor',
         'paymentNetwork',
         'chargebackStage',
-        'assumedOwnership',
-        'fullfilments'
+        'assumedOwnership'
     ];
 
-    protected $arrayOfObjectFields = [
-        'amount',
-        'reason',
-        'assumedOwnership',
-        'fullfilments'
-    ];
+    protected $arrayOfObjectFields = [];
 
     protected $stringFields = [
         'cardholderEmail',
@@ -153,46 +141,41 @@ class ChargebackCreateRequest extends Model
     ];
 
     /**
+     * Explicit mapping of object fields to their correct classes.
+     * Used instead of automatic class-name derivation from field names.
+     *
+     * @var array
+     */
+    protected $objectFields = [
+        'amount'           => Amount::class,
+        'reason'           => Reason::class,
+        'chargebackFees'   => Amount::class,
+        'assumedOwnership' => AssumedOwnership::class,
+    ];
+
+    /**
      * ChargebackCreateRequest constructor.
      *
      * @param array $chargebackCreateRequest
      */
     public function __construct(array $chargebackCreateRequest = [])
     {
-        // Check if something was passed to the class
         if (is_array($chargebackCreateRequest) && !empty($chargebackCreateRequest)) {
-            foreach ($this->fields as $field) {
-                // init the class name
-                $class = '\Signifyd\Models\\' . ucfirst($field);
+            foreach ($this->stringFields as $field) {
+                if (array_key_exists($field, $chargebackCreateRequest) && !is_array($chargebackCreateRequest[$field])) {
+                    $this->{'set' . ucfirst($field)}($chargebackCreateRequest[$field]);
+                }
+            }
 
-                // make sure no wild data is sent
-                if (array_key_exists($field, $chargebackCreateRequest) === false) {
+            foreach ($this->objectFields as $field => $class) {
+                if (!array_key_exists($field, $chargebackCreateRequest)) {
                     continue;
                 }
-
-                if (is_array($chargebackCreateRequest[$field]) && !empty($chargebackCreateRequest[$field])) {
-                    if (in_array($field, $this->arrayOfObjectFields)) {
-                        // init the class name
-                        $singular = mb_substr($field,0,-1);
-                        $className = ucfirst($singular);
-                        $class = '\Signifyd\Models\\' . $className;
-
-                        foreach ($chargebackCreateRequest[$field] as $item) {
-                            if ($item instanceof $class) {
-                                $object = $item;
-                            } else {
-                                $object = new $class($item);
-                            }
-
-                            $this->{'add' . $className}($object);
-                        }
-                    } else {
-                        $this->{'set' . ucfirst($field)}($chargebackCreateRequest[$field]);
-                    }
-                } elseif ($chargebackCreateRequest[$field] instanceof $class) {
-                    $this->{'set' . ucfirst($field)}($chargebackCreateRequest[$field]);
-                } elseif (in_array($field, $this->stringFields)) {
-                    $this->{'set' . ucfirst($field)}($chargebackCreateRequest[$field]);
+                $value = $chargebackCreateRequest[$field];
+                if ($value instanceof $class) {
+                    $this->{'set' . ucfirst($field)}($value);
+                } elseif (is_array($value) && !empty($value)) {
+                    $this->{'set' . ucfirst($field)}(new $class($value));
                 }
             }
         }
@@ -236,7 +219,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return Reason
      */
-    public function getReason(): Reason
+    public function getReason(): ?Reason
     {
         return $this->reason;
     }
@@ -247,7 +230,7 @@ class ChargebackCreateRequest extends Model
      * @param Reason $reason
      * @return void
      */
-    public function setReason(Reason $reason): void
+    public function setReason(?Reason $reason): void
     {
         $this->reason = $reason;
     }
@@ -257,7 +240,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return string
      */
-    public function getCardholderEmail(): string
+    public function getCardholderEmail(): ?string
     {
         return $this->cardholderEmail;
     }
@@ -268,7 +251,7 @@ class ChargebackCreateRequest extends Model
      * @param string $cardholderEmail
      * @return void
      */
-    public function setCardholderEmail(string $cardholderEmail): void
+    public function setCardholderEmail(?string $cardholderEmail): void
     {
         $this->cardholderEmail = $cardholderEmail;
     }
@@ -276,10 +259,9 @@ class ChargebackCreateRequest extends Model
     /**
      * Retrieve cardholder name
      *
-     * @param string $cardholderName
      * @return string
      */
-    public function getCardholderName(string $cardholderName): string
+    public function getCardholderName(): ?string
     {
         return $this->cardholderName;
     }
@@ -290,7 +272,7 @@ class ChargebackCreateRequest extends Model
      * @param string $cardholderName
      * @return void
      */
-    public function setCardholderName(string $cardholderName): void
+    public function setCardholderName(?string $cardholderName): void
     {
         $this->cardholderName = $cardholderName;
     }
@@ -298,9 +280,9 @@ class ChargebackCreateRequest extends Model
     /**
      * Retrieve chargeback fees
      *
-     * @return ChargebackFees
+     * @return Amount
      */
-    public function getChargebackFees(): ChargebackFees
+    public function getChargebackFees(): ?Amount
     {
         return $this->chargebackFees;
     }
@@ -308,10 +290,10 @@ class ChargebackCreateRequest extends Model
     /**
      * Set chargeback fees
      *
-     * @param ChargebackFees $chargebackFees
+     * @param Amount $chargebackFees
      * @return void
      */
-    public function setChargebackFees(ChargebackFees $chargebackFees): void
+    public function setChargebackFees(?Amount $chargebackFees): void
     {
         $this->chargebackFees = $chargebackFees;
     }
@@ -321,7 +303,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return string
      */
-    public function getIssuerReportedDate(): string
+    public function getIssuerReportedDate(): ?string
     {
         return $this->issuerReportedDate;
     }
@@ -332,7 +314,7 @@ class ChargebackCreateRequest extends Model
      * @param string $issuerReportedDate
      * @return void
      */
-    public function setIssuerReportedDate(string $issuerReportedDate): void
+    public function setIssuerReportedDate(?string $issuerReportedDate): void
     {
         $this->issuerReportedDate = $issuerReportedDate;
     }
@@ -342,7 +324,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return string
      */
-    public function getDueDate(): string
+    public function getDueDate(): ?string
     {
         return $this->dueDate;
     }
@@ -353,7 +335,7 @@ class ChargebackCreateRequest extends Model
      * @param string $dueDate
      * @return void
      */
-    public function setDueDate(string $dueDate): void
+    public function setDueDate(?string $dueDate): void
     {
         $this->dueDate = $dueDate;
     }
@@ -363,7 +345,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return string
      */
-    public function getPaymentProcessor(): string
+    public function getPaymentProcessor(): ?string
     {
         return $this->paymentProcessor;
     }
@@ -374,9 +356,30 @@ class ChargebackCreateRequest extends Model
      * @param string $paymentProcessor
      * @return void
      */
-    public function setPaymentProcessor(string $paymentProcessor): void
+    public function setPaymentProcessor(?string $paymentProcessor): void
     {
         $this->paymentProcessor = $paymentProcessor;
+    }
+
+    /**
+     * Retrieve payment network
+     *
+     * @return string
+     */
+    public function getPaymentNetwork(): ?string
+    {
+        return $this->paymentNetwork;
+    }
+
+    /**
+     * Set payment network
+     *
+     * @param string $paymentNetwork
+     * @return void
+     */
+    public function setPaymentNetwork(?string $paymentNetwork): void
+    {
+        $this->paymentNetwork = $paymentNetwork;
     }
 
     /**
@@ -384,7 +387,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return string
      */
-    public function getChargebackStage(): string
+    public function getChargebackStage(): ?string
     {
         return $this->chargebackStage;
     }
@@ -395,7 +398,7 @@ class ChargebackCreateRequest extends Model
      * @param string $chargebackStage
      * @return void
      */
-    public function setChargebackStage(string $chargebackStage): void
+    public function setChargebackStage(?string $chargebackStage): void
     {
         $this->chargebackStage = $chargebackStage;
     }
@@ -405,7 +408,7 @@ class ChargebackCreateRequest extends Model
      *
      * @return AssumedOwnership
      */
-    public function getAssumedOwnership(): AssumedOwnership
+    public function getAssumedOwnership(): ?AssumedOwnership
     {
         return $this->assumedOwnership;
     }
@@ -416,7 +419,7 @@ class ChargebackCreateRequest extends Model
      * @param AssumedOwnership $assumedOwnership
      * @return void
      */
-    public function setAssumedOwnership(AssumedOwnership $assumedOwnership): void
+    public function setAssumedOwnership(?AssumedOwnership $assumedOwnership): void
     {
         $this->assumedOwnership = $assumedOwnership;
     }

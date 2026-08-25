@@ -14,7 +14,10 @@ namespace Signifyd\Models\Chargeback;
 use Signifyd\Core\Model;
 
 /**
- * Class Fulfillments
+ * Class Fulfillment
+ *
+ * Represents a single entry of the "fulfillments" array of objects
+ * accepted by the Chargeback and ChargebackCreateRequest models.
  *
  * @category Signifyd_Fraud_Protection
  * @package  Signifyd\Core
@@ -22,28 +25,28 @@ use Signifyd\Core\Model;
  * @license  See LICENSE.txt for license details.
  * @link     https://www.signifyd.com/
  */
-class Fulfillments extends Model
+class Fulfillment extends Model
 {
     /**
      * The shipper's name.
      *
      * @var string
      */
-    public string $shipper;
+    public ?string $shipper = null;
 
     /**
      * The order's tracking number.
      *
-     * @var string
+     * @var ?string
      */
-    public string $trackingNumber;
+    public ?string $trackingNumber = null;
 
     /**
      * The Fulfillment Method refers to the method of fulfillment for the order.
      *
-     * @var string
+     * @var ?string
      */
-    public string $fulfillmentMethod;
+    public ?string $fulfillmentMethod = null;
 
     /**
      * The class attributes
@@ -65,53 +68,24 @@ class Fulfillments extends Model
     ];
 
     /**
-     * Fulfillments constructor.
+     * Fulfillment constructor.
      *
-     * @param array $fulfillments
+     * @param array $fulfillment
      */
-    public function __construct(array $fulfillments = [])
+    public function __construct(array $fulfillment = [])
     {
         // Check if something was passed to the class
-        if (is_array($fulfillments) && !empty($fulfillments)) {
-            foreach ($this->fields as $field) {
-                // init the class name
-                $class = '\Signifyd\Models\\' . ucfirst($field);
-
-                // make sure no wild data is sent
-                if (array_key_exists($field, $fulfillments) === false) {
-                    continue;
-                }
-
-                if (is_array($fulfillments[$field]) && !empty($fulfillments[$field])) {
-                    if (in_array($field, $this->arrayOfObjectFields)) {
-                        // init the class name
-                        $singular = mb_substr($field,0,-1);
-                        $className = ucfirst($singular);
-                        $class = '\Signifyd\Models\\' . $className;
-
-                        foreach ($fulfillments[$field] as $item) {
-                            if ($item instanceof $class) {
-                                $object = $item;
-                            } else {
-                                $object = new $class($item);
-                            }
-
-                            $this->{'add' . $className}($object);
-                        }
-                    } else {
-                        $this->{'set' . ucfirst($field)}($fulfillments[$field]);
-                    }
-                } elseif ($fulfillments[$field] instanceof $class) {
-                    $this->{'set' . ucfirst($field)}($fulfillments[$field]);
-                } elseif (in_array($field, $this->stringFields)) {
-                    $this->{'set' . ucfirst($field)}($fulfillments[$field]);
+        if (is_array($fulfillment) && !empty($fulfillment)) {
+            foreach ($this->stringFields as $field) {
+                if (array_key_exists($field, $fulfillment) && !is_array($fulfillment[$field])) {
+                    $this->{'set' . ucfirst($field)}($fulfillment[$field]);
                 }
             }
         }
     }
 
     /**
-     * Validate charback fees
+     * Validate fulfillment
      *
      * @return array|bool
      */
@@ -127,7 +101,7 @@ class Fulfillments extends Model
      *
      * @return string
      */
-    public function getShipper(): string
+    public function getShipper(): ?string
     {
         return $this->shipper;
     }
@@ -138,7 +112,7 @@ class Fulfillments extends Model
      * @param string $shipper
      * @return void
      */
-    public function setShipper(string $shipper): void
+    public function setShipper(?string $shipper): void
     {
         $this->shipper = $shipper;
     }
@@ -148,7 +122,7 @@ class Fulfillments extends Model
      *
      * @return string
      */
-    public function getTrackingNumber(): string
+    public function getTrackingNumber(): ?string
     {
         return $this->trackingNumber;
     }
@@ -159,7 +133,7 @@ class Fulfillments extends Model
      * @param string $trackingNumber
      * @return void
      */
-    public function setTrackingNumber(string $trackingNumber): void
+    public function setTrackingNumber(?string $trackingNumber): void
     {
         $this->trackingNumber = $trackingNumber;
     }
@@ -169,7 +143,7 @@ class Fulfillments extends Model
      *
      * @return string
      */
-    public function getFulfillmentMethod(): string
+    public function getFulfillmentMethod(): ?string
     {
         return $this->fulfillmentMethod;
     }
@@ -180,7 +154,7 @@ class Fulfillments extends Model
      * @param string $fulfillmentMethod
      * @return void
      */
-    public function setFulfillmentMethod(string $fulfillmentMethod): void
+    public function setFulfillmentMethod(?string $fulfillmentMethod): void
     {
         $this->fulfillmentMethod = $fulfillmentMethod;
     }

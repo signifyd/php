@@ -44,28 +44,29 @@ class Chargeback extends Model
      *
      * @var ?string
      */
-    public ?string $partnerChargebackId;
+    public ?string $partnerChargebackId = null;
 
     /**
      * Partner system's unique identifier for the merchant. Optional.
      *
      * @var ?string
      */
-    public ?string $partnerMerchantId;
+    public ?string $partnerMerchantId = null;
 
     /**
-     * ChargebackCreateRequest object.
+     * ChargebackCreateRequest object. Serialized as "chargeback" in the request body,
+     * per the Create Chargeback API contract (POST /v3/orders/events/chargebacks).
      *
      * @var ChargebackCreateRequest
      */
-    public ChargebackCreateRequest $chargebackCreateRequest;
+    public ChargebackCreateRequest $chargeback;
 
     /**
-     * This object is not required if the Fulfillments API endpoint has been used.
+     * This array is not required if the Fulfillments API endpoint has been used.
      *
-     * @var Fulfillments
+     * @var Fulfillment[]
      */
-    public Fulfillments $fulfillments;
+    public array $fulfillments = [];
 
     /**
      * The class attributes
@@ -77,12 +78,11 @@ class Chargeback extends Model
         'chargebackId',
         'partnerChargebackId',
         'partnerMerchantId',
-        'chargebackCreateRequest',
+        'chargeback',
         'fulfillments'
     ];
 
     protected $arrayOfObjectFields = [
-        'chargebackCreateRequest',
         'fulfillments'
     ];
 
@@ -100,40 +100,29 @@ class Chargeback extends Model
      */
     public function __construct(array $chargeback = [])
     {
-        // Check if something was passed to the class
         if (is_array($chargeback) && !empty($chargeback)) {
-            foreach ($this->fields as $field) {
-                // init the class name
-                $class = '\Signifyd\Models\\' . ucfirst($field);
-
-                // make sure no wild data is sent
-                if (array_key_exists($field, $chargeback) === false) {
-                    continue;
+            foreach ($this->stringFields as $field) {
+                if (array_key_exists($field, $chargeback) && !is_array($chargeback[$field])) {
+                    $this->{'set' . ucfirst($field)}($chargeback[$field]);
                 }
+            }
 
-                if (is_array($chargeback[$field]) && !empty($chargeback[$field])) {
-                    if (in_array($field, $this->arrayOfObjectFields)) {
-                        // init the class name
-                        $singular = mb_substr($field,0,-1);
-                        $className = ucfirst($singular);
-                        $class = '\Signifyd\Models\\' . $className;
+            if (!empty($chargeback['chargeback'])) {
+                $value = $chargeback['chargeback'];
+                if ($value instanceof ChargebackCreateRequest) {
+                    $this->setChargeback($value);
+                } elseif (is_array($value)) {
+                    $this->setChargeback(new ChargebackCreateRequest($value));
+                }
+            }
 
-                        foreach ($chargeback[$field] as $item) {
-                            if ($item instanceof $class) {
-                                $object = $item;
-                            } else {
-                                $object = new $class($item);
-                            }
-
-                            $this->{'add' . $className}($object);
-                        }
-                    } else {
-                        $this->{'set' . ucfirst($field)}($chargeback[$field]);
+            if (!empty($chargeback['fulfillments']) && is_array($chargeback['fulfillments'])) {
+                foreach ($chargeback['fulfillments'] as $fulfillment) {
+                    if ($fulfillment instanceof Fulfillment) {
+                        $this->addFulfillment($fulfillment);
+                    } elseif (is_array($fulfillment)) {
+                        $this->addFulfillment(new Fulfillment($fulfillment));
                     }
-                } elseif ($chargeback[$field] instanceof $class) {
-                    $this->{'set' . ucfirst($field)}($chargeback[$field]);
-                } elseif (in_array($field, $this->stringFields)) {
-                    $this->{'set' . ucfirst($field)}($chargeback[$field]);
                 }
             }
         }
@@ -198,7 +187,7 @@ class Chargeback extends Model
      *
      * @return string
      */
-    public function getPartnerChargebackId(): string
+    public function getPartnerChargebackId(): ?string
     {
         return $this->partnerChargebackId;
     }
@@ -209,7 +198,7 @@ class Chargeback extends Model
      * @param string $partnerChargebackId
      * @return void
      */
-    public function setPartnerChargebackId(string $partnerChargebackId): void
+    public function setPartnerChargebackId(?string $partnerChargebackId): void
     {
         $this->partnerChargebackId = $partnerChargebackId;
     }
@@ -217,10 +206,9 @@ class Chargeback extends Model
     /**
      * Retrieve partner merchant id
      *
-     * @param string $partnerMerchantId
      * @return string
      */
-    public function getPartnerMerchantId(string $partnerMerchantId): string
+    public function getPartnerMerchantId(): ?string
     {
         return $this->partnerMerchantId;
     }
@@ -231,7 +219,7 @@ class Chargeback extends Model
      * @param string $partnerMerchantId
      * @return void
      */
-    public function setPartnerMerchantId(string $partnerMerchantId): void
+    public function setPartnerMerchantId(?string $partnerMerchantId): void
     {
         $this->partnerMerchantId = $partnerMerchantId;
     }
@@ -241,28 +229,28 @@ class Chargeback extends Model
      *
      * @return ChargebackCreateRequest
      */
-    public function getChargebackCreateRequest(): ChargebackCreateRequest
+    public function getChargeback(): ChargebackCreateRequest
     {
-        return $this->chargebackCreateRequest;
+        return $this->chargeback;
     }
 
     /**
      * Set chargeback create request
      *
-     * @param ChargebackCreateRequest $chargebackCreateRequest
+     * @param ChargebackCreateRequest $chargeback
      * @return void
      */
-    public function setChargebackCreateRequest(ChargebackCreateRequest $chargebackCreateRequest): void
+    public function setChargeback(ChargebackCreateRequest $chargeback): void
     {
-        $this->chargebackCreateRequest = $chargebackCreateRequest;
+        $this->chargeback = $chargeback;
     }
 
     /**
      * Retrieve fulfillments
      *
-     * @return Fulfillments
+     * @return Fulfillment[]
      */
-    public function getFulfillments(): Fulfillments
+    public function getFulfillments(): array
     {
         return $this->fulfillments;
     }
@@ -270,11 +258,22 @@ class Chargeback extends Model
     /**
      * Set fulfillments
      *
-     * @param Fulfillments $fulfillments
+     * @param Fulfillment[] $fulfillments
      * @return void
      */
-    public function setFulfillments(Fulfillments $fulfillments): void
+    public function setFulfillments(array $fulfillments): void
     {
         $this->fulfillments = $fulfillments;
+    }
+
+    /**
+     * Add a fulfillment
+     *
+     * @param Fulfillment $fulfillment
+     * @return void
+     */
+    public function addFulfillment(Fulfillment $fulfillment): void
+    {
+        $this->fulfillments[] = $fulfillment;
     }
 }

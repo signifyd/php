@@ -259,10 +259,9 @@ class Stage extends Model
     /**
      * Retrieve chargeback stage
      *
-     * @param string $chargebackStage
      * @return string
      */
-    public function getChargebackStage(string $chargebackStage): string
+    public function getChargebackStage(): string
     {
         return $this->chargebackStage;
     }
