@@ -739,36 +739,56 @@ This endpoint returns `200` if feedback already exists (no update), `201` on suc
 
 #### CHARGEBACKS
 
-> **Note:** The Chargebacks group does not have a dedicated SDK class yet. The examples below use [GuzzleHttp](https://docs.guzzlephp.org/) to call the API directly. A dedicated `ChargebackApi` class will be added in a future version of the SDK.
+### ChargebackApi
 
-### Create Chargeback
+The ChargebackApi is the class that reports chargebacks filed against an order to Signifyd. Multiple chargebacks can be created against the same order depending on team settings.
 
-Report a new chargeback against an order to Signifyd. Multiple chargebacks can be created against the same order depending on team settings.
+There are multiple ways to instantiate the ChargebackApi class.
+Usage examples:
+```php
+<?php
+    // This might differ depending on the location of the file from which you your project
+    require __DIR__ . '/vendor/autoload.php';
 
-##### POST /v3/orders/events/chargebacks
+    $chargebackApi = new \Signifyd\Core\Api\ChargebackApi(["apiKey" => "your api key"]);
+```
+Or using the Settings Class
+```php
+<?php
+    // This might differ depending on the location of the file from which you your project
+    require __DIR__ . '/vendor/autoload.php';
+
+    $settings = new \Signifyd\Core\Settings(["apiKey" => "your api key"]);
+    $chargebackApi = new \Signifyd\Core\Api\ChargebackApi($settings);
+```
+
+#### Class methods
+
+##### createChargeback($signifydCaseId, $chargebackData);
+This sends the request to our API Endpoint (`POST /v3/orders/events/chargebacks`) to report a new chargeback against an order. `$signifydCaseId` is used for logging/correlation only — the endpoint itself correlates by `orderId`/`chargebackId` in the request body, not by Signifyd case id. `$chargebackData` can be an array or a `Chargeback` model instance.
+
+For more info about the data that can be added please check the `Chargeback` and `ChargebackCreateRequest` models.
 ```php
     ....
-    $client = new \GuzzleHttp\Client();
-    $response = $client->request('POST', 'https://api.signifyd.com/v3/orders/events/chargebacks', [
-        'headers' => [
-            'accept'        => 'application/json',
-            'content-type'  => 'application/json',
-            'Authorization' => 'Basic ' . base64_encode('YOUR_API_KEY:'),
-        ],
-        'json' => [
-            'orderId'      => 'ORDER-10045',
-            'chargebackId' => 'CB-78901',
-            'chargeback'   => [
-                'amount'   => 74.99,
-                'currency' => 'USD',
-                'reason'   => 'FRAUD',
+    $chargebackData = [
+        'orderId'      => 'ORDER-10045',
+        'chargebackId' => 'CB-78901',
+        'chargeback'   => [
+            'amount' => [
+                'amount'       => 74.99,
+                'currencyCode' => 'USD',
             ],
+            'reason' => [
+                'processorReasonCode' => 'FRAUD',
+            ],
+            'issuerReportedDate' => '2024-10-01T00:00:00Z',
         ],
-    ]);
-    echo $response->getBody();
+    ];
+    $chargebackResponse = $chargebackApi->createChargeback('SIGNIFYD-CASE-ID', $chargebackData);
     ....
 ```
-This endpoint returns `201` on success, `204` if no response expected, `400` on validation failure, `401` on authentication failure, `404` if order not found, `409` if chargeback already exists, and `500` on server error.
+This method returns a `ChargebackResponse` which will have the properties populated on success (`201`/`204`). In case of error (`400`, `401`, `404`, `409`, `500`) the `ChargebackResponse` will have the property `isError` set to `true` and the property `errorMessage` will have the received error message.
+Error message can be empty if the request can not be made, but in this case the signifyd_connect.log will have the error logged.
 
 ### Chargeback Stage
 

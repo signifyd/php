@@ -29,21 +29,21 @@ class Reason extends Model
      *
      * @var string
      */
-    public string $processorName;
+    public ?string $processorName = null;
 
     /**
      * Reason code issued by payment processor.
      *
-     * @var string
+     * @var ?string
      */
-    public string $processorReasonCode;
+    public ?string $processorReasonCode = null;
 
     /**
      * Detailed reason description issued by payment processor.
      *
-     * @var string
+     * @var ?string
      */
-    public string $processorReasonDescription;
+    public ?string $processorReasonDescription = null;
 
     /**
      * The class attributes
@@ -127,7 +127,7 @@ class Reason extends Model
      *
      * @return string
      */
-    public function getProcessorName(): string
+    public function getProcessorName(): ?string
     {
         return $this->processorName;
     }
@@ -138,7 +138,7 @@ class Reason extends Model
      * @param string $processorName
      * @return void
      */
-    public function setProcessorName(string $processorName): void
+    public function setProcessorName(?string $processorName): void
     {
         $this->processorName = $processorName;
     }
@@ -148,7 +148,7 @@ class Reason extends Model
      *
      * @return string
      */
-    public function getProcessorReasonCode(): string
+    public function getProcessorReasonCode(): ?string
     {
         return $this->processorReasonCode;
     }
@@ -159,7 +159,7 @@ class Reason extends Model
      * @param string $processorReasonCode
      * @return void
      */
-    public function setProcessorReasonCode(string $processorReasonCode): void
+    public function setProcessorReasonCode(?string $processorReasonCode): void
     {
         $this->processorReasonCode = $processorReasonCode;
     }
@@ -169,7 +169,7 @@ class Reason extends Model
      *
      * @return string
      */
-    public function getProcessorReasonDescription(): string
+    public function getProcessorReasonDescription(): ?string
     {
         return $this->processorReasonDescription;
     }
@@ -180,7 +180,7 @@ class Reason extends Model
      * @param string $processorReasonDescription
      * @return void
      */
-    public function setProcessorReasonDescription(string $processorReasonDescription): void
+    public function setProcessorReasonDescription(?string $processorReasonDescription): void
     {
         $this->processorReasonDescription = $processorReasonDescription;
     }

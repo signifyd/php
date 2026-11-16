@@ -32,6 +32,14 @@ abstract class Response
     public $messages = [];
 
     /**
+     * Whether this response represents an error. Defaults to false so isError() can be called
+     * safely on a successful response even when setIsError() was never invoked.
+     *
+     * @var bool
+     */
+    public $isError = false;
+
+    /**
      * Response constructor.
      *
      * @param array $response The response received from Signifyd

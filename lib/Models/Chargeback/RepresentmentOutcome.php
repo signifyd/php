@@ -12,8 +12,6 @@
 namespace Signifyd\Models\Chargeback;
 
 use Signifyd\Core\Model;
-use Signifyd\Models\Chargeback\ChargebackCreateRequest;
-use Signifyd\Models\Chargeback\Fulfillments;
 
 /**
  * Class RepresentmentOutcome
@@ -63,7 +61,7 @@ class RepresentmentOutcome extends Model
         'orderId',
         'chargebackId',
         'partnerChargebackId',
-        '$representmentOutcome'
+        'representmentOutcome'
     ];
 
     protected $arrayOfObjectFields = [];
@@ -72,7 +70,7 @@ class RepresentmentOutcome extends Model
         'orderId',
         'chargebackId',
         'partnerChargebackId',
-        '$representmentOutcome'
+        'representmentOutcome'
     ];
 
     /**
@@ -199,10 +197,9 @@ class RepresentmentOutcome extends Model
     /**
      * Retrieve representment outcome
      *
-     * @param string $representmentOutcome
      * @return string
      */
-    public function getRepresentmentOutcome(string $representmentOutcome): string
+    public function getRepresentmentOutcome(): string
     {
         return $this->representmentOutcome;
     }
